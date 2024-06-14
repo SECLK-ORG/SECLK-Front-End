@@ -1,0 +1,19 @@
+@import "../../../assets/theme/constants.scss";
+
+.appBar {
+  background: none !important;
+  align-items: end;
+    box-shadow: none !important;
+    color: $dark-blue;
+}
+
+.title {
+  flex-grow: 1;
+}
+
+.profileBox{
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    color: #000;
+}
