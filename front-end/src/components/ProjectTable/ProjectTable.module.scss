@@ -1,0 +1,29 @@
+@import "../../assets/theme/constants.scss";
+.grid{
+    border-radius: 0.8rem !important;
+    border: 1px solid $lightGreyBorder !important;
+    box-shadow: none !important;
+    
+.gridContainer {
+   display: flex;
+  justify-content: space-between !important;
+
+  padding: 1rem;
+
+}
+}
+.table {
+    width: 100% !important;
+  
+    &::-webkit-scrollbar {
+      height: 8px; // Set height for horizontal scrollbar
+    }
+  
+    &::-webkit-scrollbar-track {
+      background-color: $bgColorSidebar !important;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(146, 146, 146) !important;
+    }
+  }

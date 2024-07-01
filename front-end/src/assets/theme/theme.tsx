@@ -10,6 +10,7 @@ import {
     DialogTitle,
     Select,
     styled,
+    Button,
     Switch,
     TableCell,
     tableCellClasses,
@@ -40,6 +41,7 @@ import {
       warning: {
         main: "#FFB800",
       },
+      
       background: {
         default: "#274D36", // Set a dark background color
         paper: "rgba(25, 111, 61 , 0.5)", // Set a dark background color for paper elements
@@ -98,24 +100,23 @@ import {
       },
     },
   });
-
   export const StyledTableCell = styled(TableCell, {
     shouldForwardProp: (prop) => prop !== "width",
   })(({ theme, width }) => ({
     [`&.${tableCellClasses.head}`]: {
       fontSize: 14,
-      backgroundColor: "#f5f5f5",
-      color: "#000000",
+      backgroundColor: "#f8f9fa", // Light gray background for header
+      color: "#343a40", // Dark gray text color
       padding: "10px",
-      border: "1px solid #e0e0e0",
+      fontWeight: 500, // Correct font weight property
       width: width || "auto",
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
       padding: "10px",
-      color: "#000000",
+      fontWeight: 600, // Correct font weight property
+      color: "#495057", // Slightly lighter gray text color
       backgroundColor: "#ffffff",
-      borderBottom: "1px solid #e0e0e0",
       width: width || "auto",
     },
     "&:last-child": {
@@ -125,20 +126,20 @@ import {
     },
   }));
   
-  export  const StickyTableCell = styled(TableCell)(({ theme }) => ({
+  export const StickyTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       fontSize: 14,
-      backgroundColor: "#f5f5f5",
-      color: "#000000",
+      backgroundColor: "#f8f9fa", // Light gray background for header
+      color: "#343a40", // Dark gray text color
       padding: "10px",
-      border: "1px solid #e0e0e0",
+      fontWeight: 500, // Correct font weight property
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
       padding: "10px",
-      color: "#000000",
+      fontWeight: 600, // Correct font weight property
+      color: "#495057", // Slightly lighter gray text color
       backgroundColor: "#ffffff",
-      borderBottom: "1px solid #e0e0e0",
     },
     position: "sticky",
     zIndex: 10,
@@ -162,6 +163,7 @@ import {
   
   export  const StyledTextField = styled(TextField)(() => ({
     "& .MuiInputBase-root": {
+      height:"2.5rem",
       backgroundColor: "#ffffff",
       color: "#000000",
       borderColor: "#e0e0e0",
@@ -293,4 +295,29 @@ import {
     },
   }));
   
+  export  const StyledSwitch = styled(Switch)(({ theme }) => ({
+    "& .MuiSwitch-switchBase": {
+      color: "#000000",
+    },
+    "& .MuiSwitch-thumb": {
+      color: "#ffffff",
+    },
+    "& .MuiSwitch-track": {
+      backgroundColor: "#000000",
+    },
+  }));
+  export const CustomButton = styled(Button)(({ theme }) => ({
+    textTransform: 'none',
+    backgroundColor: 'white',
+    color: '#000000',
+    borderColor: '#e0e0e0',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+      borderColor: '#000000',
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#e0e0e0',
+      color: '#6b6b6b',
+    },
+  }));
   
