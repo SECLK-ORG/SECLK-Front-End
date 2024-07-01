@@ -1,8 +1,9 @@
 import React from 'react'
+import ProjectTable from '../../components/ProjectTable/ProjectTable'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div><ProjectTable/></div>
   )
 }
 
