@@ -105,7 +105,7 @@ import {
   })(({ theme, width }) => ({
     [`&.${tableCellClasses.head}`]: {
       fontSize: 14,
-      backgroundColor: "#f8f9fa", // Light gray background for header
+      backgroundColor: "#ffffff", // Light gray background for header
       color: "#343a40", // Dark gray text color
       padding: "10px",
       fontWeight: 500, // Correct font weight property
@@ -129,7 +129,7 @@ import {
   export const StickyTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       fontSize: 14,
-      backgroundColor: "#f8f9fa", // Light gray background for header
+      backgroundColor: "#ffffff", // Light gray background for header
       color: "#343a40", // Dark gray text color
       padding: "10px",
       fontWeight: 500, // Correct font weight property
@@ -161,9 +161,9 @@ import {
     },
   }));
   
-  export  const StyledTextField = styled(TextField)(() => ({
+  export const StyledTextField = styled(TextField)(() => ({
     "& .MuiInputBase-root": {
-      height:"2.5rem",
+      height: "2.5rem",
       backgroundColor: "#ffffff",
       color: "#000000",
       borderColor: "#e0e0e0",
@@ -176,7 +176,7 @@ import {
       color: "red",
     },
     "& .MuiInputLabel-root.Mui-focused": {
-      color: "#000000",
+      color: "#437EF7",
       opacity: 1,
     },
     "& .MuiOutlinedInput-root": {
@@ -185,11 +185,11 @@ import {
         borderWidth: "1px",
       },
       "&:hover fieldset": {
-        borderColor: "#000000",
+        borderColor: "#437EF7",
       },
       "&.Mui-focused fieldset": {
-        color: "#000000",
-        borderColor: "#000000",
+        color: "#437EF7",
+        borderColor: "#437EF7",
         borderWidth: "2px",
       },
       "& input::placeholder": {
@@ -198,15 +198,34 @@ import {
     },
     "& .MuiAutocomplete-popupIndicator": {
       color: "#000000",
+      "&:focus": {
+        color: "#437EF7",
+      },
+      "&.Mui-focused": {
+        color: "#437EF7",
+      },
     },
     "& .MuiSvgIcon-root": {
-      color: "#000000",
+      color: "#437EF7",
+      "&:focus": {
+        color: "#437EF7",
+      },
+      "&.Mui-focused": {
+        color: "#437EF7",
+      },
+    },
+    "& .MuiInputAdornment-root": {
+      "& .MuiSvgIcon-root": {
+        color: "#000000",
+      },
+      "&.Mui-focused .MuiSvgIcon-root": {
+        color: "#437EF7",
+      }
     },
     "&.Mui-disabled .MuiOutlinedInput-root": {
       borderColor: "red",
     },
   }));
-  
   const StyledSelect = styled(Select)(() => ({
     "& .MuiSelect-root": {
       backgroundColor: "#ffffff",
@@ -273,10 +292,10 @@ import {
         borderColor: "#e0e0e0",
       },
       "&:hover fieldset": {
-        borderColor: "#000000",
+        borderColor: "#437EF7",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#000000",
+        borderColor: "#437EF7",
       },
       "& input::placeholder": {
         color: "#000000",
@@ -312,8 +331,9 @@ import {
     color: '#000000',
     borderColor: '#e0e0e0',
     '&:hover': {
-      backgroundColor: '#f5f5f5',
-      borderColor: '#000000',
+      backgroundColor: '#437EF7',
+      borderColor: '#437EF7',
+      color:"#437EF7"
     },
     '&.Mui-disabled': {
       backgroundColor: '#e0e0e0',

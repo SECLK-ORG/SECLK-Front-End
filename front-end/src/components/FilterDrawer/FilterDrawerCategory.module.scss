@@ -1,0 +1,23 @@
+
+.headerContainer{
+    width: 250px;
+    }
+    .drawerContent{
+    padding-inline: 20px;
+    width: 250px;
+    }
+    .drawerContentCategory{
+       border: 1px solid #e0e0e0 ;
+       border-radius: 10px;
+       margin-block: 16px;
+       box-shadow: none;
+    }
+    
+.drawerActions {
+   justify-content: space-between;
+   position: absolute;
+   bottom: 0;
+   width: 100%;
+   padding-bottom: 30px;
+   background: white;
+ }

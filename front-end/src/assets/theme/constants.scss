@@ -24,3 +24,15 @@ $xl: 1280px;
 $l: 1024px;
 $m: 768px;
 $s: 540px;
+
+$pageMargin: 115px 45px 45px 45px;
+
+
+
+@mixin transition($val) {
+  transition: $val;
+  -moz-transition: $val;
+  -o-transition: $val;
+  -webkit-transition: $val;
+}
+
