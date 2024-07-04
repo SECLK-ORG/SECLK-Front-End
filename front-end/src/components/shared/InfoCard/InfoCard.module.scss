@@ -1,0 +1,34 @@
+/* InfoCard.module.scss */
+.card {
+    display: flex;
+    align-items: center ;
+    padding: 24px !important;; /* Adjusted padding to match MUI spacing scale */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px !important; /* Adjusted to match MUI default border radius */
+    width: 100%;
+    height: 5.125rem;
+    max-width: 300px !important;
+  }
+  
+  .icon {
+    margin-right: 16px; /* Adjusted margin to match MUI spacing scale */
+    font-size: 40px;
+    color: #437EF7; /* MUI primary main color */
+  }
+  
+  .content {
+    flex: 1;
+  }
+  
+  .title {
+    font-size: 14px;
+    color: #757575; /* MUI text secondary color */
+  }
+  
+  .value {
+    font-size: 24px !important;
+    font-weight: bold!important;
+    // font-weight: 600;
+    color: #212121 !important;; /* MUI text primary color */
+  }
+  

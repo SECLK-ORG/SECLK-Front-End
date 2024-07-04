@@ -62,8 +62,10 @@ import {
         styleOverrides: {
           root: {
             padding: "16px",
+            boxShadow:"none",
             "&:last-child": {
               paddingBottom: "16px",
+
             },
           },
         },
