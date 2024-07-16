@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ProjectTable from '../../components/ProjectTable/ProjectTable';
 import FilterDrawerCategory from '../../components/FilterDrawer/FilterDrawerCategory';
-import { InfoCard } from '../../components';
+import { CustomButton, InfoCard } from '../../components';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import { Button, Grid, Typography } from '@mui/material';
-const Dashboard: React.FC = () => {
+const Projects: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
@@ -89,22 +89,32 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between',padding:"30px"}}>
-        <Typography sx={{fontWeight:"bold",fontSize:"30px"}}>Projects</Typography>
-        <Button variant="contained" title='s' sx={{ background: "#437EF7", color: "white", minWidth: "7rem",height:"2.125rem",textTransform:"capitalize" }} onClick={() => {}}>Create Project</Button>
+        <Typography sx={{fontWeight:"700",fontSize:"30px"}}>Projects</Typography>
+        <CustomButton
+        text="Create Project"
+        size="large"
+        backgroundColor="#437EF7"
+        color="white"
+        height="2.5rem"
+        textTransform="capitalize"
+        onClick={() => {
+          console.log('Button clicked');
+        }}
+      />
 
       </div>
       <div>
       <Grid container spacing={2} sx={{justifyContent:"space-evenly",paddingInline:"30px" }}>
-        <Grid item xs={12} sm={4} lg={3} >
+        <Grid item xs={12} sm={12} md={6}  xl={3} lg={5} >
           <InfoCard title="Total Projects" value={12} icon={EmojiObjectsOutlinedIcon } />
         </Grid>
-        <Grid item xs={12} sm={2} lg={3}>
+        <Grid item xs={12} sm={12} md={6} xl={3} lg={5}>
           <InfoCard title="Active Projects" value={4} icon={WorkOutlineOutlinedIcon} />
         </Grid>
-        <Grid item xs={12} sm={2} lg={3}>
+        <Grid item xs={12} sm={12} md={6} xl={3} lg={5}>
           <InfoCard title="Projects On-hold" value={5} icon={PauseCircleOutlineOutlinedIcon} />
         </Grid>
-        <Grid item xs={12} sm={2} lg={3}>
+        <Grid item xs={12} sm={12} md={6} xl={3} lg={5}>
           <InfoCard title="Inactive Projects" value={1} icon={BlockOutlinedIcon} />
         </Grid>
       </Grid>
@@ -134,4 +144,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Projects;

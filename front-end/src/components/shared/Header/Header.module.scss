@@ -5,6 +5,11 @@
   align-items: end;
     box-shadow: none !important;
     color: $dark-blue;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    &.appBarScrolled {
+      background-color: $white !important;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    }
 }
 
 .title {

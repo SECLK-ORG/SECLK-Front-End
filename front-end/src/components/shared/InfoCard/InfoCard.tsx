@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography, useMediaQuery } from '@mui/material';
 import { EmojiObjects } from '@mui/icons-material';
 import styles from './InfoCard.module.scss';
 interface InfoCardProps {
@@ -8,8 +8,9 @@ interface InfoCardProps {
   icon: React.ElementType;
 }
 const InfoCard: React.FC<InfoCardProps> = ({ title, value, icon: Icon }) => {
+  const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
     return (
-      <Card className={styles.card}>
+      <Card className={`${styles.card} ${isSmallScreen ? styles.smallCard : styles.largeCard}`}>
         <Icon className={styles.icon} />
         <CardContent className={styles.content}>
         <Typography className={styles.value}>

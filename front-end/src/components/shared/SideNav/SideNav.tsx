@@ -8,7 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -17,18 +16,27 @@ import SupportIcon from '@mui/icons-material/Support';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import styles from './SideNav.module.scss'; // Assume you create a separate SCSS file for this
-import { logo } from '../../../assets/images/';
-
+import styles from './SideNav.module.scss';
+import { logo, flag ,settings} from '../../../assets/images/';
+import { useNavigate } from 'react-router-dom';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
- const handleNavigate=(value:string)=>{
-if(value=="Dashboard"){
-  window.location.href="/dashboard"
-}
- }
+  const [selectedItem, setSelectedItem] = React.useState<string>('Dashboard');
+  const navigate = useNavigate();
 
+  const handleNavigate = (value: string) => {
+    setSelectedItem(value);
+    if (value === "Configurations") {
+      navigate("/configurations");
+    } else if (value === "Projects") {
+      navigate("/projects");
+    } else if (value === "Employees") {
+      navigate("/employees");
+    }
+  }
 
   return (
     <>
@@ -42,38 +50,40 @@ if(value=="Dashboard"){
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            backgroundColor: '#040404',
+            backgroundColor: '#1C2534',
             boxSizing: 'border-box',
-            color: '#ffffff',
+            color: '#A5ACBA',
           },
         }}
       >
         <Box className={styles.logo}>
-          <img src={logo} alt="Scce" />
+          <img src={logo} alt="Logo" />
         </Box>
         <List>
-          <ListItem disablePadding>
-            <ListItemButton>
+          <ListItem disablePadding className={selectedItem === 'Configurations' ? styles.selected : ''}>
+            <ListItemButton onClick={() => handleNavigate('Configurations')}>
               <ListItemIcon>
-                <DashboardIcon sx={{ color: 'white' }} />
+                <SettingsOutlinedIcon sx={{ color: selectedItem === 'Configurations' ? '#FFFFFF' : '#A5ACBA' }} />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" onClick={()=>{handleNavigate("Dashboard")}} />
+              <ListItemText primary="Configurations" sx={{ color: selectedItem === 'Configurations' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
+          <ListItem disablePadding className={selectedItem === 'Projects' ? styles.selected : ''}>
+            <ListItemButton onClick={() => handleNavigate('Projects')}>
               <ListItemIcon>
-                <AssignmentIcon sx={{ color: 'white' }} />
+                <AssignmentIcon sx={{ color: selectedItem === 'Projects' ? '#FFFFFF' : '#A5ACBA' }} />
+                
               </ListItemIcon>
-              <ListItemText primary="Projects" />
+              <ListItemText primary="Projects" sx={{ color: selectedItem === 'Projects' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
+          <ListItem disablePadding className={selectedItem === 'Employees' ? styles.selected : ''}>
+            <ListItemButton onClick={() => handleNavigate('Employees')}>
               <ListItemIcon>
-                <PeopleIcon sx={{ color: 'white' }} />
+                <GroupsOutlinedIcon sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} />
+                {/* <PeopleIcon sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} /> */}
               </ListItemIcon>
-              <ListItemText primary="Employees" />
+              <ListItemText primary="Employees" sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
           </ListItem>
           <Divider />
@@ -86,7 +96,7 @@ if(value=="Dashboard"){
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <UpdateIcon sx={{ color: 'white' }} />
+                <UpdateIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Updates" />
             </ListItemButton>
@@ -94,16 +104,16 @@ if(value=="Dashboard"){
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <StarIcon sx={{ color: 'white' }} />
+                <StarIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Integrations" />
-              <ExpandMoreIcon sx={{ color: 'white' }} />
+              <ExpandMoreIcon sx={{ color: '#A5ACBA' }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <SupportIcon sx={{ color: 'white' }} />
+                <SupportIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Support" />
             </ListItemButton>
@@ -111,16 +121,16 @@ if(value=="Dashboard"){
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <AccountCircleIcon sx={{ color: 'white' }} />
+                <AccountCircleIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Account" />
-              <ExpandMoreIcon sx={{ color: 'white' }} />
+              <ExpandMoreIcon sx={{ color: '#A5ACBA' }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <ExitToAppIcon sx={{ color: 'white' }} />
+                <ExitToAppIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Sign Out" />
             </ListItemButton>

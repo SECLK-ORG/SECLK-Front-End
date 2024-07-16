@@ -40,6 +40,7 @@ const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
             sx={{
               fontWeight: 'bold',
               paddingLeft: '10px',
+              padding:"15px",
               fontSize: '1.5rem'
             }}
           >

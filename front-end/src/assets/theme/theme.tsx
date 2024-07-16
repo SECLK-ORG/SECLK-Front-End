@@ -27,7 +27,8 @@ import {
         disabled: "#6b6b6b",
       },
       primary: {
-        main: "#dd2126",
+        main: "#333B48",
+       
       },
       secondary: {
         main: "#274D36",
@@ -43,8 +44,8 @@ import {
       },
       
       background: {
-        default: "#274D36", // Set a dark background color
-        paper: "rgba(25, 111, 61 , 0.5)", // Set a dark background color for paper elements
+        default: "#ooooo", // Set a dark background color
+        paper: "white", // Set a dark background color for paper elements
       },
     },
     typography: {

@@ -1,0 +1,31 @@
+/* ProjectTable.module.scss */
+@import "../../assets/theme/constants.scss";
+
+.grid {
+    box-shadow: none !important;
+  
+  .gridContainer {
+    display: flex;
+    justify-content: space-between !important;
+  }
+}
+
+.table {
+  width: 100% !important;
+  
+  .tableHead {
+    border-top: 1px solid $lightGreyBorder !important;
+  }
+
+  &::-webkit-scrollbar {
+    height: 50px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $bgColorSidebar !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(146, 146, 146) !important;
+  }
+}
