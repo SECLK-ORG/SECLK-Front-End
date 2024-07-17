@@ -10,6 +10,7 @@ import { Visibility, Edit, Search, ArrowBack, ArrowForward } from '@mui/icons-ma
 import { CustomButton, StickyTableCell, StyledTableCell, StyledTableRow, StyledTextField } from '../../assets/theme/theme';
 import styles from './ProjectTable.module.scss';
 import CustomPagination from '../CustomPagination/CustomPagination';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface ProjectTableProps {
   page: number;
@@ -21,6 +22,7 @@ interface ProjectTableProps {
   isFiltered: boolean;
   statusFilters: { [key: string]: boolean };
   onClearFilters: () => void;
+  handleClick(Mode:string, projectId:string):void;
 }
 
 const ProjectTable: React.FC<ProjectTableProps> = ({
@@ -32,8 +34,26 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   onFilterDrawerOpen,
   onClearFilters,
   isFiltered,
-  statusFilters
+  statusFilters,
+  handleClick
 }) => {
+
+  const getStatusStyles = (status:string) => {
+    if (status === 'Active') {
+      return {
+        dotColor: '#2D8A39',
+        backgroundColor: '#F0FAF0',
+        textColor: '#2D8A39'
+      };
+    } else if (status === 'Inactive') {
+      return {
+        dotColor: '#E2341D',
+        backgroundColor: '#FFF2F0',
+        textColor: '#E2341D'
+      };
+    }
+  };
+
   const projects = [
     { name: 'ZenSpace Mobile App', startDate: '23/08/2023', endDate: '12/12/2024', category: 'US', resourcesCount: 20, status: 'Active' },
     { name: 'Luminous Landing Page', startDate: '23/08/2023', endDate: '25/08/2023', category: 'UK', resourcesCount: 12, status: 'Active' },
@@ -148,6 +168,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
           </TableHead>
           <TableBody>
             {filteredProjects.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((project, index) => (
+              
               <StyledTableRow key={index}>
                 <StyledTableCell>{project.name}</StyledTableCell>
                 <StyledTableCell>{project.startDate}</StyledTableCell>
@@ -155,18 +176,38 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                 <StyledTableCell>{project.category}</StyledTableCell>
                 <StyledTableCell>{project.resourcesCount}</StyledTableCell>
                 <StyledTableCell>
-                  <span style={{
-                    color: project.status === 'Active' ? 'green' : 'red',
-                    backgroundColor: project.status === 'Active' ? '#d1e7dd' : '#f8d7da',
-                    width: 'fit-content',
-                    padding: '5px',
-                  }}>
-                    {project.status}
-                  </span>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    sx={{
+                      backgroundColor: project.status === 'Active' ? '#F0FAF0' : '#FFF2F0',
+                      borderRadius: '5px',
+                      padding: '2px 8px',
+                      maxWidth: '5.3rem'
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        backgroundColor: project.status === 'Active' ? '#2D8A39' : '#E2341D',
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        marginRight: '0.5rem'
+                      }}
+                    ></Box>
+                    <Typography
+                      sx={{
+                        color: project.status === 'Active' ? '#2D8A39' : '#E2341D',
+                        fontWeight: '600'
+                      }}
+                    >
+                      {project.status}
+                    </Typography>
+                  </Box>
                 </StyledTableCell>
                 <StickyTableCell>
-                  <IconButton>
-                    <Visibility />
+                  <IconButton onClick={()=>{handleClick(SCREEN_MODES.VIEW,"123")}}>
+                    <Visibility  />
                   </IconButton>
                   <IconButton>
                     <Edit />

@@ -7,6 +7,8 @@ import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import { Button, Grid, Typography } from '@mui/material';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import { useNavigate } from 'react-router-dom';
 const Projects: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -22,7 +24,7 @@ const Projects: React.FC = () => {
     Inactive: false,
   });
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
-
+  const navigate=useNavigate();
   useEffect(() => {
     setIsFiltered(
       Object.values(categoryFilters).some(filter => filter) ||
@@ -86,6 +88,13 @@ const Projects: React.FC = () => {
     });
   };
 
+  const handleClick = (mode:string,id: string) => {
+    if(SCREEN_MODES.VIEW === mode){
+      console.log('View clicked');
+      navigate(`/projects/${id}`);
+    }
+console.log(mode,id)
+  }
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between',padding:"30px"}}>
@@ -129,6 +138,7 @@ const Projects: React.FC = () => {
         onChangeRowsPerPage={handleChangeRowsPerPage}
         onFilterDrawerOpen={handleFilterDrawerOpen}
         onClearFilters={handleClearFilters}
+        handleClick={handleClick}
       />
       <FilterDrawerCategory
         filterDrawerOpen={filterDrawerOpen}
