@@ -6,5 +6,7 @@ export {default as InfoCard} from './shared/InfoCard/InfoCard'
 export {default as CustomButton } from './shared/CustomButton/CustomButton';
 export {default  as PositionsTable} from './PositionsCard/PositionsTable';
 export {default  as ProjectCategoriesTable} from './ProjectCategoriesCard/ProjectCategoriesTable';
+export {default  as ProjectDetailsBox} from './ProjectDetailsBox/ProjectDetailsBox';
+export {default  as ProjectInfoCard} from './ProjectInfoCard/ProjectInfoCard';
 
 

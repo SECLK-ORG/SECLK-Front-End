@@ -4,6 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
+import { ProjectDetailsBox, ProjectInfoCard } from '../../components';
 
 const expenses = [
   { category: 'Salary', vendor: 'Kalana Malith', amount: 200, description: 'Software Engineer', invoiceNumber: '100 200 300', date: '23/08/2023' },
@@ -21,7 +22,7 @@ const handleBack=()=>{
 }
   return (
     <Box p={3} >
-       <Box sx={{display:'flex' ,justifyContent:"left",alignItems:"center",}}>
+       <Box sx={{display:'flex' ,justifyContent:"left",alignItems:"center",marginBottom:"1rem"}}>
        <IconButton onClick={handleBack}>
         <ArrowBackIcon sx={{color:"black",}} />
       </IconButton>
@@ -31,41 +32,41 @@ const handleBack=()=>{
         <Typography sx={{ color: '#2D8A39', fontWeight:"600" }}>Active</Typography>
       </Box>
     </Box> 
-      
-      <Typography variant="subtitle1" color="textSecondary">Start Date: 23/08/2023</Typography>
-      <Typography variant="subtitle1" color="textSecondary">End Date: 12/12/2024</Typography>
-      <Typography variant="subtitle1" color="textSecondary">Contact email: Johncena@celled.com</Typography>
-      <Typography variant="subtitle1" color="textSecondary">Contact Number: +1 234567890</Typography>
+
+      <ProjectDetailsBox/>
+
       <Box mt={3} mb={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Income</Typography>
-                <Typography variant="h4">$2500</Typography>
-                <Typography variant="subtitle1" color="textSecondary">$1742 This Month</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Expenses</Typography>
-                <Typography variant="h4">$1300</Typography>
-                <Typography variant="subtitle1" color="textSecondary">$331 Remaining</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Profit</Typography>
-                <Typography variant="h4">$1300</Typography>
-                <Typography variant="subtitle1" color="textSecondary">$331 This Month</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={4}>
+          <ProjectInfoCard 
+            title="Total Income"
+            totalValue="$2500"
+            currentValue="$1742"
+            currentLabel="This Month"
+            remaining="25"
+            remainingLabel="25% Remaining"
+            color="green"
+          />
         </Grid>
+        <Grid item xs={12} sm={4}>
+          <ProjectInfoCard 
+            title="Total Expenses"
+            totalValue="$1300"
+            currentValue="$331"
+            currentLabel="Remaining"
+            color="red"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <ProjectInfoCard 
+            title="Profit"
+            totalValue="$1300"
+            currentValue="$331"
+            currentLabel="This Month"
+            color="green"
+          />
+        </Grid>
+      </Grid>
       </Box>
       <Button variant="contained" color="primary" style={{ marginBottom: '1rem' }}>Add Expense</Button>
       <TableContainer component={Paper}>
