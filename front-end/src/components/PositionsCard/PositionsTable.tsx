@@ -31,7 +31,7 @@ const PositionsTable: React.FC<PositionsTableProps> = ({ positions }) => {
               <TableCell align="right" sx={{fontWeight:"700",fontSize:"16px", color:"#A5ACBA"}}>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody className={styles.tableBody}>
             {positions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((position, index) => (
               <StyledTableRow key={index}>
                 <StyledTableCell>{position}</StyledTableCell>

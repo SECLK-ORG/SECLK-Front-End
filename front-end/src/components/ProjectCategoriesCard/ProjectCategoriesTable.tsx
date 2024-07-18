@@ -31,7 +31,7 @@ const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categor
               <TableCell align="right" sx={{fontWeight:"700",fontSize:"16px",color:"#A5ACBA"}}>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody className={styles.tableBody} >
             {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => (
               <StyledTableRow key={index}>
                 <StyledTableCell>{category}</StyledTableCell>

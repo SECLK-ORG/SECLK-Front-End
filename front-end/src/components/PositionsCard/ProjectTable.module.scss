@@ -16,7 +16,9 @@
   .tableHead {
     border-top: 1px solid $lightGreyBorder !important;
   }
-
+  .tableBody{
+    border-bottom: 1px solid $lightGreyBorder !important;
+  }
   &::-webkit-scrollbar {
     height: 50px;
   }

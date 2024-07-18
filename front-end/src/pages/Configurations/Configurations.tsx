@@ -12,8 +12,8 @@ const Configurations: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '30px',}}>
         <Typography sx={{ fontWeight: '700', fontSize: '30px' }}>Configurations</Typography>
       </div>
-      <Grid container spacing={2} sx={{justifyContent:"space-evenly",paddingInline:"30px"  }}>
-      <Grid item xs={12} sx={{border:" 1px solid rgba(0, 0, 0, 0.2)", borderRadius:"18px",margin:"1rem",paddingBlock:"1rem"}}>
+      <Grid container sx={{justifyContent:"space-evenly",paddingInline:"30px"  }}>
+      <Grid item xs={12} sx={{border:" 1px solid rgba(0, 0, 0, 0.2)", borderRadius:"10px",margin:"1rem",paddingBlock:"1rem"}}>
       <div style={{display:"flex", justifyContent:"space-between", margin:"1rem"}}>
       <Typography sx={{fontWeight:"600",fontSize:"18px"}}>Project Categories</Typography>
       <CustomButton
@@ -33,7 +33,7 @@ const Configurations: React.FC = () => {
         <ProjectCategoriesTable categories={categories} />
         </Grid>
       </Grid>
-      <Grid item xs={12} sx={{border:" 1px solid rgba(0, 0, 0, 0.2)", borderRadius:"18px",margin:"1rem",paddingBlock:"1rem"}}>
+      <Grid item xs={12} sx={{border:" 1px solid rgba(0, 0, 0, 0.2)", borderRadius:"10px",margin:"1rem",paddingBlock:"1rem"}}>
       <div style={{display:"flex", justifyContent:"space-between", margin:"1rem"}}>
       <Typography sx={{fontWeight:"600",fontSize:"18px"}}>Positions</Typography>
       <CustomButton
