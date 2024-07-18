@@ -1,13 +1,14 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import { BorderLinearProgress } from '../../assets/theme/theme';
-
+import styles from './ProjectInfoCard.module.scss';
 
 interface ProjectInfoCardProps {
   title: string;
-  totalValue: string;
-  currentValue: string;
-  currentLabel?: string;
+  Value: string;
+  label: string;
+  Value2: string;
+  label2: string;
   remaining?: string;
   remainingLabel?: string;
   color?: string;
@@ -15,19 +16,48 @@ interface ProjectInfoCardProps {
 
 
 
-const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, totalValue, currentValue, currentLabel, remaining, remainingLabel, color }) => {
+const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, label,Value, Value2, label2, remaining, remainingLabel, color }) => {
   const parsedRemaining = remaining ? parseFloat(remaining) : null;
   
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6">{title}</Typography>
-        <BorderLinearProgress variant="determinate" value={50} />
+    <Card className={styles.projectCard}>
+      <CardContent sx={{boxShadow:"none"}}>
+      <Grid container spacing={2} alignItems="center">
+          <Grid sm={6} item >
+            <Typography variant="h5">{title}</Typography>
+          </Grid>
+          <Grid sm={6} item>
+          <BorderLinearProgress variant="determinate" value={50} />
+          </Grid>
+          <Grid sm={6} item >
+            <Typography className={styles.commonText}>All time</Typography>
+          </Grid>
+          <Grid sm={6}  item>
+          <Typography  className={styles.remainTex}>25% remaining</Typography>
+          </Grid>
+          <Grid sm={5} item>
+           <Box className={styles.valueBox}>
+            <Typography className={styles.value}>{Value}</Typography>
+            <Typography className={styles.valueDesc}>{label}</Typography>
+           </Box>
+          </Grid>
+          <Grid sm={2} item></Grid>
+          <Grid sm={5} item>
+          <Box className={styles.valueBox}>
+            <Typography  sx={{color:color, fontWeight:600,fontSize:"16px"}} className={styles.value}>{Value2}</Typography>
+            <Typography className={styles.valueDesc}>{label2}</Typography>
+           </Box>
+          </Grid>
+
+      </Grid>
+
+
+        {/* <BorderLinearProgress variant="determinate" value={50} />
         <Typography variant="body2" color="textSecondary">All time</Typography>
         <Box my={2}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h4">{totalValue}</Typography>
-            <Typography variant="body2" color="textSecondary">{currentLabel}</Typography>
+            <Typography variant="body2" color="textSecondary">{label2}</Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6" sx={{ color }}>{currentValue}</Typography>
@@ -38,7 +68,7 @@ const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, totalValue, cu
             <Typography variant="h6" sx={{ color: parsedRemaining !== null && parsedRemaining < 0 ? 'red' : 'inherit' }}>{remainingLabel}</Typography>
             <Typography variant="h6" sx={{ color: parsedRemaining !== null && parsedRemaining < 0 ? 'red' : 'inherit' }}>{remaining}</Typography>
           </Box>
-        )}
+        )} */}
       </CardContent>
     </Card>
   );
