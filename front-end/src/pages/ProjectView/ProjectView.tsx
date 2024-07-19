@@ -20,7 +20,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
-import { ProjectDetailsBox, ProjectInfoCard } from "../../components";
+import { EmployeesTable, IncomeTable, ProjectDetailsBox, ProjectInfoCard } from "../../components";
 import styles from "./ProjectView.module.scss";
 import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
@@ -161,7 +161,19 @@ const ProjectView = () => {
     <Tab>Expenses</Tab>
     <Tab>Employees</Tab>
   </TabsList>
-  <TabPanel value={0}>First page</TabPanel>
+  <TabPanel value={0}>
+<IncomeTable
+ handleClick={(mode: string, expenseId: string) => {}}
+ isFiltered={false}
+ onClearFilters={() => {}}
+ onFilterDrawerOpen={() => {}}
+ onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
+ onChangeRowsPerPage={(event: any) => {}}
+ page={1}
+ rowsPerPage={5}
+/>
+
+  </TabPanel>
   <TabPanel value={1}>
     <ExpensesTable
     handleClick={(mode: string, expenseId: string) => {}}
@@ -175,7 +187,20 @@ const ProjectView = () => {
     
   />
   </TabPanel>
-  <TabPanel value={2}>Third page</TabPanel>
+  <TabPanel value={2}>
+
+<EmployeesTable
+  handleClick={(mode: string, expenseId: string) => {}}
+  isFiltered={false}
+  onClearFilters={() => {}}
+  onFilterDrawerOpen={() => {}}
+  onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
+  onChangeRowsPerPage={(event: any) => {}}
+  page={1}
+  rowsPerPage={5}
+/>
+
+  </TabPanel>
 </Tabs>
       </Box>
     </Box>

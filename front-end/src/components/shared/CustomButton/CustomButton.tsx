@@ -16,7 +16,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   text,
   variant,
   size = 'medium',
-  backgroundColor ,
+  backgroundColor,
   color = 'white',
   height = '2.125rem',
   textTransform = 'capitalize',
@@ -32,7 +32,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         height: height,
         textTransform: textTransform,
         borderRadius: "5px",
-        border: "1px solid #437EF7",
+        border: variant === 'outlined' ? "1px solid #437EF7" : "none",
       }}
       onClick={onClick}
     >

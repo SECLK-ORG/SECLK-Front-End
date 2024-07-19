@@ -8,5 +8,5 @@ export {default  as PositionsTable} from './PositionsCard/PositionsTable';
 export {default  as ProjectCategoriesTable} from './ProjectCategoriesCard/ProjectCategoriesTable';
 export {default  as ProjectDetailsBox} from './ProjectDetailsBox/ProjectDetailsBox';
 export {default  as ProjectInfoCard} from './ProjectInfoCard/ProjectInfoCard';
-
-
+export {default  as EmployeesTable} from './ProjectEmployeesTable/ProjectEmployeesTable';
+export {default  as IncomeTable} from './IncomeTable/IncomeTable';

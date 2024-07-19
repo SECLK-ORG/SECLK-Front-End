@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import ProjectTable from '../../components/ProjectTable/ProjectTable';
-import FilterDrawerCategory from '../../components/FilterDrawer/FilterDrawerCategory';
-import { CustomButton, InfoCard } from '../../components';
+import React, { useEffect, useState } from 'react'
+import { CustomButton, FilterDrawerCategory, InfoCard } from '../../components';
+import { Grid, Typography } from '@mui/material';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
-import { Button, Grid, Typography } from '@mui/material';
-import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
-const Projects: React.FC = () => {
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import EmployeeTable from '../../components/EmployeeTable/EmployeeTable';
+const Employees = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
@@ -90,17 +89,17 @@ const Projects: React.FC = () => {
 
   const handleClick = (mode:string,id: string) => {
     if(SCREEN_MODES.VIEW === mode){
-      console.log('View clicked');
-      navigate(`/projects/${id}`);
+      // console.log('View clicked');
+      navigate(`/employees/${id}`);
     }
 console.log(mode,id)
   }
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between',padding:"30px"}}>
-        <Typography sx={{fontWeight:"700",fontSize:"30px"}}>Projects</Typography>
+        <Typography sx={{fontWeight:"700",fontSize:"30px"}}>Employees</Typography>
         <CustomButton
-        text="Create Project"
+        text="Create Employee"
         size="large"
         backgroundColor="#437EF7"
         color="white"
@@ -111,28 +110,26 @@ console.log(mode,id)
         }}
       />
 
-      </div>
-      <div>
+
+</div> 
+<div>
       <Grid container spacing={2} sx={{justifyContent:"space-evenly",paddingInline:"30px" }}>
-        <Grid item xs={12} sm={12} md={6}  xl={3} lg={6} >
-          <InfoCard title="Total Projects" value={12} icon={EmojiObjectsOutlinedIcon } />
+        <Grid item xs={12} sm={12} md={6}  xl={4} lg={4} >
+          <InfoCard title="Total Employees" value={12} icon={EmojiObjectsOutlinedIcon } />
         </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Active Projects" value={4} icon={WorkOutlineOutlinedIcon} />
+        <Grid item xs={12} sm={12} md={6} xl={4} lg={4}>
+          <InfoCard title="Active Employees" value={4} icon={WorkOutlineOutlinedIcon} />
         </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Projects On-hold" value={5} icon={PauseCircleOutlineOutlinedIcon} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Inactive Projects" value={1} icon={BlockOutlinedIcon} />
+        <Grid  item xs={12} sm={12} md={6} xl={4} lg={4}>
+          <InfoCard title="Inactive Employees" value={5} icon={PauseCircleOutlineOutlinedIcon} />
         </Grid>
       </Grid>
       </div>
-      <ProjectTable
-        page={page}
+
+      <EmployeeTable page={page}
         rowsPerPage={rowsPerPage}
-        categoryFilters={categoryFilters}
-        statusFilters={statusFilters}
+        // categoryFilters={categoryFilters}
+        // statusFilters={statusFilters}
         isFiltered={isFiltered}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
@@ -140,8 +137,9 @@ console.log(mode,id)
         onClearFilters={handleClearFilters}
         handleClick={handleClick}
       />
-      <FilterDrawerCategory
-        type='Category'
+
+<FilterDrawerCategory
+        type="Position"
         filterDrawerOpen={filterDrawerOpen}
         categoryFilters={categoryFilters}
         statusFilters={statusFilters}
@@ -151,8 +149,10 @@ console.log(mode,id)
         categories={["US", "UK", "Local", "Fiverr"]}
         statuses={["Active", "Inactive"]}
       />
-    </div>
-  );
-};
 
-export default Projects;
+</div>
+  
+  )
+}
+
+export default Employees

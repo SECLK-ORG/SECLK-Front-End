@@ -16,6 +16,7 @@ interface FilterDrawerProps {
   onStatusChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   categories: string[];
   statuses: string[];
+  type: string;
 }
 
 const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
@@ -27,6 +28,7 @@ const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
   onStatusChange,
   categories,
   statuses,
+  type
 }) => {
   return (
     <Drawer
@@ -58,7 +60,7 @@ const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
                 fontSize: '1rem'
               }}
             >
-              Category
+              {type}
             </Typography>
             <Divider />
             <FormControl component="fieldset" sx={{ paddingInline: "20px", marginBottom: "1rem" }}>

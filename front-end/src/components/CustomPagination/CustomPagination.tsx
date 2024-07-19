@@ -66,7 +66,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
           )}
         />
         <Box sx={{ justifyContent:"flex-end" }}>
-        <FormControl variant="outlined" sx={{ minWidth: 80,maxHeight:50}}>
+        <FormControl variant="outlined" sx={{ minWidth: 80,maxHeight:60}}>
           <Select
             labelId="rows-per-page-label"
             value={rowsPerPage}
