@@ -20,18 +20,29 @@ interface Employee {
 interface EmployeeTableProps {
   page: number;
   rowsPerPage: number;
+  categoryFilters: { [key: string]: boolean };
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
   onChangeRowsPerPage: (event: any) => void;
   onFilterDrawerOpen: () => void;
   onClearFilters: () => void;
   isFiltered: boolean;
   handleClick: (mode: string, employeeId: string) => void;
+  statusFilters: { [key: string]: boolean };
 }
 
 const employees: Employee[] = [
   { name: 'Chaminda Silva', email: 'chaminda.silva@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 77 1234567', position: 'Software Engineer', status: 'Active' },
   { name: 'Nimal Perera', email: 'nimal.perera@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 71 2345678', position: 'Software Engineer', status: 'Active' },
   { name: 'Malini Fernando', email: 'malini.fernando@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 3456789', position: 'Software Engineer', status: 'Active' },
+  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
+  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
+  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
+  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
+  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
+  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
+  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
+  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
+  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
   { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
   { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
 ];
@@ -55,6 +66,8 @@ const getStatusStyles = (status: 'Active' | 'Inactive') => {
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
   page,
   rowsPerPage,
+  categoryFilters,
+  statusFilters,
   onChangePage,
   onChangeRowsPerPage,
   onFilterDrawerOpen,
@@ -62,6 +75,20 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   isFiltered,
   handleClick
 }) => {
+  // Filter employees based on position and status filters
+  const filteredEmployees = employees
+    .filter((employee) =>
+      (categoryFilters['Software Engineer'] && employee.position === 'Software Engineer') ||
+      (categoryFilters['UX Engineer'] && employee.position === 'UX Engineer') ||
+      (categoryFilters['QA Engineer'] && employee.position === 'QA Engineer') ||
+      (!categoryFilters['Software Engineer'] && !categoryFilters['UX Engineer'] && !categoryFilters['QA Engineer'])
+    )
+    .filter((employee) =>
+      (statusFilters['Active'] && employee.status === 'Active') ||
+      (statusFilters['Inactive'] && employee.status === 'Inactive') ||
+      (!statusFilters['Active'] && !statusFilters['Inactive'])
+    );
+
   return (
     <div style={{ margin: "1rem", padding: "1rem" }}>
       <TableContainer component={Paper}>
@@ -80,25 +107,23 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             style={{ marginRight: '10px' }}
           />
           <div>
-          {isFiltered && (
+            {isFiltered && (
+              <CustomButton
+                variant="contained"
+                style={{ background: "#437EF7", color: "white", marginInline: "1rem" }}
+                onClick={onClearFilters}
+              >
+                Clear Filters
+              </CustomButton>
+            )}
             <CustomButton
-              variant="contained"
-              
-              style={{  background: "#437EF7", color: "white", marginInline: "1rem"}}
-              onClick={onClearFilters}
+              variant="outlined"
+              endIcon={<FilterAltOutlinedIcon />}
+              style={{ textTransform: 'full-width', backgroundColor: 'white' }}
+              onClick={onFilterDrawerOpen}
             >
-              Clear Filters
+              Filters
             </CustomButton>
-          )}
-          <CustomButton
-            variant="outlined"
-            endIcon={<FilterAltOutlinedIcon />}
-            style={{ textTransform: 'full-width', backgroundColor: 'white' }}
-            onClick={onFilterDrawerOpen}
-          >
-            Filters
-          </CustomButton>
-      
           </div>
         </div>
         <Table>
@@ -114,7 +139,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {employees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
+            {filteredEmployees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
               <TableRow key={index}>
                 <TableCell>{employee.name}</TableCell>
                 <TableCell>{employee.email}</TableCell>
@@ -164,12 +189,16 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-          <CustomPagination
-                      count={Math.ceil(employees.length / rowsPerPage)}
-                      page={page}
-                      onChangePage={onChangePage}
-                      rowsPerPage={rowsPerPage}
-                      onChangeRowsPerPage={onChangeRowsPerPage} filteredProjects={[]}          />
+          
+        <CustomPagination
+  count={Math.ceil(filteredEmployees.length / rowsPerPage)}
+  page={page}
+  onChangePage={onChangePage}
+  filteredProjects={filteredEmployees}
+  rowsPerPage={rowsPerPage}
+  onChangeRowsPerPage={onChangeRowsPerPage}
+/>
+         
         </Box>
       </TableContainer>
     </div>

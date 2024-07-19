@@ -108,13 +108,17 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
             ))}
           </TableBody>
         </Table>
+        <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
         <CustomPagination
                   count={Math.ceil(employees.length / rowsPerPage)}
                   page={page}
                   onChangePage={onChangePage}
                   rowsPerPage={rowsPerPage}
-                  onChangeRowsPerPage={onChangeRowsPerPage} filteredProjects={[]}        />
+                  onChangeRowsPerPage={onChangeRowsPerPage}
+                   filteredProjects={[]}        />
+                    </Box>
       </TableContainer>
+    
     </div>
   );
 };
