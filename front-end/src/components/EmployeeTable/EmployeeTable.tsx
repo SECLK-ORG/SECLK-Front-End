@@ -92,7 +92,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   return (
     <div style={{ margin: "1rem", padding: "1rem" }}>
       <TableContainer component={Paper}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', borderBottom: "1px solid #e0e0e0" }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', border: "1px solid #dee2e6",borderTopLeftRadius:"8px",borderTopRightRadius:"8px" }}>
           <TextField
             variant="outlined"
             placeholder="Search"

@@ -75,7 +75,12 @@ const ProjectView = () => {
     navigate(-1);
   };
   return (
-    <Box p={3}>
+    <Box  m={1} 
+    p={2}
+    sx={{
+      border: "1px solid #E0E0E0",
+      borderRadius: "8px",
+    }}>
       <Box
         sx={{
           display: "flex",

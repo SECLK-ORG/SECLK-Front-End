@@ -115,7 +115,7 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                   onChangePage={onChangePage}
                   rowsPerPage={rowsPerPage}
                   onChangeRowsPerPage={onChangeRowsPerPage}
-                   filteredProjects={[]}        />
+                   filteredProjects={employees}        />
                     </Box>
       </TableContainer>
     

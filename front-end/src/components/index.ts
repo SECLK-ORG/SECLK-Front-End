@@ -10,3 +10,8 @@ export {default  as ProjectDetailsBox} from './ProjectDetailsBox/ProjectDetailsB
 export {default  as ProjectInfoCard} from './ProjectInfoCard/ProjectInfoCard';
 export {default  as EmployeesTable} from './ProjectEmployeesTable/ProjectEmployeesTable';
 export {default  as IncomeTable} from './IncomeTable/IncomeTable';
+export {default  as EmployeeDetailsBox} from './EmployeeDetailsBox/EmployeeDetailsBox';
+export {default  as ProjectMiniCard} from './ProjectMiniCard/ProjectMiniCard';
+export {default  as ExpensesTable} from './ExpensesTable/ExpensesTable';
+export {default  as EmployeeTable} from './EmployeeTable/EmployeeTable';
+export {default  as PaymentHistoryTable} from './PaymentHistoryTable/PaymentHistoryTable';

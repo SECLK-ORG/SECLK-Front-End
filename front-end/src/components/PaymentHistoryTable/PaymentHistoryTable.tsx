@@ -1,21 +1,23 @@
+// PaymentHistoryTable.tsx
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, Typography,
-  TableCell
+  IconButton, TextField, InputAdornment, Box, TableCell
 } from '@mui/material';
-import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material';
+import { Visibility, Edit, Search } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 
-interface Income {
+interface PaymentHistory {
+  project: string;
+  category: string;
   amount: string;
+  description: string;
   invoiceNumber: string;
-  receivedBy: string;
   date: string;
 }
 
-interface IncomeTableProps {
+interface PaymentHistoryTableProps {
   page: number;
   rowsPerPage: number;
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
@@ -23,18 +25,18 @@ interface IncomeTableProps {
   onFilterDrawerOpen: () => void;
   onClearFilters: () => void;
   isFiltered: boolean;
-  handleClick: (mode: string, incomeId: string) => void;
+  handleClick: (mode: string, invoiceNumber: string) => void;
 }
 
-const incomes: Income[] = [
-  { amount: '$200', invoiceNumber: '100 200 300', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$25', invoiceNumber: '101 202 303', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$100', invoiceNumber: '102 203 304', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$150', invoiceNumber: '103 204 305', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$250', invoiceNumber: '104 205 306', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
+const payments: PaymentHistory[] = [
+  { project: 'ZenSpace Mobile App', category: 'Salary', amount: '$200', description: 'Monthly Payment', invoiceNumber: '100 200 300', date: '23/08/2023' },
+  { project: 'ZenSpace Mobile App', category: 'Salary', amount: '$25', description: 'Monthly Payment', invoiceNumber: '101 202 303', date: '23/07/2023' },
+  { project: 'Navigation Overhaul', category: 'Salary', amount: '$100', description: 'Monthly Payment', invoiceNumber: '102 203 304', date: '23/06/2023' },
+  { project: 'Navigation Overhaul', category: 'Salary', amount: '$150', description: 'Monthly Payment', invoiceNumber: '103 204 305', date: '23/05/2023' },
+  { project: 'Navigation Overhaul', category: 'Salary', amount: '$250', description: 'Monthly Payment', invoiceNumber: '104 205 306', date: '23/04/2023' },
 ];
 
-const IncomeTable: React.FC<IncomeTableProps> = ({
+const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
   page,
   rowsPerPage,
   onChangePage,
@@ -71,7 +73,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
               </IconButton>
             )}
             <CustomButton
-              text='Add Income'
+              text='Add Payment'
               backgroundColor='#437EF7'
               color='white'
               variant='contained'
@@ -82,25 +84,29 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Project</TableCell>
+              <TableCell>Category</TableCell>
               <TableCell>Amount</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Invoice Number</TableCell>
-              <TableCell>Received By</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {incomes.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((income, index) => (
+            {payments.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((payment, index) => (
               <TableRow key={index}>
-                <TableCell>{income.amount}</TableCell>
-                <TableCell>{income.invoiceNumber}</TableCell>
-                <TableCell>{income.receivedBy}</TableCell>
-                <TableCell>{income.date}</TableCell>
+                <TableCell>{payment.project}</TableCell>
+                <TableCell>{payment.category}</TableCell>
+                <TableCell>{payment.amount}</TableCell>
+                <TableCell>{payment.description}</TableCell>
+                <TableCell>{payment.invoiceNumber}</TableCell>
+                <TableCell>{payment.date}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => { handleClick('VIEW', income.invoiceNumber) }}>
+                  <IconButton onClick={() => { handleClick('VIEW', payment.invoiceNumber) }}>
                     <Visibility />
                   </IconButton>
-                  <IconButton>
+                  <IconButton onClick={() => { handleClick('EDIT', payment.invoiceNumber) }}>
                     <Edit />
                   </IconButton>
                 </TableCell>
@@ -109,18 +115,18 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-
-        <CustomPagination
-                  count={Math.ceil(incomes.length / rowsPerPage)}
-                  page={page}
-                  onChangePage={onChangePage}
-                  rowsPerPage={rowsPerPage}
-                  onChangeRowsPerPage={onChangeRowsPerPage} 
-                  filteredProjects={incomes}        />
-                    </Box>
+          <CustomPagination
+            count={Math.ceil(payments.length / rowsPerPage)}
+            page={page}
+            onChangePage={onChangePage}
+            rowsPerPage={rowsPerPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            filteredProjects={payments} // Adjust this if necessary
+          />
+        </Box>
       </TableContainer>
     </div>
   );
 };
 
-export default IncomeTable;
+export default PaymentHistoryTable;
