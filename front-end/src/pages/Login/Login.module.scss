@@ -1,0 +1,82 @@
+.container {
+    height: 100vh;
+    display: flex;
+  }
+  
+  .loginSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+  }
+  
+  .title {
+    color: #3e8bff;
+    font-size: 2em;
+    margin-bottom: 0.5em;
+  }
+  .forgotPassword{
+margin-top: 1rem;
+    cursor: pointer;
+    text-align: center;
+  }
+  .subtitle {
+    color: #333;
+    font-weight: 600 !important;
+    font-size: 1.5rem !important;
+
+    margin-bottom: 1.5em;
+  }
+  
+  .form {
+    width: 80%;
+  }
+  
+  .button {
+    margin-top: 1em;
+    margin-bottom: 1rem;
+
+  }
+  
+  .imageSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(133.25% 177.67% at 11.15% -22.64%, #4C02F1 0%, #4B02EF 1%, #3903C4 13%, #29039E 25%, #1D0380 38%, #130468 51%, #0C0457 65%, #07044D 81%, #06044A 100%);
+    @media (max-width: 700px) {
+        display: none;
+      }
+  }
+  
+  .image {
+    // width: 100%;
+    object-fit: cover;
+  }
+  
+  .shape1 {
+    width: 553.74px;
+    height: 131.21px;
+    position: absolute;
+    top: 895.05px;
+    left: -252px;
+    gap: 0px;
+    border-radius: 105.53px 0px 0px 0px;
+    opacity: 0;
+    transform: rotate(41.1deg);
+    background-color: #07044D;
+  }
+  
+  .shape2 {
+    width: 596.73px;
+    height: 141.4px;
+    position: absolute;
+    top: 912.32px;
+    left: -287px;
+    gap: 0px;
+    border-radius: 105.53px 0px 0px 0px;
+    opacity: 0;
+    transform: rotate(41.1deg);
+    background-color: #38B6FF;
+  }

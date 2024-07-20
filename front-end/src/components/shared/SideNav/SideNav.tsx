@@ -21,11 +21,13 @@ import { logo, flag ,settings} from '../../../assets/images/';
 import { useNavigate } from 'react-router-dom';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { useEffect } from 'react';
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
-  const [selectedItem, setSelectedItem] = React.useState<string>('Dashboard');
+  const [selectedItem, setSelectedItem] = React.useState<string>('Projects');
   const navigate = useNavigate();
+
 
   const handleNavigate = (value: string) => {
     setSelectedItem(value);

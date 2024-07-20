@@ -350,13 +350,13 @@ import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
   }));
   export const CustomButton = styled(Button)(({ theme }) => ({
     textTransform: 'none',
-    backgroundColor: 'white',
-    color: '#000000',
+    backgroundColor: '#437EF7',
+    color: '#ffffff',
     borderColor: '#e0e0e0',
     '&:hover': {
       backgroundColor: '#437EF7',
       borderColor: '#437EF7',
-      color:"#437EF7"
+      color:"#ffffff"
     },
     '&.Mui-disabled': {
       backgroundColor: '#e0e0e0',
