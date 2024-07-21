@@ -138,7 +138,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             <CustomButton
               variant="contained"
               
-              style={{  background: "#437EF7", color: "white", marginInline: "1rem"}}
+              style={{ background: "#437EF7", color: "black", marginInline: "1rem"}}
               onClick={onClearFilters}
             >
               Clear Filters
@@ -146,8 +146,8 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
           )}
           <CustomButton
             variant="outlined"
+            sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
             endIcon={<FilterAltOutlinedIcon />}
-            style={{ textTransform: 'full-width', backgroundColor: 'white' }}
             onClick={onFilterDrawerOpen}
           >
             Filters

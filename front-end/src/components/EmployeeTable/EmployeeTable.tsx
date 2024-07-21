@@ -110,7 +110,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             {isFiltered && (
               <CustomButton
                 variant="contained"
-                style={{ background: "#437EF7", color: "white", marginInline: "1rem" }}
+                sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
                 onClick={onClearFilters}
               >
                 Clear Filters
@@ -119,7 +119,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             <CustomButton
               variant="outlined"
               endIcon={<FilterAltOutlinedIcon />}
-              style={{ textTransform: 'full-width', backgroundColor: 'white' }}
+              sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
               onClick={onFilterDrawerOpen}
             >
               Filters

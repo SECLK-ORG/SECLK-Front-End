@@ -15,3 +15,5 @@ export {default  as ProjectMiniCard} from './ProjectMiniCard/ProjectMiniCard';
 export {default  as ExpensesTable} from './ExpensesTable/ExpensesTable';
 export {default  as EmployeeTable} from './EmployeeTable/EmployeeTable';
 export {default  as PaymentHistoryTable} from './PaymentHistoryTable/PaymentHistoryTable';
+export {default  as CreateProjectModal} from './CreateProjectModal/CreateProjectModal';
+export {default  as CreateEmployeeModal} from './CreateEmployeeModal/CreateEmployeeModal';

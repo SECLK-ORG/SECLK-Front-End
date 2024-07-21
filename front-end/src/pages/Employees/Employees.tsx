@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CustomButton, InfoCard } from '../../components';
+import { CreateEmployeeModal, CustomButton, InfoCard } from '../../components';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
@@ -13,6 +13,7 @@ const Employees = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [positionFilters, setPositionFilters] = useState<{ [key: string]: boolean }>({
     'Software Engineer': false,
     'UX Engineer': false,
@@ -92,7 +93,13 @@ const Employees = () => {
     }
     console.log(mode, id);
   };
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: "30px" }}>
@@ -105,7 +112,7 @@ const Employees = () => {
           height="2.5rem"
           textTransform="capitalize"
           onClick={() => {
-            console.log('Button clicked');
+            handleModalOpen()
           }}
         />
       </div>
@@ -147,6 +154,7 @@ const Employees = () => {
         categories={["Software Engineer", "UX Engineer", "QA Engineer"]}
         statuses={["Active", "Inactive"]}
       />
+      <CreateEmployeeModal open={modalOpen} onClose={handleModalClose} />
     </div>
   );
 };

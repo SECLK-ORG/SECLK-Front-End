@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProjectTable from '../../components/ProjectTable/ProjectTable';
 import FilterDrawerCategory from '../../components/FilterDrawer/FilterDrawerCategory';
-import { CustomButton, InfoCard } from '../../components';
+import { CreateProjectModal, InfoCard } from '../../components';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
@@ -9,9 +9,11 @@ import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import { Button, Grid, Typography } from '@mui/material';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
+import { CustomButton } from '../../assets/theme/theme';
 const Projects: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
   const [categoryFilters, setCategoryFilters] = useState<{ [key: string]: boolean }>({
     US: false,
@@ -93,23 +95,30 @@ const Projects: React.FC = () => {
       console.log('View clicked');
       navigate(`/projects/${id}`);
     }
+
+  
 console.log(mode,id)
   }
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between',padding:"30px"}}>
         <Typography sx={{fontWeight:"700",fontSize:"30px"}}>Projects</Typography>
         <CustomButton
-        text="Create Project"
         size="large"
-        backgroundColor="#437EF7"
-        color="white"
-        height="2.5rem"
-        textTransform="capitalize"
         onClick={() => {
-          console.log('Button clicked');
+          handleModalOpen();
         }}
-      />
+      >
+        Create Project
+        </CustomButton>
 
       </div>
       <div>
@@ -151,6 +160,7 @@ console.log(mode,id)
         categories={["US", "UK", "Local", "Fiverr"]}
         statuses={["Active", "Inactive"]}
       />
+        <CreateProjectModal open={modalOpen} onClose={handleModalClose} />
     </div>
   );
 };
