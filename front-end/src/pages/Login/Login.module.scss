@@ -56,27 +56,39 @@ margin-top: 1rem;
   }
   
   .shape1 {
-    width: 553.74px;
-    height: 131.21px;
+     width: 503.74px;
+     height: 180.21px;
     position: absolute;
-    top: 895.05px;
-    left: -252px;
+    bottom: 0;
+    left: 0;
     gap: 0px;
-    border-radius: 105.53px 0px 0px 0px;
-    opacity: 0;
-    transform: rotate(41.1deg);
-    background-color: #07044D;
+    @media (max-width: 700px) {
+        // display: none;
+        bottom: -12px;
+        left: 0;
+        gap: 0px;
+        
+      }
+      @media (min-width: 700px) and (max-width: 900px) {
+        display: none;
+      }
   }
   
   .shape2 {
-    width: 596.73px;
-    height: 141.4px;
+    width: 576.73px;
+    height: 163.21px;
     position: absolute;
-    top: 912.32px;
-    left: -287px;
+    left: 0;
+    bottom: 0;
     gap: 0px;
-    border-radius: 105.53px 0px 0px 0px;
-    opacity: 0;
-    transform: rotate(41.1deg);
-    background-color: #38B6FF;
+    @media (max-width: 700px) {
+        bottom: -12px;
+        left: 0;
+        gap: 0px;
+        
+      }
+      @media (min-width: 700px) and (max-width: 900px) {
+        display: none;
+
+      }
   }
