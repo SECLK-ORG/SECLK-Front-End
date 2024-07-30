@@ -71,14 +71,14 @@ const ResetPassWord: React.FC = () => {
                 
             />
         <StyledTextField
-              label="Enter Password"
+              label="Enter New Password"
               type="password"
               variant="outlined"
               fullWidth
               margin="normal"
             />
         <StyledTextField
-              label="Enter Confirm Password"
+              label="Confirm  New Password"
               type="password"
               variant="outlined"
               fullWidth
