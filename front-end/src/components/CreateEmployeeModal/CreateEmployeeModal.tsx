@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  Modal, Box, Button, TextField, MenuItem, Select, InputLabel, FormControl, Grid,
+  Modal, Box, Button, MenuItem, Select, InputLabel, FormControl, Grid,
   Divider,
   Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { CustomButton } from '../../assets/theme/theme';
+import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 
 interface CreateEmployeeModalProps {
   open: boolean;
@@ -51,7 +51,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Employee Name"
                 required
@@ -59,7 +59,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
               />
             </Grid>
             <Grid item xs={6} md={3}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Start Date"
                 type="date"
@@ -69,7 +69,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
               />
             </Grid>
             <Grid item xs={6} md={3}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Position"
                 required
@@ -89,7 +89,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
               </FormControl>
             </Grid>
             <Grid item xs={6} md={3}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Hourly Rate"
                 required
@@ -103,7 +103,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Contact Email"
                 required
@@ -111,7 +111,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Contact Number"
                 required
@@ -119,7 +119,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({ open, onClose
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <StyledTextField
                 fullWidth
                 label="Work Location"
                 required

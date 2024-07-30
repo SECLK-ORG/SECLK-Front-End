@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, Typography, TableCell
+  IconButton, InputAdornment, Box, Typography, TableCell
 } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Visibility, Edit, Search } from '@mui/icons-material';
-import { CustomButton } from '../../assets/theme/theme';
+import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CustomPagination from '../CustomPagination/CustomPagination';
 
 interface Employee {
@@ -93,7 +93,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
     <div style={{ margin: "1rem", padding: "1rem" }}>
       <TableContainer component={Paper}>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', border: "1px solid #dee2e6",borderTopLeftRadius:"8px",borderTopRightRadius:"8px" }}>
-          <TextField
+          <StyledTextField
             variant="outlined"
             placeholder="Search"
             InputProps={{

@@ -1,8 +1,9 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, Typography,
-  TableCell
+  IconButton, InputAdornment, Box, Typography,
+  TableCell,
+  TextField
 } from '@mui/material';
 import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';

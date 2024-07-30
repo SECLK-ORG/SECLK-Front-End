@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  Modal, Box, Button, TextField, MenuItem, Select, InputLabel, FormControl, Grid,
+  Modal, Box, Button, MenuItem, Select, InputLabel, FormControl, Grid,
   Divider,
   Typography
 } from '@mui/material';
-import { CustomButton } from '../../assets/theme/theme';
+import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
 interface CreateProjectModalProps {
   open: boolean;
@@ -49,14 +49,14 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }
       
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
-            <TextField
+            <StyledTextField
               fullWidth
               label="Project Name"
               required
             />
           </Grid>
           <Grid item xs={6} md={4}>
-            <TextField
+            <StyledTextField
               fullWidth
               label="Start Date"
               type="date"
@@ -65,7 +65,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }
             />
           </Grid>
           <Grid item xs={6}md={4}>
-            <TextField
+            <StyledTextField
               fullWidth
               label="End Date"
               type="date"
@@ -86,13 +86,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }
             </FormControl>
           </Grid>
           <Grid item xs={6} md={4}>
-            <TextField
+            <StyledTextField
               fullWidth
               label="Client Contact Number"
             />
           </Grid>
           <Grid item xs={6} md={4}>
-            <TextField
+            <StyledTextField
               fullWidth
               label="Client Contact Email"
             />

@@ -2,11 +2,12 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, TableCell
+  IconButton, InputAdornment, Box, TableCell
 } from '@mui/material';
 import { Visibility, Edit, Search } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
+import { StyledTextField } from '../../assets/theme/theme';
 
 interface PaymentHistory {
   project: string;
@@ -50,7 +51,7 @@ const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
     <div>
       <TableContainer component={Paper}>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', borderBottom: "1px solid #e0e0e0" }}>
-          <TextField
+          <StyledTextField
             variant="outlined"
             placeholder="Search"
             InputProps={{

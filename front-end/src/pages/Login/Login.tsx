@@ -1,10 +1,10 @@
 import React from 'react';
-import { Grid, TextField, Button, Typography, Box } from '@mui/material';
+import { Grid, Button, Typography, Box } from '@mui/material';
 import styles from './Login.module.scss';
 import background from '../../assets/images/background.png'; // Ensure the path is correct
 import { useNavigate } from 'react-router-dom';
 import {logo} from '../../assets/images';
-import { CustomButton } from '../../assets/theme/theme';
+import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import { Rectangle1,Rectangle2 } from '../../assets/images';
 const Login: React.FC = () => {
 const navigate =useNavigate();
@@ -31,13 +31,13 @@ const navigate =useNavigate();
             Welcome Back!
           </Typography>
         
-            <TextField
+            <StyledTextField
               label="Enter Email"
               variant="outlined"
               fullWidth
               margin="normal"
             />
-            <TextField
+            <StyledTextField
               label="Enter Password"
               type="password"
               variant="outlined"
@@ -61,6 +61,7 @@ const navigate =useNavigate();
             </Box>
     
         </Grid>
+        
         <Grid item xs={12} md={6} className={styles.imageSection}>
           <img src={background} alt="Laptop" className={styles.image} />
         </Grid>

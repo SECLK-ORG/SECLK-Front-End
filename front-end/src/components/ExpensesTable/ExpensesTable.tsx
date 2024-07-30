@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, Typography,
+  IconButton, InputAdornment, Box, Typography,
   TableCell
 } from '@mui/material';
 import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material';
@@ -9,6 +9,7 @@ import { Pagination } from '@mui/material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import { StyledTextField } from '../../assets/theme/theme';
 
 interface Expense {
   name: string;
@@ -94,7 +95,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     <div style={{  }}>
       <TableContainer component={Paper}>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem',borderBottom:"1px solid #e0e0e0" }}>
-          <TextField
+          <StyledTextField
             variant="outlined"
             placeholder="Search"
             InputProps={{

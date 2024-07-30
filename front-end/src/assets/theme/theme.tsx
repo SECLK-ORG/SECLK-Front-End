@@ -186,7 +186,7 @@ import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
   
   export const StyledTextField = styled(TextField)(() => ({
     "& .MuiInputBase-root": {
-      height: "2.5rem",
+      
       backgroundColor: "#ffffff",
       color: "#000000",
       borderColor: "#e0e0e0",

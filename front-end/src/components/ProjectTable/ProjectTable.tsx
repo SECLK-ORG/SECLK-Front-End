@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, TextField, InputAdornment, Box, Pagination, PaginationItem,
+  IconButton, InputAdornment, Box, Pagination, PaginationItem,
   Typography
 } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
