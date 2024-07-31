@@ -32,7 +32,6 @@ const ResetPassWord: React.FC = () => {
             try {
 
                 const decodedToken: any = jwtDecode(token);
-                console.log("Decoded Token:", decodedToken);
 
                 setResetData(prevState => ({
                     ...prevState,
@@ -58,12 +57,10 @@ const ResetPassWord: React.FC = () => {
     const handleResetPassword = async() => {
         setResetBtnLoading(true)
         setHelperText(true);
-        console.log("form",resetData)
        
         const [validateData, isValid] = await validateFormData(resetData);
         setResetData(validateData);
         if(resetData.password.value!==resetData.confirmPassword.value){
-            console.log("insede",resetData.password.value!==resetData.confirmPassword.value)
             setResetData({
                 ...resetData,
                 confirmPassword:{
@@ -81,14 +78,11 @@ const ResetPassWord: React.FC = () => {
             password: resetData.password.value,
             token: resetData.token.value
           }
-          console.log("[ResetPayload]",payload)
           UserService.resetPassword(payload).then((result)=>{
-            console.log("result",result)
             showSuccessToast(result.data.message)
             navigate('/')
 
           }).catch((error)=>{
-            console.log("error",error)
             showErrorToast(error)
           })
 
