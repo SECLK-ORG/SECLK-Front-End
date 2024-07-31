@@ -18,6 +18,7 @@ import {
     TextField,
     LinearProgress,
     linearProgressClasses,
+    CircularProgress,
   } from "@mui/material";
   import "../theme/constants.scss";
   import { Tabs } from '@mui/base/Tabs';
@@ -25,6 +26,7 @@ import { TabsList as BaseTabsList } from '@mui/base/TabsList';
 import { TabPanel as BaseTabPanel } from '@mui/base/TabPanel';
 import { buttonClasses } from '@mui/base/Button';
 import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
   const primaryFontSize = 14;
 
@@ -348,7 +350,39 @@ import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
       backgroundColor: "#000000",
     },
   }));
-  export const CustomButton = styled(Button)(({ theme }) => ({
+  // export const CustomButton = styled(Button)(({ theme }) => ({
+  //   textTransform: 'none',
+  //   backgroundColor: '#437EF7',
+  //   color: '#ffffff',
+  //   borderColor: '#e0e0e0',
+  //   '&:hover': {
+  //     backgroundColor: '#437EF7',
+  //     borderColor: '#437EF7',
+  //     color:"#ffffff"
+  //   },
+  //   '&.Mui-disabled': {
+  //     backgroundColor: '#e0e0e0',
+  //     color: '#6b6b6b',
+  //   },
+  // }));
+  interface CustomButtonProps {
+    loading?: boolean;
+    children: React.ReactNode;
+    [key: string]: any; // to allow other props like onClick, variant, etc.
+  }
+  
+  export const CustomButton = styled(({ loading = false, children, ...props }: CustomButtonProps) => (
+    <Button {...props} disabled={loading}>
+      {loading ? (
+        <>
+          <CircularProgress size={24} style={{ marginRight: 8 }} />
+          Loading...
+        </>
+      ) : (
+        children
+      )}
+    </Button>
+  ))(({ theme }) => ({
     textTransform: 'none',
     backgroundColor: '#437EF7',
     color: '#ffffff',
@@ -356,13 +390,25 @@ import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
     '&:hover': {
       backgroundColor: '#437EF7',
       borderColor: '#437EF7',
-      color:"#ffffff"
+      color: '#ffffff',
     },
     '&.Mui-disabled': {
       backgroundColor: '#e0e0e0',
       color: '#6b6b6b',
     },
   }));
+  
+  CustomButton.defaultProps = {
+    loading: false,
+  };
+
+  export const CustomVisibilityIcon = styled(Visibility)({
+    color: '#437EF7',
+  });
+  
+  export const CustomVisibilityOffIcon = styled(VisibilityOff)({
+    color: '#437EF7',
+  });
   
   const blue = {
     50: '#F0F7FF',
