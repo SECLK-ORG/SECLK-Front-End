@@ -12,3 +12,13 @@ export interface ResetPayload{
     password:string
     token:string
 }
+
+export interface  loginPayloadDto{
+    email:string
+    password:string
+}
+export interface  loginFormDto{
+    email: FormFieldDto<string>;
+    password: FormFieldDto<string>;
+}
+

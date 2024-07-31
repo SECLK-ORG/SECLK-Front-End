@@ -1,10 +1,10 @@
 import { AxiosResponse } from "axios"
 import { axiosPrivateInstance } from "."
-import { ResetPayload } from "../utilities/models";
+import { loginPayloadDto, ResetPayload } from "../utilities/models";
 
 
 
-const login = (payload:any):  Promise<AxiosResponse<any[]>> => {
+const login = (payload:loginPayloadDto):  Promise<AxiosResponse<any[]>> => {
     return axiosPrivateInstance.post(`/api/users/signIn`,payload);
 }
 
