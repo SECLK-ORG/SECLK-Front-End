@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import styles from './ResetPassWord.module.scss';
 import { Box, Grid, IconButton, InputAdornment, Typography } from '@mui/material';
 import { CustomButton, CustomVisibilityIcon, CustomVisibilityOffIcon, StyledTextField } from '../../assets/theme/theme';
 import { resetImage } from '../../assets/images';
-import { ResetFormDto } from '../../utilities/models';
+import { ResetFormDto, ResetPayload } from '../../utilities/models';
 import { validateFormData } from '../../utilities/helpers';
-import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { UserService } from '../../services/user.service';
+import { error } from 'console';
+import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
 const ResetPassWord: React.FC = () => {
     const location = useLocation();
+    const navigate= useNavigate()
     const token = location.state?.token;
+    
     const INITIAL_RESET_FORM_DATA: ResetFormDto = {
         email:{ value: "", isRequired: true, disable: true, readonly: true, validator: "email", error: "", },
         confirmPassword:{ value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
@@ -70,6 +74,24 @@ const ResetPassWord: React.FC = () => {
             setResetBtnLoading(false)
             
             return
+        }
+        if(isValid){
+          const payload:ResetPayload={
+            email: resetData.email.value,
+            password: resetData.password.value,
+            token: resetData.token.value
+          }
+          console.log("[ResetPayload]",payload)
+          UserService.resetPassword(payload).then((result)=>{
+            console.log("result",result)
+            showSuccessToast(result.data.message)
+            navigate('/')
+
+          }).catch((error)=>{
+            console.log("error",error)
+            showErrorToast(error)
+          })
+
         }
         setResetBtnLoading(false)
     };
@@ -196,7 +218,7 @@ const handleTogglePasswordVisibility2=()=>{
                  className={styles.button}
                  fullWidth
                  loading={resetBtnLoading}
-                 onClick={handleResetPassword}
+                 onClick={()=>handleResetPassword()}
                   >
                  Reset Password
                   </CustomButton>

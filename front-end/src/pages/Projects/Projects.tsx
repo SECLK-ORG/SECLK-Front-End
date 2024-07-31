@@ -6,7 +6,7 @@ import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
-import { Button, Grid, Typography } from '@mui/material';
+import {  Grid, Typography } from '@mui/material';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';

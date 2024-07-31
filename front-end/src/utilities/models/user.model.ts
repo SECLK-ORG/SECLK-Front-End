@@ -6,3 +6,9 @@ export interface ResetFormDto{
     confirmPassword: FormFieldDto<string>;
     token:FormFieldDto<string>
 }
+
+export interface ResetPayload{
+    email:string
+    password:string
+    token:string
+}
