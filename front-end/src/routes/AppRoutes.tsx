@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from '../templates/Layout';
-import { Configurations, Projects, ProjectView, Employees, EmployeeView, Login,LoginRedirect,ResetPassWord } from '../pages';
+import { Configurations, Projects, ProjectView, Employees, EmployeeView, Login,LoginRedirect,ResetPassWord,ForgetPassWord } from '../pages';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -10,6 +10,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<Login />} />
         <Route path="/login/:token" element={<LoginRedirect />} />
         <Route path="/reset" element={<ResetPassWord />} />
+        <Route path="/forgotPass" element={<ForgetPassWord />} />
         <Route 
           path="/*" 
           element={

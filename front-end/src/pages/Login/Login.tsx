@@ -9,7 +9,7 @@ import { Rectangle1,Rectangle2 } from '../../assets/images';
 import { loginFormDto, loginPayloadDto } from '../../utilities/models';
 import { validateFormData } from '../../utilities/helpers';
 import { UserService } from '../../services/user.service';
-import { error } from 'console';
+
 import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
 const Login: React.FC = () => {
 
@@ -72,6 +72,11 @@ const Login: React.FC = () => {
     }
     setIsBtnLoading(false)
       
+  }
+
+
+  const handleForgotPassWord=()=>{
+    navigate('/forgotPass')
   }
   return (
     <div className={styles.container}>
@@ -147,7 +152,7 @@ const Login: React.FC = () => {
               Login
             </CustomButton>
             <Box  className={styles.forgotPassword}>
-            <Typography variant="body2">
+            <Typography onClick={()=>{handleForgotPassWord()}} variant="body2" >
               Forgot Password?</Typography>
               </Box>
             
