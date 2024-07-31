@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import styles from './Header.module.scss';
 import Box from '@mui/material/Box';
+import { jwtDecode } from 'jwt-decode';
 const drawerWidth = 240;
 
 const Header: React.FC = () => {
@@ -26,6 +27,21 @@ const Header: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+   
+   const [userData, setUserData] = useState<any>()
+
+   let token
+  useEffect(() => {
+    token= localStorage.getItem('accessToken')
+    if(token){
+     const data= jwtDecode(token)
+     console.log("data",data)
+     setUserData(data)
+    }
+
+  }, [])
+  
   return (
     <AppBar position="fixed"
     className={`${styles.appBar} ${scrolled ? styles.appBarScrolled : ''}`}
@@ -33,14 +49,14 @@ const Header: React.FC = () => {
     >
       <Toolbar>
         <IconButton color="inherit">
-          <Avatar alt="Cristopher Calzoni" src="/static/images/avatar/1.jpg" />
+          <Avatar alt= {userData?.name} src="/static/images/avatar/1.jpg" />
         </IconButton>
         <Box className={styles.profileBox}>
             <Typography variant="h6" noWrap>
-              Cristopher Calzoni
+            {userData?.name}
             </Typography>
             <Typography variant="caption" noWrap>
-              Admin
+              {userData?.role}
             </Typography>
           </Box>
       </Toolbar>

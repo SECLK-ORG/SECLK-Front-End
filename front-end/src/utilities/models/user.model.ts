@@ -21,4 +21,9 @@ export interface  loginFormDto{
     email: FormFieldDto<string>;
     password: FormFieldDto<string>;
 }
-
+ export interface userData{
+    email:string
+    name:string
+    role:string
+    userId:string
+ }

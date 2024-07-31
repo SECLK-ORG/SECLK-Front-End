@@ -40,6 +40,10 @@ export default function PermanentDrawerLeft() {
     }
   }
 
+  const handleSignOut=()=>{
+    localStorage.clear()
+    navigate('/')
+  }
   return (
     <>
       <CssBaseline />
@@ -130,7 +134,7 @@ export default function PermanentDrawerLeft() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={()=>handleSignOut()}>
               <ListItemIcon>
                 <ExitToAppIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>

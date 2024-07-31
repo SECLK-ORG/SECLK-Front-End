@@ -64,7 +64,7 @@ const Login: React.FC = () => {
         localStorage.setItem('accessToken',result.data.data)
         showSuccessToast(result.data.message)
 
-        // navigate('/projects')
+        navigate('/projects')
       }).catch((error:any)=>{
       showErrorToast(error)
       })
