@@ -10,7 +10,6 @@ import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert'
 import styles from './ForgotPassWord.module.scss';
 
 const ForgetPassWord = () => {
-  const navigate = useNavigate();
   const INITIAL_FORGOT_FORM_DATA = {
     email: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "" },
   };
