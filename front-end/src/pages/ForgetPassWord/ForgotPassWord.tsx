@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Grid, Typography } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
-import { forgotImage } from '../../assets/images';
+import { forgotImage, messageSent } from '../../assets/images';
 import { forgotPasswordPayload } from '../../utilities/models';
 import { validateFormData } from '../../utilities/helpers';
 import { UserService } from '../../services/user.service';
@@ -21,11 +21,12 @@ const ForgetPassWord = () => {
 
   const handleSendmail = async () => {
     setHelperText(true);
-    setIsBtnLoading(true);
+   
     const [validateData, isValid] = await validateFormData(resetData);
     setResetData(validateData);
 
     if (isValid) {
+      setIsBtnLoading(true);
       const payload: forgotPasswordPayload = { email: resetData.email.value };
       UserService.forgotPassword(payload)
         .then((result) => {
@@ -35,6 +36,7 @@ const ForgetPassWord = () => {
         })
         .catch((error) => {
           showErrorToast(error);
+          setIsBtnLoading(false);
         });
     }
   
@@ -66,7 +68,7 @@ const ForgetPassWord = () => {
       <Grid container>
         <Grid item xs={12} md={6} className={styles.loginSection}>
           <Box className={styles.loginBox}>
-            <Typography className={styles.subtitle}>Forgot Password?</Typography>
+          {!isEmailSent &&<> <Typography className={styles.subtitle}>Forgot Password?</Typography>
               <StyledTextField
                 fullWidth
                 label="Email"
@@ -91,10 +93,13 @@ const ForgetPassWord = () => {
               >
                 Send Email
               </CustomButton>
-
-              <Typography className={styles.text}>
-            {isEmailSent && 'Email sent successfully. Please check your email to reset your password.'}
+              </>}
+              {isEmailSent && <>
+                <img src={messageSent} alt="Laptop" className={styles.image} />
+                <Typography className={styles.text}>
+           Email sent successfully. Please check your email to reset your password.
             </Typography>
+              </>}
           </Box>
          
            

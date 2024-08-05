@@ -50,11 +50,12 @@ const Login: React.FC = () => {
   }
 
   const handleLogin=async ()=>{
-    setIsBtnLoading(true)
+ 
     setHelperText(true);
     const [validateData, isValid] = await validateFormData(loginForm);
     setLoginForm(validateData)
     if(isValid){
+      setIsBtnLoading(true)
       const payload:loginPayloadDto={
         email: loginForm.email.value,
         password: loginForm.password.value
@@ -63,14 +64,15 @@ const Login: React.FC = () => {
       UserService.login(payload).then((result:any)=>{
         localStorage.setItem('accessToken',result.data.data)
         showSuccessToast(result.data.message)
-
+        setIsBtnLoading(false)
         navigate('/projects')
       }).catch((error:any)=>{
       showErrorToast(error)
+      setIsBtnLoading(false)
       })
 
     }
-    setIsBtnLoading(false)
+    
       
   }
 
