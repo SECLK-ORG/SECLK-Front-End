@@ -12,6 +12,10 @@ export interface ResetPayload{
     password:string
     token:string
 }
+export interface forgotPasswordPayload{
+    email:string
+}
+
 
 export interface  loginPayloadDto{
     email:string

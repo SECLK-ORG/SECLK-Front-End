@@ -112,7 +112,7 @@ const Login: React.FC = () => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>onInputHandleChange('email', event.target.value)}
             />
              <StyledTextField
-              label="Enter New Password"
+              label="Enter  Password"
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
                margin='dense'

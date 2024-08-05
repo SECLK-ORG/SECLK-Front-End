@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
 import { axiosPrivateInstance } from "."
-import { loginPayloadDto, ResetPayload } from "../utilities/models";
+import { forgotPasswordPayload, loginPayloadDto, ResetPayload } from "../utilities/models";
 
 
 
@@ -12,6 +12,9 @@ const resetPassword=(payload:ResetPayload): Promise<AxiosResponse<any>> =>{
     return axiosPrivateInstance.put(`/api/users/resetPassword`,payload);
 }
 
+const forgotPassword=(payload:forgotPasswordPayload): Promise<AxiosResponse<any>> =>{  
+    return axiosPrivateInstance.post(`/api/users/forgotPassword`,payload);
+ } 
 const getAllUsers=():Promise<AxiosResponse<any[]>> => {
     return axiosPrivateInstance.post(`/api/users/all`);
 }
@@ -22,5 +25,6 @@ const getAllUsers=():Promise<AxiosResponse<any[]>> => {
 export const UserService = {
     login,
     resetPassword,
-    getAllUsers
+    getAllUsers,
+    forgotPassword
 }
