@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import ProjectTable from '../../components/ProjectTable/ProjectTable';
 import FilterDrawerCategory from '../../components/FilterDrawer/FilterDrawerCategory';
 import { CreateProjectModal, InfoCard } from '../../components';
-import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
-import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors';
 import {  Grid, Typography } from '@mui/material';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
+import { Project, ProjectStatusDto } from '../../utilities/models';
+import { ProjectService } from '../../services/project.service';
 const Projects: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -33,6 +35,31 @@ const Projects: React.FC = () => {
       Object.values(statusFilters).some(filter => filter)
     );
   }, [categoryFilters, statusFilters]);
+
+
+//ProjectService
+    const[projects,setProjects]=useState<Project[]>([]);
+    const[projectCount,setProjectCount]=useState<ProjectStatusDto>();
+
+    useEffect(()=>{
+     gerProjects();
+    },[])
+
+    const gerProjects=async()=>{
+       ProjectService.getProjects().then((res:any)=>{
+        setProjects(res.data.data);
+       }).catch((err)=>{
+          console.log(err);
+       })
+       ProjectService.getProjectCountByStatus().then((res:any)=>{
+        setProjectCount(res.data.data);
+       }).catch((err)=>{
+          console.log(err);
+       })
+       
+      
+    }
+
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
@@ -122,22 +149,23 @@ console.log(mode,id)
 
       </div>
       <div>
-      <Grid container spacing={2} sx={{justifyContent:"space-evenly",paddingInline:"30px" }}>
-        <Grid item xs={12} sm={12} md={6}  xl={3} lg={6} >
-          <InfoCard title="Total Projects" value={12} icon={EmojiObjectsOutlinedIcon } />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Active Projects" value={4} icon={WorkOutlineOutlinedIcon} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Projects On-hold" value={5} icon={PauseCircleOutlineOutlinedIcon} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
-          <InfoCard title="Inactive Projects" value={1} icon={BlockOutlinedIcon} />
-        </Grid>
+      <Grid container spacing={2} sx={{ justifyContent: "space-evenly", paddingInline: "30px" }}>
+      <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
+        <InfoCard title="Total Projects" value={projectCount?.total || 0} icon={LibraryBooksOutlinedIcon} />
       </Grid>
+      <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
+        <InfoCard title="In Progress Projects" value={projectCount?.['In Progress'] || 0} icon={RunningWithErrorsIcon} />
+      </Grid>
+      <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
+        <InfoCard title="On-hold Projects" value={projectCount?.['On Hold'] || 0} icon={PauseCircleOutlineOutlinedIcon} />
+      </Grid>
+      <Grid item xs={12} sm={12} md={6} xl={3} lg={6}>
+        <InfoCard title="Completed Projects" value={projectCount?.Completed || 0} icon={CheckCircleOutlineIcon} />
+      </Grid>
+    </Grid>
       </div>
       <ProjectTable
+        projects={projects}
         page={page}
         rowsPerPage={rowsPerPage}
         categoryFilters={categoryFilters}
@@ -160,7 +188,11 @@ console.log(mode,id)
         categories={["US", "UK", "Local", "Fiverr"]}
         statuses={["Active", "Inactive"]}
       />
-        <CreateProjectModal open={modalOpen} onClose={handleModalClose} />
+        <CreateProjectModal open={modalOpen} onClose={handleModalClose}
+        //  categories={["US", "UK", "Local", "Fiverr"]}
+        //  statuses={["Active", "Inactive"]}
+        
+        />
     </div>
   );
 };

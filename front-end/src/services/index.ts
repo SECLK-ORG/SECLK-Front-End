@@ -9,7 +9,7 @@ export const axiosPrivateInstance = axios.create()
 // Request interceptor to manage authorization & headers
 axiosPrivateInstance.interceptors.request.use(async (request: any) => {
 
-  const tokenResponse ={ accessToken:"token"}
+  const tokenResponse ={ accessToken:localStorage.getItem('accessToken')}
   request.headers.Authorization = `Bearer ${tokenResponse?.accessToken}`
 
   return request

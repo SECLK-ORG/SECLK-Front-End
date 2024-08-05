@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Pagination, PaginationItem,
-  Typography
+  IconButton, InputAdornment, Box, Typography
 } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 
-import { Visibility, Edit, Search, ArrowBack, ArrowForward } from '@mui/icons-material';
+import { Visibility, Edit, Search } from '@mui/icons-material';
 import { CustomButton, StickyTableCell, StyledTableCell, StyledTableRow, StyledTextField } from '../../assets/theme/theme';
 import styles from './ProjectTable.module.scss';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import { Project } from '../../utilities/models';
+import {ProjectStatus} from '../../utilities/models/common.model';
+import moment from 'moment';
 
 interface ProjectTableProps {
+  projects: Project[];
   page: number;
   rowsPerPage: number;
   categoryFilters: { [key: string]: boolean };
@@ -22,10 +25,11 @@ interface ProjectTableProps {
   isFiltered: boolean;
   statusFilters: { [key: string]: boolean };
   onClearFilters: () => void;
-  handleClick(Mode:string, projectId:string):void;
+  handleClick(Mode: string, projectId: string): void;
 }
 
 const ProjectTable: React.FC<ProjectTableProps> = ({
+  projects,
   page,
   rowsPerPage,
   categoryFilters,
@@ -37,72 +41,13 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   statusFilters,
   handleClick
 }) => {
+  const [searchValue, setSearchValue] = useState('');
 
-  const getStatusStyles = (status:string) => {
-    if (status === 'Active') {
-      return {
-        dotColor: '#2D8A39',
-        backgroundColor: '#F0FAF0',
-        textColor: '#2D8A39'
-      };
-    } else if (status === 'Inactive') {
-      return {
-        dotColor: '#E2341D',
-        backgroundColor: '#FFF2F0',
-        textColor: '#E2341D'
-      };
-    }
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
   };
 
-  const projects = [
-    { name: 'ZenSpace Mobile App', startDate: '23/08/2023', endDate: '12/12/2024', category: 'US', resourcesCount: 20, status: 'Active' },
-    { name: 'Luminous Landing Page', startDate: '23/08/2023', endDate: '25/08/2023', category: 'UK', resourcesCount: 12, status: 'Active' },
-    { name: 'Navigation Overhaul', startDate: '23/08/2023', endDate: '', category: 'Local', resourcesCount: 3, status: 'Active' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'ZenSpace Mobile App', startDate: '23/08/2023', endDate: '12/12/2024', category: 'US', resourcesCount: 20, status: 'Active' },
-    { name: 'Luminous Landing Page', startDate: '23/08/2023', endDate: '25/08/2023', category: 'UK', resourcesCount: 12, status: 'Active' },
-    { name: 'Navigation Overhaul', startDate: '23/08/2023', endDate: '', category: 'Local', resourcesCount: 3, status: 'Active' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'ZenSpace Mobile App', startDate: '23/08/2023', endDate: '12/12/2024', category: 'US', resourcesCount: 20, status: 'Active' },
-    { name: 'Luminous Landing Page', startDate: '23/08/2023', endDate: '25/08/2023', category: 'UK', resourcesCount: 12, status: 'Active' },
-    { name: 'Navigation Overhaul', startDate: '23/08/2023', endDate: '', category: 'Local', resourcesCount: 3, status: 'Active' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'ZenSpace Mobile App', startDate: '23/08/2023', endDate: '12/12/2024', category: 'US', resourcesCount: 20, status: 'Active' },
-    { name: 'Luminous Landing Page', startDate: '23/08/2023', endDate: '25/08/2023', category: 'UK', resourcesCount: 12, status: 'Active' },
-    { name: 'Navigation Overhaul', startDate: '23/08/2023', endDate: '', category: 'Local', resourcesCount: 3, status: 'Active' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-    { name: 'Mosaic Admin Panel', startDate: '23/08/2023', endDate: '-', category: 'Local', resourcesCount: 13, status: 'Active' },
-    { name: 'Echo Portfolio Site', startDate: '23/08/2023', endDate: '-', category: 'US', resourcesCount: 13, status: 'Inactive' },
-  ];
 
-  
-  
   const filteredProjects = projects.filter((project) =>
     (categoryFilters.US && project.category === 'US') ||
     (categoryFilters.UK && project.category === 'UK') ||
@@ -110,11 +55,17 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
     (categoryFilters.Fiverr && project.category === 'Fiverr') ||
     (!categoryFilters.US && !categoryFilters.UK && !categoryFilters.Local && !categoryFilters.Fiverr)
   ).filter((project) =>
-    (statusFilters.Active && project.status === 'Active') ||
-    (statusFilters.Inactive && project.status === 'Inactive') ||
-    (!statusFilters.Active && !statusFilters.Inactive)
+    (statusFilters.Completed && project.status === ProjectStatus.COMPLETED) ||
+    (statusFilters.InProgress && project.status === ProjectStatus.IN_PROGRESS) ||
+    (statusFilters.OnHold && project.status === ProjectStatus.ON_HOLD) ||
+    (!statusFilters.Completed && !statusFilters.InProgress && !statusFilters.OnHold)
+  ).filter((project) =>
+    project.projectName.toLowerCase().includes(searchValue.toLowerCase()) ||
+    moment(project.startDate).format('YYYY-MM-DD').includes(searchValue) ||
+    moment(project.endDate).format('YYYY-MM-DD').includes(searchValue) ||
+    project.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+    project.status.toLowerCase().includes(searchValue.toLowerCase())
   );
-
 
   return (
     <div style={{ margin: "1rem", padding: "1rem" }}>
@@ -122,7 +73,9 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         <div className={styles.gridContainer}>
           <StyledTextField
             variant="outlined"
-            placeholder="Search"
+            placeholder="Search By Project Name, Start Date, End Date, Category, Status"
+            value={searchValue}
+            onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -134,24 +87,23 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             style={{ marginRight: '10px' }}
           />
           <div>
-          {isFiltered && (
+            {isFiltered && (
+              <CustomButton
+                variant="contained"
+                style={{ background: "#437EF7", color: "black", marginInline: "1rem" }}
+                onClick={onClearFilters}
+              >
+                Clear Filters
+              </CustomButton>
+            )}
             <CustomButton
-              variant="contained"
-              
-              style={{ background: "#437EF7", color: "black", marginInline: "1rem"}}
-              onClick={onClearFilters}
+              variant="outlined"
+              sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
+              endIcon={<FilterAltOutlinedIcon />}
+              onClick={onFilterDrawerOpen}
             >
-              Clear Filters
+              Filters
             </CustomButton>
-          )}
-          <CustomButton
-            variant="outlined"
-            sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
-            endIcon={<FilterAltOutlinedIcon />}
-            onClick={onFilterDrawerOpen}
-          >
-            Filters
-          </CustomButton>
           </div>
         </div>
         <Table className={styles.table}>
@@ -167,68 +119,72 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProjects.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((project, index) => (
-              
-              <StyledTableRow key={index}>
-                <StyledTableCell>{project.name}</StyledTableCell>
-                <StyledTableCell>{project.startDate}</StyledTableCell>
-                <StyledTableCell>{project.endDate}</StyledTableCell>
-                <StyledTableCell>{project.category}</StyledTableCell>
-                <StyledTableCell>{project.resourcesCount}</StyledTableCell>
-                <StyledTableCell>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    sx={{
-                      backgroundColor: project.status === 'Active' ? '#F0FAF0' : '#FFF2F0',
-                      borderRadius: '5px',
-                      padding: '2px 8px',
-                      maxWidth: '5.3rem'
-                    }}
-                  >
+            {filteredProjects.length > 0 ? (
+              filteredProjects.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((project) => (
+                <StyledTableRow key={project._id}>
+                  <StyledTableCell>{project.projectName}</StyledTableCell>
+                  <StyledTableCell>{moment(project?.startDate).format('YYYY-MM-DD ')}</StyledTableCell>
+                  <StyledTableCell>{moment(project?.endDate).format('YYYY-MM-DD ')}</StyledTableCell>
+                  <StyledTableCell>{project.category}</StyledTableCell>
+                  <StyledTableCell>{project.employees.length}</StyledTableCell>
+                  <StyledTableCell>
                     <Box
+                      display="flex"
+                      alignItems="center"
                       sx={{
-                        backgroundColor: project.status === 'Active' ? '#2D8A39' : '#E2341D',
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        marginRight: '0.5rem'
-                      }}
-                    ></Box>
-                    <Typography
-                      sx={{
-                        color: project.status === 'Active' ? '#2D8A39' : '#E2341D',
-                        fontWeight: '600'
+                        backgroundColor: project.status === 'Completed' ? '#F0FAF0' : '#FFF2F0',
+                        borderRadius: '5px',
+                        padding: '2px 8px',
+                        maxWidth: '5.3rem'
                       }}
                     >
-                      {project.status}
-                    </Typography>
-                  </Box>
+                      <Box
+                        sx={{
+                          backgroundColor: project.status === 'Completed' ? '#2D8A39' : '#E2341D',
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          marginRight: '0.5rem'
+                        }}
+                      ></Box>
+                      <Typography
+                        sx={{
+                          color: project.status === 'Completed' ? '#2D8A39' : '#E2341D',
+                          fontWeight: '600'
+                        }}
+                      >
+                        {project.status}
+                      </Typography>
+                    </Box>
+                  </StyledTableCell>
+                  <StickyTableCell>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, project._id) }}>
+                      <Visibility />
+                    </IconButton>
+                    <IconButton>
+                      <Edit />
+                    </IconButton>
+                  </StickyTableCell>
+                </StyledTableRow>
+              ))
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={7} align="center">
+                  No Records Found
                 </StyledTableCell>
-                <StickyTableCell>
-                  <IconButton onClick={()=>{handleClick(SCREEN_MODES.VIEW,"123")}}>
-                    <Visibility  />
-                  </IconButton>
-                  <IconButton>
-                    <Edit />
-                  </IconButton>
-                </StickyTableCell>
               </StyledTableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-         
-
-
-<CustomPagination
-  count={Math.ceil(filteredProjects.length / rowsPerPage)}
-  page={page}
-  onChangePage={onChangePage}
-  filteredProjects={filteredProjects}
-  rowsPerPage={rowsPerPage}
-  onChangeRowsPerPage={onChangeRowsPerPage}
-/>
+          <CustomPagination
+            count={Math.ceil(filteredProjects.length / rowsPerPage)}
+            page={page}
+            onChangePage={onChangePage}
+            filteredProjects={filteredProjects}
+            rowsPerPage={rowsPerPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+          />
         </Box>
       </TableContainer>
     </div>

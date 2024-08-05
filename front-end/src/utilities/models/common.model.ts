@@ -9,4 +9,8 @@ export interface FormFieldDto<V> {
     min?: number;
     charLength?: number[];
   }
-  
+  export enum ProjectStatus {
+    COMPLETED = 'Completed',
+    IN_PROGRESS = 'In Progress',
+    ON_HOLD = 'On Hold'
+  }

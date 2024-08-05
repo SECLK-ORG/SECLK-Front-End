@@ -64,6 +64,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }
               required
             />
           </Grid>
+        
           <Grid item xs={6}md={4}>
             <StyledTextField
               fullWidth
@@ -82,6 +83,18 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }
               >
                 <MenuItem value="Active">Active</MenuItem>
                 <MenuItem value="Inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <FormControl fullWidth>
+              <InputLabel>Category</InputLabel>
+              <Select
+                label="Status"
+                defaultValue="local"
+              >
+                <MenuItem value="uk">UK</MenuItem>
+                <MenuItem value="local">Local</MenuItem>
               </Select>
             </FormControl>
           </Grid>
