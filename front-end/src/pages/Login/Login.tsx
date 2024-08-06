@@ -11,6 +11,9 @@ import { validateFormData } from '../../utilities/helpers';
 import { UserService } from '../../services/user.service';
 
 import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
+
+import { useDispatch } from 'react-redux';
+import { loginRequest } from '../../redux/userSlice/userSlice'; 
 const Login: React.FC = () => {
 
 
@@ -20,6 +23,7 @@ const Login: React.FC = () => {
       password: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     }
     const navigate= useNavigate()
+    const dispatch = useDispatch();
     const [loginForm,setLoginForm]=useState<loginFormDto>(INITIAL_RESET_FORM_DATA);
     const [helperText, setHelperText] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -60,16 +64,17 @@ const Login: React.FC = () => {
         email: loginForm.email.value,
         password: loginForm.password.value
       }
-
-      UserService.login(payload).then((result:any)=>{
-        localStorage.setItem('accessToken',result.data.data)
-        showSuccessToast(result.data.message)
-        setIsBtnLoading(false)
-        navigate('/projects')
-      }).catch((error:any)=>{
-      showErrorToast(error)
-      setIsBtnLoading(false)
-      })
+      dispatch(loginRequest(payload));
+      // UserService.login(payload).then((result:any)=>{
+      //   localStorage.setItem('accessToken',result.data.data)
+      //   localStorage.setItem('isLogin',"true")
+      //   showSuccessToast(result.data.message)
+      //   setIsBtnLoading(false)
+      //   navigate('/projects')
+      // }).catch((error:any)=>{
+      // showErrorToast(error)
+      // setIsBtnLoading(false)
+      // })
 
     }
     

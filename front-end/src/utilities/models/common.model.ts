@@ -14,3 +14,11 @@ export interface FormFieldDto<V> {
     IN_PROGRESS = 'In Progress',
     ON_HOLD = 'On Hold'
   }
+
+  export interface StateObjectDto<T> {
+    [x: string]: any;
+    data: T;
+    isLoading: boolean;
+    error: null;
+    status: "initial" | "loading" | "success" | "error" | null;
+  }

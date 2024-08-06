@@ -1,4 +1,4 @@
-import { FormFieldDto } from "./common.model";
+import { FormFieldDto, StateObjectDto } from "./common.model";
 
 export interface ResetFormDto{
     email: FormFieldDto<string>;
@@ -31,3 +31,8 @@ export interface  loginFormDto{
     role:string
     userId:string
  }
+
+
+ export  interface UserStateDto {
+    login:StateObjectDto<any>
+  }
