@@ -11,8 +11,8 @@ export interface FormFieldDto<V> {
   }
   export enum ProjectStatus {
     COMPLETED = 'Completed',
-    IN_PROGRESS = 'In Progress',
-    ON_HOLD = 'On Hold'
+    IN_PROGRESS = 'In-Progress',
+    ON_HOLD = 'On-Hold'
   }
 
   export interface StateObjectDto<T> {
@@ -22,3 +22,4 @@ export interface FormFieldDto<V> {
     error: null;
     status: "initial" | "loading" | "success" | "error" | null;
   }
+

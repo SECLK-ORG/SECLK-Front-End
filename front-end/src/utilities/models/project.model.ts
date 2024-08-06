@@ -45,8 +45,8 @@ export interface Income {
   export interface ProjectStatusDto {
     total: number;
     Completed: number;
-    'In Progress': number;
-    'On Hold': number;
+    'In-Progress': number;
+    'On-Hold': number;
   }
   
 
@@ -61,3 +61,17 @@ export interface Income {
     createdBy: FormFieldDto<string>;
   }
   
+export interface Category{
+    _id:string
+    category:string
+}
+export interface CategoryDto{
+     id:FormFieldDto<string>
+    category:FormFieldDto<string>
+}
+
+export interface FilterMap{
+    _id:string
+    name:string
+    isSelect:boolean
+}

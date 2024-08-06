@@ -26,4 +26,10 @@ export const SCREEN_MODES = {
   export const USER_ACTION_TYPES = {
     USER_LOGIN: "USER_LOGIN",
   };
+  
+  export  interface PROJECT_STATUSType{
+    _id:number;
+    name:string;
+  }
+  export const PROJECT_STATUS:PROJECT_STATUSType[] = [{_id:1, name:'Completed'},{_id:2, name:'On-Hold'},{_id:3, name:'In-Progress'}]
   export type AppActionStatus = typeof APP_ACTION_STATUS[keyof typeof APP_ACTION_STATUS];

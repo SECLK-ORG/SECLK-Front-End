@@ -2,10 +2,11 @@ import React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableBody, IconButton, TableCell, TablePagination } from '@mui/material';
 import { Visibility, Edit } from '@mui/icons-material';
 import styles from './ProjectTable.module.scss';
-import { CustomButton, StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
+import { StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
+import { Positions } from '../../utilities/models';
 
 interface PositionsTableProps {
-  positions: string[];
+  positions: Positions[];
 }
 
 const PositionsTable: React.FC<PositionsTableProps> = ({ positions }) => {
@@ -22,19 +23,19 @@ const PositionsTable: React.FC<PositionsTableProps> = ({ positions }) => {
   };
 
   return (
-    <div >
+    <div>
       <TableContainer component={Paper} className={styles.grid}>
         <Table className={styles.table}>
           <TableHead className={styles.tableHead}>
             <TableRow>
-              <TableCell sx={{fontWeight:"700",fontSize:"16px",color:"#A5ACBA"}}>Position</TableCell>
-              <TableCell align="right" sx={{fontWeight:"700",fontSize:"16px", color:"#A5ACBA"}}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "700", fontSize: "16px", color: "#A5ACBA" }}>Position</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "700", fontSize: "16px", color: "#A5ACBA" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody className={styles.tableBody}>
-            {positions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((position, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell>{position}</StyledTableCell>
+            {positions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((position) => (
+              <StyledTableRow key={position._id}>
+                <StyledTableCell>{position.positions}</StyledTableCell>
                 <StyledTableCell align="right">
                   <IconButton>
                     <Visibility />
@@ -47,8 +48,16 @@ const PositionsTable: React.FC<PositionsTableProps> = ({ positions }) => {
             ))}
           </TableBody>
         </Table>
-
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={positions.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </div>
   );
 };

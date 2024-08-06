@@ -17,3 +17,4 @@ export {default  as EmployeeTable} from './EmployeeTable/EmployeeTable';
 export {default  as PaymentHistoryTable} from './PaymentHistoryTable/PaymentHistoryTable';
 export {default  as CreateProjectModal} from './CreateProjectModal/CreateProjectModal';
 export {default  as CreateEmployeeModal} from './CreateEmployeeModal/CreateEmployeeModal';
+export {default  as CategoryModal} from './CategoryModal/CategoryModal';

@@ -2,10 +2,11 @@ import React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableBody, IconButton, TableCell, TablePagination } from '@mui/material';
 import { Visibility, Edit } from '@mui/icons-material';
 import styles from './ProjectTable.module.scss';
-import { CustomButton, StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
+import { StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
+import { Category } from '../../utilities/models';
 
 interface ProjectCategoriesTableProps {
-  categories: string[];
+  categories: Category[];
 }
 
 const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categories }) => {
@@ -27,14 +28,14 @@ const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categor
         <Table className={styles.table}>
           <TableHead className={styles.tableHead}>
             <TableRow>
-              <TableCell sx={{fontWeight:"700",fontSize:"16px",color:"#A5ACBA"}}>Category</TableCell>
-              <TableCell align="right" sx={{fontWeight:"700",fontSize:"16px",color:"#A5ACBA"}}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "700", fontSize: "16px", color: "#A5ACBA" }}>Category</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "700", fontSize: "16px", color: "#A5ACBA" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody className={styles.tableBody} >
-            {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell>{category}</StyledTableCell>
+          <TableBody className={styles.tableBody}>
+            {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category) => (
+              <StyledTableRow key={category._id}>
+                <StyledTableCell>{category.category}</StyledTableCell>
                 <StyledTableCell align="right">
                   <IconButton>
                     <Visibility />
@@ -47,8 +48,16 @@ const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categor
             ))}
           </TableBody>
         </Table>
-      
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={categories.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </div>
   );
 };

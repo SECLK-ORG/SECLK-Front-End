@@ -1,4 +1,4 @@
-// FilterDrawer.tsx
+// FilterDrawerCategory.tsx
 import React from 'react';
 import {
   Drawer, FormControl, FormGroup, FormControlLabel, Checkbox, Button,
@@ -6,23 +6,20 @@ import {
   Typography
 } from '@mui/material';
 import styles from './FilterDrawerCategory.module.scss';
+import { Category, FilterMap } from '../../utilities/models';
 
 interface FilterDrawerProps {
   filterDrawerOpen: boolean;
-  categoryFilters: { [key: string]: boolean };
-  statusFilters: { [key: string]: boolean };
   onFilterDrawerClose: (save: boolean) => void;
-  onCategoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onStatusChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  categories: string[];
-  statuses: string[];
+  onCategoryChange: (id: string) => void;
+  onStatusChange: (id: string) => void;
+  categories: FilterMap[];
+  statuses: FilterMap[];
   type: string;
 }
 
 const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
   filterDrawerOpen,
-  categoryFilters,
-  statusFilters,
   onFilterDrawerClose,
   onCategoryChange,
   onStatusChange,
@@ -64,16 +61,22 @@ const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
             </Typography>
             <Divider />
             <FormControl component="fieldset" sx={{ paddingInline: "20px", marginBottom: "1rem" }}>
-              <FormGroup>
-                {categories.map((category) => (
-                  <FormControlLabel
-                    key={category}
-                    control={<Checkbox checked={categoryFilters[category]} onChange={onCategoryChange} name={category} />}
-                    label={category}
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
+      <FormGroup>
+        {categories.map((category: FilterMap) => (
+          <FormControlLabel
+            key={category._id}
+            control={
+              <Checkbox
+                checked={category.isSelect}
+                onChange={()=>{onCategoryChange(category._id)}}
+                name={category.name}
+              />
+            }
+            label={category.name}
+          />
+        ))}
+      </FormGroup>
+    </FormControl>
           </div>
           <div className={styles.drawerContentCategory}>
             <Typography
@@ -91,9 +94,9 @@ const FilterDrawerCategory: React.FC<FilterDrawerProps> = ({
               <FormGroup>
                 {statuses.map((status) => (
                   <FormControlLabel
-                    key={status}
-                    control={<Checkbox checked={statusFilters[status]} onChange={onStatusChange} name={status} />}
-                    label={status}
+                    key={status._id}
+                    control={<Checkbox checked={status.isSelect} onChange={()=>{onStatusChange(status._id)}} name={status.name} />}
+                    label={status.name}
                   />
                 ))}
               </FormGroup>

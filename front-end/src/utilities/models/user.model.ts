@@ -36,3 +36,11 @@ export interface  loginFormDto{
  export  interface UserStateDto {
     login:StateObjectDto<any>
   }
+
+  export interface  Positions{
+    _id:string
+    positions:string
+  }
+  export interface PositionFormDto{
+    position:FormFieldDto<string>
+  }

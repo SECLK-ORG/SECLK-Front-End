@@ -61,18 +61,12 @@ const Employees = () => {
     }
   };
 
-  const handlePositionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPositionFilters({
-      ...positionFilters,
-      [event.target.name]: event.target.checked,
-    });
+  const handlePositionChange = (id: string) => {
+
   };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStatusFilters({
-      ...statusFilters,
-      [event.target.name]: event.target.checked,
-    });
+  const handleStatusChange = (id:string) => {
+
   };
 
   const handleClearFilters = () => {
@@ -146,13 +140,11 @@ const Employees = () => {
       <FilterDrawerCategory
         type="Position"
         filterDrawerOpen={filterDrawerOpen}
-        categoryFilters={positionFilters}
-        statusFilters={statusFilters}
         onFilterDrawerClose={handleFilterDrawerClose}
         onCategoryChange={handlePositionChange}
         onStatusChange={handleStatusChange}
-        categories={["Software Engineer", "UX Engineer", "QA Engineer"]}
-        statuses={["Active", "Inactive"]}
+        categories={[]}
+        statuses={[]}
       />
       <CreateEmployeeModal open={modalOpen} onClose={handleModalClose} />
     </div>
