@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableBody, IconButton, TableCell, TablePagination } from '@mui/material';
-import { Visibility, Edit } from '@mui/icons-material';
+import { Visibility, Edit, Delete } from '@mui/icons-material';
 import styles from './ProjectTable.module.scss';
 import { StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
 import { Positions } from '../../utilities/models';
@@ -42,6 +42,9 @@ const PositionsTable: React.FC<PositionsTableProps> = ({ positions }) => {
                   </IconButton>
                   <IconButton>
                     <Edit />
+                  </IconButton>
+                  <IconButton>
+                    <Delete />
                   </IconButton>
                 </StyledTableCell>
               </StyledTableRow>

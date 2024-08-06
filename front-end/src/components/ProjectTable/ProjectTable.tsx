@@ -46,8 +46,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
     project.projectName.toLowerCase().includes(searchValue.toLowerCase()) ||
     moment(project.startDate).format('YYYY-MM-DD').includes(searchValue) ||
     moment(project.endDate).format('YYYY-MM-DD').includes(searchValue)
-    // project.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-    // project.status.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   return (
@@ -56,7 +54,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         <div className={styles.gridContainer}>
           <StyledTextField
             variant="outlined"
-            placeholder="Search By Project Name, Start Date, End Date, Category, Status"
+            placeholder="Search By Project Name, Start Date, End Date"
             value={searchValue}
             onChange={handleSearchChange}
             InputProps={{

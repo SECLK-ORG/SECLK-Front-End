@@ -65,8 +65,8 @@ export interface Category{
     _id:string
     category:string
 }
-export interface CategoryDto{
-     id:FormFieldDto<string>
+export interface CategoryFormDto{
+     _id:FormFieldDto<string>
     category:FormFieldDto<string>
 }
 

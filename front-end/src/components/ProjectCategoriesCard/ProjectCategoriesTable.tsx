@@ -1,15 +1,18 @@
 import React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableBody, IconButton, TableCell, TablePagination } from '@mui/material';
-import { Visibility, Edit } from '@mui/icons-material';
+import { Visibility, Edit, Delete } from '@mui/icons-material';
 import styles from './ProjectTable.module.scss';
 import { StyledTableCell, StyledTableRow } from '../../assets/theme/theme';
 import { Category } from '../../utilities/models';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+
 
 interface ProjectCategoriesTableProps {
   categories: Category[];
+  handleTableAction(type: string, id: string): void;
 }
 
-const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categories }) => {
+const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categories,handleTableAction }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -38,11 +41,15 @@ const ProjectCategoriesTable: React.FC<ProjectCategoriesTableProps> = ({ categor
                 <StyledTableCell>{category.category}</StyledTableCell>
                 <StyledTableCell align="right">
                   <IconButton>
-                    <Visibility />
+                    <Visibility onClick={()=>{handleTableAction(SCREEN_MODES.VIEW,category._id)}}/>
                   </IconButton>
                   <IconButton>
-                    <Edit />
+                    <Edit onClick={()=>{handleTableAction(SCREEN_MODES.EDIT,category._id)}}/>
                   </IconButton>
+                  <IconButton onClick={()=>{handleTableAction(SCREEN_MODES.DELETE,category._id)}}>
+                    <Delete   />
+                  </IconButton>
+                  
                 </StyledTableCell>
               </StyledTableRow>
             ))}
