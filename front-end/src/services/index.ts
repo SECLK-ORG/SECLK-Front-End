@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { exceptionHandler } from '../core'
 
+
 axios.defaults.baseURL = "http://localhost:9090"
 
 export const axiosPublicInstance = axios.create()
 export const axiosPrivateInstance = axios.create()
-
 // Request interceptor to manage authorization & headers
 axiosPrivateInstance.interceptors.request.use(async (request: any) => {
 

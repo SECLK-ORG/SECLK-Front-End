@@ -21,13 +21,15 @@ import { logo, flag ,settings} from '../../../assets/images/';
 import { useNavigate } from 'react-router-dom';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginClear } from '../../../redux/userSlice/userSlice';
+
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
   const [selectedItem, setSelectedItem] = React.useState<string>('Projects');
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
 
   const handleNavigate = (value: string) => {
     setSelectedItem(value);
@@ -42,7 +44,7 @@ export default function PermanentDrawerLeft() {
 
   const handleSignOut=()=>{
     localStorage.clear()
-    navigate('/')
+    dispatch(loginClear())
   }
   return (
     <>

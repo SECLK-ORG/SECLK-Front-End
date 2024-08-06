@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Button, Typography, Box, IconButton, InputAdornment } from '@mui/material';
 import styles from './Login.module.scss';
 import background from '../../assets/images/background.png'; // Ensure the path is correct
@@ -12,11 +12,13 @@ import { UserService } from '../../services/user.service';
 
 import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
 
-import { useDispatch } from 'react-redux';
-import { loginRequest } from '../../redux/userSlice/userSlice'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { loginClear, loginRequest } from '../../redux/userSlice/userSlice'; 
+import { RootState } from '../../redux/store';
+import { APP_ACTION_STATUS } from '../../utilities/constants/app.constants';
 const Login: React.FC = () => {
 
-
+    const loginState = useSelector((state: RootState) => state.user.login);
 
     const INITIAL_RESET_FORM_DATA: loginFormDto = {
       email:{ value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "", },
@@ -52,6 +54,20 @@ const Login: React.FC = () => {
           },
         });
   }
+
+  useEffect(() => {
+    if (loginState.status === APP_ACTION_STATUS.SUCCESS) {
+        setIsBtnLoading(false)
+        localStorage.setItem('accessToken',loginState.data.data)
+       
+        navigate('/projects')
+
+    } else if (loginState.status === APP_ACTION_STATUS.ERROR) {
+ 
+      setIsBtnLoading(false)
+    }
+  }, [loginState, dispatch]);
+
 
   const handleLogin=async ()=>{
  

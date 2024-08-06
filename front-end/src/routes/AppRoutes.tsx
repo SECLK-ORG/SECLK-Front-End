@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from '../templates/Layout';
 import { Configurations, Projects, ProjectView, Employees, EmployeeView, Login,LoginRedirect,ResetPassWord,ForgetPassWord } from '../pages';
+import PrivateRouteProps from './PrivateRouteProps';
 
 const AppRoutes: React.FC = () => {
 
@@ -15,6 +16,7 @@ const AppRoutes: React.FC = () => {
         <Route 
           path="/*" 
           element={
+            <PrivateRouteProps>
             <Layout>
               <Routes>
                 <Route path="configurations" element={<Configurations />} />
@@ -24,6 +26,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="employees/:id" element={<EmployeeView />} />
               </Routes>
             </Layout>
+            </PrivateRouteProps>
           }
         />
       </Routes>
