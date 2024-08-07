@@ -18,6 +18,7 @@ const Configurations: React.FC = () => {
   const [positionModalOpen, setPositionModalOpen] = useState<boolean>(false);
   const [helperText, setHelperText] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isCategoryLoading, setIsCategoryLoading] = useState<boolean>(false);
   const [id, setId] = useState<string>("");
   const [mode, setMode] = useState<string>("");
 
@@ -34,8 +35,10 @@ const Configurations: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
+      setIsCategoryLoading(true);
       const response:any = await CategoryService.getCategories();
       setCategories(response.data.data);
+      setIsCategoryLoading(false);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -188,12 +191,14 @@ return (
               height="2.5rem"
               onClick={() => {
                 setCategoryModalOpen(true);
+                setMode(SCREEN_MODES.CREATE);
               }}
             >Create Category
                </CustomButton>
           </div>
           <Grid item xs={12}>
             <ProjectCategoriesTable 
+            isCategoryLoading={isCategoryLoading}
             categories={categories} 
             handleTableAction={handleTableAction}/>
           </Grid>
@@ -204,7 +209,6 @@ return (
             <CustomButton
             size="large"
             height="2.5rem"
-            textTransform="capitalize"
             onClick={() => {setPositionModalOpen(true);}}
               
             >Create Position

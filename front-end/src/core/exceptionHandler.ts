@@ -9,6 +9,9 @@ export const exceptionHandler = async (error: any): Promise<string> => {
         case 404:
           errorMsg = error.data.message || 'URL Not Found'
           break
+        case 402:
+            errorMsg = error.data.message || 'Token Expired'
+            break
         case 500:
           errorMsg = error.data.message || 'Internal Server error'
           break
