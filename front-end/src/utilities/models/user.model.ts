@@ -42,5 +42,6 @@ export interface  loginFormDto{
     positions:string
   }
   export interface PositionFormDto{
+    _id:FormFieldDto<string>
     position:FormFieldDto<string>
   }

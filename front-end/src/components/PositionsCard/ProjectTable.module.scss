@@ -31,3 +31,10 @@
     background-color: rgb(146, 146, 146) !important;
   }
 }
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import PeopleIcon from '@mui/icons-material/People';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import UpdateIcon from '@mui/icons-material/Update';
 import StarIcon from '@mui/icons-material/Star';
 import SupportIcon from '@mui/icons-material/Support';
@@ -17,35 +17,46 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './SideNav.module.scss';
-import { logo, flag ,settings} from '../../../assets/images/';
-import { useNavigate } from 'react-router-dom';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { logo } from '../../../assets/images/';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginClear } from '../../../redux/userSlice/userSlice';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
-  const [selectedItem, setSelectedItem] = React.useState<string>('Projects');
+  const [selectedItem, setSelectedItem] = React.useState<string>('');
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const path = location.pathname;
+    if (path.includes('configurations')) {
+      setSelectedItem('Configurations');
+    } else if (path.includes('projects')) {
+      setSelectedItem('Projects');
+    } else if (path.includes('employees')) {
+      setSelectedItem('Employees');
+    }
+  }, [location]);
 
   const handleNavigate = (value: string) => {
     setSelectedItem(value);
-    if (value === "Configurations") {
-      navigate("/configurations");
-    } else if (value === "Projects") {
-      navigate("/projects");
-    } else if (value === "Employees") {
-      navigate("/employees");
+    if (value === 'Configurations') {
+      navigate('/configurations');
+    } else if (value === 'Projects') {
+      navigate('/projects');
+    } else if (value === 'Employees') {
+      navigate('/employees');
     }
-  }
+  };
 
-  const handleSignOut=()=>{
-    localStorage.clear()
-    dispatch(loginClear())
-  }
+  const handleSignOut = () => {
+    localStorage.clear();
+    dispatch(loginClear());
+  };
+
   return (
     <>
       <CssBaseline />
@@ -80,7 +91,6 @@ export default function PermanentDrawerLeft() {
             <ListItemButton onClick={() => handleNavigate('Projects')}>
               <ListItemIcon>
                 <AssignmentIcon sx={{ color: selectedItem === 'Projects' ? '#FFFFFF' : '#A5ACBA' }} />
-                
               </ListItemIcon>
               <ListItemText primary="Projects" sx={{ color: selectedItem === 'Projects' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
@@ -89,7 +99,6 @@ export default function PermanentDrawerLeft() {
             <ListItemButton onClick={() => handleNavigate('Employees')}>
               <ListItemIcon>
                 <GroupsOutlinedIcon sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} />
-                {/* <PeopleIcon sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} /> */}
               </ListItemIcon>
               <ListItemText primary="Employees" sx={{ color: selectedItem === 'Employees' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
@@ -136,7 +145,7 @@ export default function PermanentDrawerLeft() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>handleSignOut()}>
+            <ListItemButton onClick={handleSignOut}>
               <ListItemIcon>
                 <ExitToAppIcon sx={{ color: '#A5ACBA' }} />
               </ListItemIcon>
