@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -19,58 +19,40 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { EmployeesTable, IncomeTable, ProjectDetailsBox, ProjectInfoCard } from "../../components";
 import styles from "./ProjectView.module.scss";
 import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
-const expenses = [
-  {
-    category: "Salary",
-    vendor: "Kalana Malith",
-    amount: 200,
-    description: "Software Engineer",
-    invoiceNumber: "100 200 300",
-    date: "23/08/2023",
-  },
-  {
-    category: "Subscription",
-    vendor: "Freepik",
-    amount: 25,
-    description: "Subscription payment",
-    invoiceNumber: "101 202 303",
-    date: "23/08/2023",
-  },
-  {
-    category: "Salary",
-    vendor: "Nuwan Thushara",
-    amount: 100,
-    description: "UX Designer",
-    invoiceNumber: "102 203 304",
-    date: "23/08/2023",
-  },
-  {
-    category: "Salary",
-    vendor: "Kalana Perera",
-    amount: 150,
-    description: "QA Engineer",
-    invoiceNumber: "103 204 305",
-    date: "23/08/2023",
-  },
-  {
-    category: "Salary",
-    vendor: "Kesara Charith",
-    amount: 250,
-    description: "QA Engineer",
-    invoiceNumber: "104 205 306",
-    date: "23/08/2023",
-  },
-];
+import { ProjectService } from "../../services/project.service";
+import { Project, ProjectStatus } from "../../utilities/models";
 
 const ProjectView = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams<{ projectId: string }>();
 
+  const [projectData, setProjectData] = useState<Project>({} as Project)
+
+
+useEffect(() => {
+
+    getProjectData()
+  
+}, [])
+
+
+const getProjectData=()=>{
+  if(projectId){
+    ProjectService.getProjectById(projectId).then((res:any)=>{
+      console.log("first",res.data.data)
+      setProjectData(res.data.data)
+
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+}
   const handleBack = () => {
     navigate(-1);
   };
@@ -95,33 +77,41 @@ const ProjectView = () => {
         <Typography
           sx={{ fontWeight: "600", fontSize: "28px", marginInline: "1rem" }}
         >
-          ZenSpace Mobile App
+          {projectData?.projectName}
         </Typography>
         <Box
           display="flex"
           alignItems="center"
           sx={{
-            backgroundColor: "#F0FAF0",
+            backgroundColor: projectData.status === ProjectStatus.COMPLETED ? '#F0FAF0' :
+            projectData.status === ProjectStatus.IN_PROGRESS ? '#FFF8E1' :
+              '#FFF2F0',
             borderRadius: "5px",
             padding: "2px 8px",
           }}
         >
           <Box
             sx={{
-              backgroundColor: "#2D8A39",
+              backgroundColor: projectData.status === ProjectStatus.COMPLETED ? '#2D8A39' :
+              projectData.status === ProjectStatus.IN_PROGRESS ? '#FFA500' :
+                '#E2341D',
               width: "8px",
               height: "8px",
               borderRadius: "50%",
               marginRight: "0.5rem",
             }}
           ></Box>
-          <Typography sx={{ color: "#2D8A39", fontWeight: "600" }}>
-            Active
+          <Typography sx={{ color: projectData.status === ProjectStatus.COMPLETED ? '#2D8A39' :
+                                projectData.status === ProjectStatus.IN_PROGRESS ? '#FFA500' :
+                                  '#E2341D', fontWeight: "600" }}>
+            {projectData?.status}
           </Typography>
         </Box>
       </Box>
 
-      <ProjectDetailsBox />
+      <ProjectDetailsBox
+      projectData={projectData }
+      />
 
       <Box mt={3} mb={3}>
         <Grid container spacing={3}>

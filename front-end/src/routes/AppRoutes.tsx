@@ -21,7 +21,7 @@ const AppRoutes: React.FC = () => {
               <Routes>
                 <Route path="configurations" element={<Configurations />} />
                 <Route path="projects" element={<Projects />} />
-                <Route path="projects/:id" element={<ProjectView />} />
+                <Route path="projects/:projectId" element={<ProjectView />} />
                 <Route path="employees" element={<Employees />} />
                 <Route path="employees/:id" element={<EmployeeView />} />
               </Routes>
