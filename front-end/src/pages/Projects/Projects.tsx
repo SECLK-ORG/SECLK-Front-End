@@ -29,6 +29,7 @@ const Projects: React.FC = () => {
     status: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     createdBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     paymentType: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    category: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
   }
 
   const navigate = useNavigate();
@@ -249,6 +250,10 @@ const handleInputFocus = (property: string) => {
   });
 }
 
+const onSave=()=>{
+
+}
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: "30px" }}>
@@ -298,14 +303,15 @@ const handleInputFocus = (property: string) => {
         categories={categories}
         statuses={statuses}
       />
-      <CreateProjectModal 
-      mode={mode}
-      open={modalOpen} 
-      onClose={handleModalClose}
-      projectForm={projectForm}
-      handleInputFocus={handleInputFocus}
-      onInputHandleChange={onInputHandleChange}
-      helperText={helperText}
+      <CreateProjectModal
+      onSave={onSave} 
+        mode={mode}
+        open={modalOpen} 
+        onClose={handleModalClose}
+        projectForm={projectForm}
+        handleInputFocus={handleInputFocus}
+        onInputHandleChange={onInputHandleChange}
+        helperText={helperText}
        />
 
       <DeleteConfirmationModal

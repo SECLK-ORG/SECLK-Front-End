@@ -55,6 +55,7 @@ export interface Income {
     projectName: FormFieldDto<string>;
     startDate: FormFieldDto<string>;
     endDate: FormFieldDto<string>;
+    category: FormFieldDto<string>;
     status: FormFieldDto<string>;
     clientContactNumber: FormFieldDto<string>;
     clientEmail: FormFieldDto<string>;
