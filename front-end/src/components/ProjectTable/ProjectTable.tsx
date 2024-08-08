@@ -157,8 +157,9 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                         <IconButton onClick={() => { handleTableAction(SCREEN_MODES.VIEW, project._id) }}>
                           <Visibility />
                         </IconButton>
-                    {isAdmin && <>    <IconButton>
-                          <Edit />
+                    {isAdmin && <>    
+                    <IconButton onClick={() => { handleTableAction(SCREEN_MODES.EDIT, project._id) }}>
+                          <Edit  />
                         </IconButton>
                         <IconButton onClick={() => { handleTableAction(SCREEN_MODES.DELETE, project._id) }}>
                         <Delete />

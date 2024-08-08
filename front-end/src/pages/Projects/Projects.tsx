@@ -204,10 +204,31 @@ if(loginState.status === 'success'){
     }
     if(SCREEN_MODES.DELETE===mode){
       setIsDeleteModalOpen(true)
+    }if(SCREEN_MODES.EDIT===mode){
+      const project:Project|undefined=projects.find((project)=>project._id===id)
+      if(project){
+        setProjectForm({
+          ...projectForm,
+          _id:{...projectForm._id,value:project._id},
+          category:{...projectForm.category,value:project.category},
+          clientContactNumber:{...projectForm.clientContactNumber,value:Number(project.clientContactNumber)},
+          clientEmail:{...projectForm.clientEmail,value:project.clientEmail},
+          createdBy:{...projectForm.createdBy,value:project.createdBy},
+          endDate:{...projectForm.endDate,value:project.endDate},
+          projectName:{...projectForm.projectName,value:project.projectName},
+          startDate:{...projectForm.startDate,value:project.startDate},
+          status:{...projectForm.status,value:project.status}
+        })
+        
+      }
+
+
+      setModalOpen(true)
     }
   };
 
   const handleModalOpen = () => {
+
     setMode(SCREEN_MODES.CREATE);
     setModalOpen(true);
   };
@@ -260,11 +281,10 @@ const onSave=async()=>{
   setHelperText(true);
   const [validateData, isValid] =await validateFormData(projectForm);
   setProjectForm(validateData)
-  console.log("first",projectForm)
   if(isValid){
     setIsLoading(true)
-
     const projectData:createProjectDto={
+      _id:projectForm._id.value,
       clientContactNumber:projectForm.clientContactNumber.value,
       clientEmail:projectForm.clientEmail.value,
       projectName:projectForm.projectName.value,
@@ -275,7 +295,21 @@ const onSave=async()=>{
       category:projectForm.category.value,
     }
     if(mode===SCREEN_MODES.CREATE){
+
       ProjectService.createProject(projectData).then(async (res:any)=>{
+        await getProjects();
+        await getProjectsCounts();
+        setModalOpen(false)
+        setProjectForm(INITIAL_PROJECT_FORM_DATA)
+        showSuccessToast(res.data.message)
+      }).catch((error:any)=>{
+        console.log(error)
+        showErrorToast(error)
+        setIsLoading(false)
+      })
+    }
+    if(mode===SCREEN_MODES.EDIT){
+      ProjectService.updateProject(projectData).then(async (res:any)=>{
         await getProjects();
         await getProjectsCounts();
         setModalOpen(false)
@@ -287,8 +321,8 @@ const onSave=async()=>{
         showErrorToast(error)
         setIsLoading(false)
       })
-    }
   }
+}
 
 }
 

@@ -1,6 +1,7 @@
 import { FormFieldDto, ProjectStatus } from "./common.model";
 
 export interface createProjectDto{
+  _id?: string;
   clientContactNumber: number;
   clientEmail: string;
   projectName: string;

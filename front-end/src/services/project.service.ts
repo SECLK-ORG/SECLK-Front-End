@@ -19,9 +19,13 @@ const deleteProject = async (projectId: string): Promise<AxiosResponse<any[]>> =
     return await axiosPrivateInstance.delete(`/api/projects/delete/${projectId}`)
 }
 
+const updateProject = async (project: createProjectDto): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.put(`/api/projects/update/${project._id}`, project)
+}
 export const ProjectService = {
     createProject,
     getProjects,
     getProjectCountByStatus,
-    deleteProject
+    deleteProject,
+    updateProject
 }

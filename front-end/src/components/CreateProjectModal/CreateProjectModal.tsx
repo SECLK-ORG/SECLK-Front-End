@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FilterMap, ProjectFormDto } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { ProjectStatus } from '../../utilities/models/common.model';
+import moment from 'moment';
 interface CreateProjectModalProps {
   open: boolean;
   mode: string;
@@ -82,7 +83,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 label="Start Date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={projectForm.startDate.value}
+                value={mode === SCREEN_MODES.EDIT ? moment(projectForm.startDate.value).format('YYYY-MM-DD') : projectForm.startDate.value}
                 error={!!projectForm.startDate.error}
                 disabled={projectForm.startDate.disable}
                 required={projectForm.startDate.isRequired}
@@ -97,7 +98,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 label="End Date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={projectForm.endDate.value}
+                value={mode === SCREEN_MODES.EDIT ? moment(projectForm.endDate.value).format('YYYY-MM-DD') : projectForm.endDate.value}
                 error={!!projectForm.endDate.error}
                 disabled={projectForm.endDate.disable}
                 required={projectForm.endDate.isRequired}
