@@ -27,11 +27,17 @@ const Projects: React.FC = () => {
   const [statuses, setStatuses] = useState<FilterMap[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectCount, setProjectCount] = useState<ProjectStatusDto>();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAdmin,setIsAdmin]=useState<boolean>(false)
   useEffect(() => {
     getProjects();
     getProjectsCounts();
     fetchFilters();
+     let role= localStorage.getItem('role')
+     if(role){
+     let isAdmin= role==='admin'?true:false
+      setIsAdmin(isAdmin)
+     }
   }, []);
 
 
@@ -64,9 +70,12 @@ const Projects: React.FC = () => {
  
   const getProjects = async () => {
     try {
+      setIsLoading(true);
       const projectRes:any = await ProjectService.getProjects();
       setProjects(projectRes.data.data);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };
@@ -157,7 +166,7 @@ const Projects: React.FC = () => {
 
    
 
-  const handleClick = (mode: string, id: string) => {
+  const handleTableAction = (mode: string, id: string) => {
     if (SCREEN_MODES.VIEW === mode) {
       console.log('View clicked');
       navigate(`/projects/${id}`);
@@ -201,6 +210,8 @@ const Projects: React.FC = () => {
         </Grid>
       </div>
       <ProjectTable
+      isAdmin={isAdmin}
+        isLoading={isLoading}
         projects={projects}
         page={page}
         rowsPerPage={rowsPerPage}
@@ -209,7 +220,7 @@ const Projects: React.FC = () => {
         onChangeRowsPerPage={handleChangeRowsPerPage}
         onFilterDrawerOpen={handleFilterDrawerOpen}
         onClearFilters={handleClearFilters}
-        handleClick={handleClick}
+        handleTableAction={handleTableAction}
       />
       <FilterDrawerCategory
         type='Category'

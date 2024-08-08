@@ -35,9 +35,10 @@ const Header: React.FC = () => {
   useEffect(() => {
     token= localStorage.getItem('accessToken')
     if(token){
-     const data= jwtDecode(token)
+     const data:any= jwtDecode(token)
      console.log("data",data)
      setUserData(data)
+     localStorage.setItem('role',data?.role)
     }
 
   }, [])
