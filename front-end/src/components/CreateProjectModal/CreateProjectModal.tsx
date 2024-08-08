@@ -4,9 +4,9 @@ import {
 } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
-import { ProjectFormDto } from '../../utilities/models';
+import { FilterMap, ProjectFormDto } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
-
+import { ProjectStatus } from '../../utilities/models/common.model';
 interface CreateProjectModalProps {
   open: boolean;
   mode: string;
@@ -16,6 +16,7 @@ interface CreateProjectModalProps {
   helperText?: boolean;
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: string) => void;
+  categories:FilterMap[];
 }
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
@@ -26,7 +27,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   projectForm,
   helperText,
   handleInputFocus,
-  onInputHandleChange
+  onInputHandleChange,
+  categories
 }) => {
   return (
     <Modal
@@ -112,8 +114,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                   value={projectForm.status.value}
                   onChange={(event) => onInputHandleChange('status', event.target.value)}
                 >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Inactive">Inactive</MenuItem>
+                  <MenuItem value={ProjectStatus.IN_PROGRESS}>{ProjectStatus.IN_PROGRESS}</MenuItem>
+                  <MenuItem value={ProjectStatus.ON_HOLD}>{ProjectStatus.ON_HOLD}</MenuItem>
+                  <MenuItem value={ProjectStatus.COMPLETED}>{ProjectStatus.COMPLETED}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -125,14 +128,17 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                   value={projectForm.category.value}
                   onChange={(event) => onInputHandleChange('category', event.target.value)}
                 >
-                  <MenuItem value="uk">UK</MenuItem>
-                  <MenuItem value="local">Local</MenuItem>
+                {categories.map((item)=>(
+                  <MenuItem key={item._id} value={item.name}>{item.name}</MenuItem>
+                )) } 
+                  
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={6} md={4}>
               <StyledTextField
                 fullWidth
+                type='number'
                 label="Client Contact Number"
                 value={projectForm.clientContactNumber.value}
                 error={!!projectForm.clientContactNumber.error}
@@ -155,19 +161,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 onFocus={() => handleInputFocus('clientEmail')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('clientEmail', event.target.value)}
               />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>Payment Type</InputLabel>
-                <Select
-                  label="Payment Type"
-                  value={projectForm.paymentType.value}
-                  onChange={(event) => onInputHandleChange('paymentType', event.target.value)}
-                >
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="EUR">EUR</MenuItem>
-                </Select>
-              </FormControl>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="right">
               <CustomButton onClick={onClose} variant="contained" sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}>

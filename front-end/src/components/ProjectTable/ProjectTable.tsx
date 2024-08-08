@@ -47,9 +47,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   };
 
   const filteredProjects = projects.filter((project) =>
-    project.projectName.toLowerCase().includes(searchValue.toLowerCase()) ||
-    moment(project.startDate).format('YYYY-MM-DD').includes(searchValue) ||
-    moment(project.endDate).format('YYYY-MM-DD').includes(searchValue)
+    project.projectName.toLowerCase().includes(searchValue.toLowerCase()) 
   );
 
 
@@ -60,7 +58,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         <div className={styles.gridContainer}>
           <StyledTextField
             variant="outlined"
-            placeholder="Search By Project Name, Start Date, End Date"
+            placeholder="Search By Project Name"
             value={searchValue}
             onChange={handleSearchChange}
             InputProps={{

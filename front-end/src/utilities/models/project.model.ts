@@ -1,14 +1,14 @@
 import { FormFieldDto, ProjectStatus } from "./common.model";
 
 export interface createProjectDto{
-    projectName:string;
-    startDate:string;
-    endDate:string;
-    status:ProjectStatus;
-    clientContactNumber:string;
-    clientEmail:string;
-    paymentType:string;
-    createdBy:string;
+  clientContactNumber: number;
+  clientEmail: string;
+  projectName: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  createdBy: string;
+  category: string;
 }
 
 
@@ -57,9 +57,8 @@ export interface Income {
     endDate: FormFieldDto<string>;
     category: FormFieldDto<string>;
     status: FormFieldDto<string>;
-    clientContactNumber: FormFieldDto<string>;
+    clientContactNumber: FormFieldDto<number>;
     clientEmail: FormFieldDto<string>;
-    paymentType: FormFieldDto<string>;
     createdBy: FormFieldDto<string>;
   }
   

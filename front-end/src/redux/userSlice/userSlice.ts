@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserStateDto } from '../../utilities/models';
 import { APP_ACTION_STATUS, COMMON_ACTION_TYPES, USER_ACTION_TYPES } from '../../utilities/constants/app.constants';
+import { jwtDecode } from 'jwt-decode';
 
 const INITIAL_STATE: UserStateDto = {
     login: {
@@ -22,10 +23,18 @@ const userSlice = createSlice({
       state.login.data = null;
     },
     loginSuccess(state, action: PayloadAction<any>) {
+    const decodeData:any=jwtDecode(action.payload.data)
+     const data:any={
+        data:action.payload.data,
+        role:decodeData?.role,
+        name:decodeData?.name,
+        userId:decodeData?.userId
+     }
+     localStorage.setItem('accessToken',action.payload.data)
       state.login.isLoading = false;
       state.login.status = APP_ACTION_STATUS.SUCCESS;
       state.login.error = null;
-      state.login.data = action.payload;
+      state.login.data = data;
     },
     loginError(state, action: PayloadAction<any>) {
       state.login.isLoading = false;

@@ -1,6 +1,6 @@
 export interface FormFieldDto<V> {
     value: V;
-    validator: "text" | "number" | "date" | "object" | "array" | "dates" |"email"| null;
+    validator: "text" | "number" | "date" | "object" | "array" | "dates" |"email"|"mobile"| null;
     isRequired: boolean;
     error: string | null;
     disable: boolean;
@@ -23,3 +23,9 @@ export interface FormFieldDto<V> {
     status: "initial" | "loading" | "success" | "error" | null;
   }
 
+
+ export interface loginUserData {
+    name: string;
+    role: string;
+    userId: string;
+  }

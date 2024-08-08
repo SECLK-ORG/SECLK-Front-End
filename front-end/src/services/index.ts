@@ -1,8 +1,6 @@
 
 import axios from 'axios';
 import { exceptionHandler } from '../core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 import {logout } from '../core/authUtils'
 axios.defaults.baseURL = "http://localhost:9090";
 export const axiosPublicInstance = axios.create();

@@ -58,8 +58,6 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (loginState.status === APP_ACTION_STATUS.SUCCESS) {
         setIsBtnLoading(false)
-        localStorage.setItem('accessToken',loginState.data.data)
-       
         navigate('/projects')
 
     } else if (loginState.status === APP_ACTION_STATUS.ERROR) {

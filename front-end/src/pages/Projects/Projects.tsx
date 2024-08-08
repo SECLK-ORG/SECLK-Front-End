@@ -10,17 +10,20 @@ import { Grid, Typography } from '@mui/material';
 import { PROJECT_STATUS, PROJECT_STATUSType, SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
-import { FilterMap, Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
+import { createProjectDto, FilterMap, loginUserData, Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
 import { ProjectService } from '../../services/project.service';
 import { CategoryService } from '../../services/category.service';
 import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal';
 import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
+import { validateFormData } from '../../utilities/helpers';
+import { RootState } from '../../redux/store';
+import { useSelector } from 'react-redux';
 
 
 const Projects: React.FC = () => {
 
   const INITIAL_PROJECT_FORM_DATA: ProjectFormDto= {
-    clientContactNumber:{ value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    clientContactNumber:{ value: 0, isRequired: true, disable: false, readonly: false, validator: "mobile", error: "" },
     _id: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "", },
     clientEmail: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "", },
     projectName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
@@ -28,9 +31,9 @@ const Projects: React.FC = () => {
     endDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
     status: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     createdBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
-    paymentType: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     category: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
   }
+  const loginState = useSelector((state: RootState) => state.user.login);
 
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
@@ -51,21 +54,18 @@ const Projects: React.FC = () => {
   const [mode, setMode] = useState<string>('');
   const [projectForm, setProjectForm] = useState<ProjectFormDto>(INITIAL_PROJECT_FORM_DATA);
   const [helperText, setHelperText] = useState(false);
-
-
-
-
-
+  
+  useEffect(() => {
+if(loginState.status === 'success'){
+  setProjectForm({...projectForm,createdBy:{...projectForm.createdBy,value:loginState.data.userId}})
+  setIsAdmin(loginState.data.role==='admin'?true:false)
+}
+}, [loginState.data.role, loginState.data.userId, loginState.status, projectForm]);
   
   useEffect(() => {
     getProjects();
     getProjectsCounts();
     fetchFilters();
-     let role= localStorage.getItem('role')
-     if(role){
-     let isAdmin= role==='admin'?true:false
-      setIsAdmin(isAdmin)
-     }
   }, []);
 
 
@@ -75,6 +75,7 @@ const Projects: React.FC = () => {
   }
   }, [statuses, categories, isFiltered]);
   
+
 
   const handleStatusORCategoryChange = () => {
     const selectedStatuses = statuses.filter(status => status.isSelect);
@@ -207,10 +208,12 @@ const Projects: React.FC = () => {
   };
 
   const handleModalOpen = () => {
+    setMode(SCREEN_MODES.CREATE);
     setModalOpen(true);
   };
 
   const handleModalClose = () => {
+    setProjectForm(INITIAL_PROJECT_FORM_DATA);
     setModalOpen(false);
   };
 
@@ -226,6 +229,9 @@ const handleDeleteAction=(confirm:boolean,property:string)=>{
       showErrorToast(error)
       setIsDeleteModalOpen(false)
     })
+  }
+  if(!confirm){
+    setIsDeleteModalOpen(false)
   }
 
 }
@@ -250,7 +256,39 @@ const handleInputFocus = (property: string) => {
   });
 }
 
-const onSave=()=>{
+const onSave=async()=>{
+  setHelperText(true);
+  const [validateData, isValid] =await validateFormData(projectForm);
+  setProjectForm(validateData)
+  console.log("first",projectForm)
+  if(isValid){
+    setIsLoading(true)
+
+    const projectData:createProjectDto={
+      clientContactNumber:projectForm.clientContactNumber.value,
+      clientEmail:projectForm.clientEmail.value,
+      projectName:projectForm.projectName.value,
+      startDate:projectForm.startDate.value,
+      endDate:projectForm.endDate.value,
+      status:projectForm.status.value,
+      createdBy:projectForm.createdBy.value,
+      category:projectForm.category.value,
+    }
+    if(mode===SCREEN_MODES.CREATE){
+      ProjectService.createProject(projectData).then(async (res:any)=>{
+        await getProjects();
+        await getProjectsCounts();
+        setModalOpen(false)
+        setProjectForm(INITIAL_PROJECT_FORM_DATA)
+        showSuccessToast(res.data.message)
+
+      }).catch((error:any)=>{
+        console.log(error)
+        showErrorToast(error)
+        setIsLoading(false)
+      })
+    }
+  }
 
 }
 
@@ -282,7 +320,7 @@ const onSave=()=>{
         </Grid>
       </div>
       <ProjectTable
-      isAdmin={isAdmin}
+        isAdmin={isAdmin}
         isLoading={isLoading}
         projects={projects}
         page={page}
@@ -304,6 +342,7 @@ const onSave=()=>{
         statuses={statuses}
       />
       <CreateProjectModal
+      categories={categories}
       onSave={onSave} 
         mode={mode}
         open={modalOpen} 

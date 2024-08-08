@@ -7,10 +7,13 @@ import Avatar from '@mui/material/Avatar';
 import styles from './Header.module.scss';
 import Box from '@mui/material/Box';
 import { jwtDecode } from 'jwt-decode';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { loginUserData } from '../../../utilities/models';
 const drawerWidth = 240;
 
 const Header: React.FC = () => {
-
+  const loginState = useSelector((state: RootState) => state.user.login);
   const [scrolled, setScrolled] = useState<boolean>(false);
 
   useEffect(() => {
@@ -28,20 +31,20 @@ const Header: React.FC = () => {
     };
   }, []);
 
-   
-   const [userData, setUserData] = useState<any>()
 
-   let token
+   const [userData, setUserData] = useState<loginUserData>()
+
   useEffect(() => {
-    token= localStorage.getItem('accessToken')
-    if(token){
-     const data:any= jwtDecode(token)
-     console.log("data",data)
-     setUserData(data)
-     localStorage.setItem('role',data?.role)
-    }
+if(loginState.status === 'success'){
+  setUserData({
+    name:loginState.data.name,
+    role:loginState.data.role,
+    userId:loginState.data.userId
+  })
 
-  }, [])
+}
+
+  }, [loginState]);
   
   return (
     <AppBar position="fixed"
