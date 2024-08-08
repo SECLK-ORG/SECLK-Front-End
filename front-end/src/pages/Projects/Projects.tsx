@@ -10,25 +10,52 @@ import { Grid, Typography } from '@mui/material';
 import { PROJECT_STATUS, PROJECT_STATUSType, SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
-import { Category, FilterMap, Project, ProjectStatusDto } from '../../utilities/models';
+import { FilterMap, Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
 import { ProjectService } from '../../services/project.service';
 import { CategoryService } from '../../services/category.service';
-import { CleanHands } from '@mui/icons-material';
+import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal';
+import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
 
 
 const Projects: React.FC = () => {
+
+  const INITIAL_PROJECT_FORM_DATA: ProjectFormDto= {
+    clientContactNumber:{ value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    _id: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "", },
+    clientEmail: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "", },
+    projectName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    startDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
+    endDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
+    status: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    createdBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    paymentType: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+  }
+
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
+
   const [categories, setCategories] = useState<FilterMap[]>([]);
   const [statuses, setStatuses] = useState<FilterMap[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectCount, setProjectCount] = useState<ProjectStatusDto>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAdmin,setIsAdmin]=useState<boolean>(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  const [id, setId] = useState<string>('');
+  const [mode, setMode] = useState<string>('');
+  const [projectForm, setProjectForm] = useState<ProjectFormDto>(INITIAL_PROJECT_FORM_DATA);
+  const [helperText, setHelperText] = useState(false);
+
+
+
+
+
+  
   useEffect(() => {
     getProjects();
     getProjectsCounts();
@@ -167,11 +194,15 @@ const Projects: React.FC = () => {
    
 
   const handleTableAction = (mode: string, id: string) => {
+    setMode(mode);
+    setId(id);
     if (SCREEN_MODES.VIEW === mode) {
       console.log('View clicked');
       navigate(`/projects/${id}`);
     }
-    console.log(mode, id);
+    if(SCREEN_MODES.DELETE===mode){
+      setIsDeleteModalOpen(true)
+    }
   };
 
   const handleModalOpen = () => {
@@ -181,6 +212,42 @@ const Projects: React.FC = () => {
   const handleModalClose = () => {
     setModalOpen(false);
   };
+
+const handleDeleteAction=(confirm:boolean,property:string)=>{
+  if(confirm){
+    ProjectService.deleteProject(id).then((res:any)=>{
+      getProjects();
+      getProjectsCounts();
+      setIsDeleteModalOpen(false)
+      showSuccessToast(res.data.message)
+    }).catch((error:any)=>{
+      console.log(error)
+      showErrorToast(error)
+      setIsDeleteModalOpen(false)
+    })
+  }
+
+}
+
+const onInputHandleChange = (property: string, value: string) => {
+  setProjectForm({
+    ...projectForm,
+    [property]: {
+      ...projectForm[property as keyof typeof projectForm],
+      value: value,
+      error: "",
+    },
+  });
+}
+const handleInputFocus = (property: string) => {
+  setProjectForm({
+    ...projectForm,
+    [property]: {
+      ...projectForm[property as keyof typeof projectForm],
+      error: "",
+    },
+  });
+}
 
   return (
     <div>
@@ -231,7 +298,22 @@ const Projects: React.FC = () => {
         categories={categories}
         statuses={statuses}
       />
-      <CreateProjectModal open={modalOpen} onClose={handleModalClose} />
+      <CreateProjectModal 
+      mode={mode}
+      open={modalOpen} 
+      onClose={handleModalClose}
+      projectForm={projectForm}
+      handleInputFocus={handleInputFocus}
+      onInputHandleChange={onInputHandleChange}
+      helperText={helperText}
+       />
+
+      <DeleteConfirmationModal
+        handleDeleteAction={handleDeleteAction}
+        text={"Project"}
+        onClose={() => setIsDeleteModalOpen(false)}
+        open={isDeleteModalOpen}
+      />
     </div>
   );
 };

@@ -6,12 +6,21 @@ import {
 } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
+import { ProjectFormDto } from '../../utilities/models';
 interface CreateProjectModalProps {
   open: boolean;
   onClose: () => void;
+  projectForm:ProjectFormDto
+  handleInputFocus: (property: string) => void;
+  onInputHandleChange: (property: string, value: string) => void;
+  helperText: boolean;
+  mode: string;
+
 }
 
-const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose }) => {
+const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ open, onClose,projectForm }) => {
+
+  
   return (
     <Modal
       open={open}

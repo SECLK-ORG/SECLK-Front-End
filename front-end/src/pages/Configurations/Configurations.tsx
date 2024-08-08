@@ -303,13 +303,13 @@ const Configurations: React.FC = () => {
         positionForm={positionForm}
       />
       <DeleteConfirmationModal
-        handleCategoryDeleteAction={(isConfirm) => handleCategoryDeleteAction(isConfirm, 'category')}
+        handleDeleteAction={(isConfirm) => handleCategoryDeleteAction(isConfirm, 'category')}
         text={"Category"}
         onClose={() => setIsDeleteCategoryModalOpen(false)}
         open={isDeleteCategoryModalOpen}
       />
       <DeleteConfirmationModal
-        handleCategoryDeleteAction={(isConfirm) => handleCategoryDeleteAction(isConfirm, 'position')}
+        handleDeleteAction={(isConfirm) => handleCategoryDeleteAction(isConfirm, 'position')}
         text={"Position"}
         onClose={() => setIsDeletePositionModalOpen(false)}
         open={isDeletePositionModalOpen}

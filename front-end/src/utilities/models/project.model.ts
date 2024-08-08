@@ -50,11 +50,12 @@ export interface Income {
   }
   
 
-  export interface ProjectDto {
+  export interface ProjectFormDto {
+    _id: FormFieldDto<string>;
     projectName: FormFieldDto<string>;
     startDate: FormFieldDto<string>;
     endDate: FormFieldDto<string>;
-    status: FormFieldDto<ProjectStatus>;
+    status: FormFieldDto<string>;
     clientContactNumber: FormFieldDto<string>;
     clientEmail: FormFieldDto<string>;
     paymentType: FormFieldDto<string>;

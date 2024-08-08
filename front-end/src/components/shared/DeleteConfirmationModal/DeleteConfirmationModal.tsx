@@ -9,10 +9,10 @@ interface DeleteConfirmationModalProps {
   open: boolean;
   text: string;
   onClose: () => void;
-  handleCategoryDeleteAction: (confirm: boolean,property:string) => void;
+  handleDeleteAction: (confirm: boolean,property:string) => void;
 }
 
-const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,open, onClose, handleCategoryDeleteAction }) => {
+const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,open, onClose, handleDeleteAction }) => {
 
 
 
@@ -51,7 +51,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,
                 variant="contained"
                 color="secondary"
                 sx={{ backgroundColor: "#f0f0f0", color: "#437EF7" }}
-                onClick={() => handleCategoryDeleteAction(true,text)}
+                onClick={() => handleDeleteAction(true,text)}
               >
                 Yes
               </CustomButton>
@@ -61,7 +61,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,
                 fullWidth
                 variant="contained"
                
-                onClick={() => handleCategoryDeleteAction(false,text)}
+                onClick={() => handleDeleteAction(false,text)}
               >
                 No
               </CustomButton>
