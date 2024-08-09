@@ -3,21 +3,18 @@ import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box, Typography,
   TableCell,
-  TextField
+  TextField,
+  CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material';
+import { Visibility, Edit, Search } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
-
-interface Income {
-  amount: string;
-  invoiceNumber: string;
-  receivedBy: string;
-  date: string;
-}
+import { Income } from '../../utilities/models';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface IncomeTableProps {
   page: number;
+  isIncomeLoading: boolean;
   rowsPerPage: number;
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
   onChangeRowsPerPage: (event: any) => void;
@@ -25,15 +22,8 @@ interface IncomeTableProps {
   onClearFilters: () => void;
   isFiltered: boolean;
   handleClick: (mode: string, incomeId: string) => void;
+  incomes: Income[];
 }
-
-const incomes: Income[] = [
-  { amount: '$200', invoiceNumber: '100 200 300', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$25', invoiceNumber: '101 202 303', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$100', invoiceNumber: '102 203 304', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$150', invoiceNumber: '103 204 305', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-  { amount: '$250', invoiceNumber: '104 205 306', receivedBy: 'Lahiru Perera', date: '23/08/2023' },
-];
 
 const IncomeTable: React.FC<IncomeTableProps> = ({
   page,
@@ -43,7 +33,9 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
   onFilterDrawerOpen,
   onClearFilters,
   isFiltered,
-  handleClick
+  handleClick,
+  incomes,
+  isIncomeLoading
 }) => {
   return (
     <div>
@@ -76,7 +68,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
               backgroundColor='#437EF7'
               color='white'
               variant='contained'
-              onClick={onFilterDrawerOpen}
+              onClick={() => { handleClick(SCREEN_MODES.CREATE, '') }}
             />
           </div>
         </div>
@@ -87,38 +79,54 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
               <TableCell>Invoice Number</TableCell>
               <TableCell>Received By</TableCell>
               <TableCell>Date</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {incomes.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((income, index) => (
-              <TableRow key={index}>
-                <TableCell>{income.amount}</TableCell>
-                <TableCell>{income.invoiceNumber}</TableCell>
-                <TableCell>{income.receivedBy}</TableCell>
-                <TableCell>{income.date}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => { handleClick('VIEW', income.invoiceNumber) }}>
-                    <Visibility />
-                  </IconButton>
-                  <IconButton>
-                    <Edit />
-                  </IconButton>
+            {isIncomeLoading ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  <CircularProgress />
                 </TableCell>
               </TableRow>
-            ))}
+            ) : incomes.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No records found
+                </TableCell>
+              </TableRow>
+            ) : (
+              incomes.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((income, index) => (
+                <TableRow key={income._id}>
+                  <TableCell>{income.amount}</TableCell>
+                  <TableCell>{income.invoiceNumber}</TableCell>
+                  <TableCell>{income.receivedBy}</TableCell>
+                  <TableCell>{income.date}</TableCell>
+                  <TableCell>{income.description}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, income.invoiceNumber) }}>
+                      <Visibility />
+                    </IconButton>
+                    <IconButton>
+                      <Edit />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-
-        <CustomPagination
-                  count={Math.ceil(incomes.length / rowsPerPage)}
-                  page={page}
-                  onChangePage={onChangePage}
-                  rowsPerPage={rowsPerPage}
-                  onChangeRowsPerPage={onChangeRowsPerPage} 
-                  filteredProjects={incomes}        />
-                    </Box>
+          <CustomPagination
+            count={Math.ceil(incomes.length / rowsPerPage)}
+            page={page}
+            onChangePage={onChangePage}
+            rowsPerPage={rowsPerPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            filteredProjects={incomes}
+          />
+        </Box>
       </TableContainer>
     </div>
   );

@@ -36,7 +36,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '50%',
+        width: '60%',
         bgcolor: 'background.paper',
         border: '1px solid #e0e0e0',
         boxShadow: 24,
@@ -48,7 +48,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
         <Divider />
         <Box sx={{ padding: '16px' }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Amount"
@@ -59,7 +59,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
                 helperText={helperText && incomeForm.amount.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Invoice Number"
@@ -70,7 +70,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
                 helperText={helperText && incomeForm.invoiceNumber.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Received By"
@@ -81,7 +81,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
                 helperText={helperText && incomeForm.receivedBy.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 type="date"

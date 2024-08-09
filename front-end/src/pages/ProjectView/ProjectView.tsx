@@ -15,7 +15,7 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { EmployeeFormDto, ExpenseFormDto, IncomeFormDto, Project, ProjectStatus } from "../../utilities/models";
+import { employee, EmployeeFormDto, Expense, ExpenseFormDto, Income, IncomeFormDto, Project, ProjectStatus } from "../../utilities/models";
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
@@ -24,6 +24,7 @@ import { SCREEN_MODES } from "../../utilities/constants/app.constants";
 const ProjectView = () => {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
+
   const INITIAL_INCOME_FORM_DATA: IncomeFormDto = {
     amount: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
     invoiceNumber: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
@@ -40,6 +41,8 @@ const ProjectView = () => {
   };
   
   const INITIAL_EMPLOYEE_FORM_DATA: EmployeeFormDto = {
+    _id: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
+    employeeID: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
     employeeName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
     email: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "" },
     position: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
@@ -48,7 +51,12 @@ const ProjectView = () => {
   
 
   const [projectData, setProjectData] = useState<Project>({} as Project)
-
+  const [employees, setEmployees] = useState<employee[]>([]);
+  const [incomes, setIncomes] = useState<Income[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [isIncomeLoading, setIsIncomeLoading] = useState(false);
+  const [isExpensesLoading, setIsExpensesLoading] = useState(false);
+  const [isEmployeeLoading, setIsEmployeeLoading] = useState(false);
   
   const [incomeForm, setIncomeForm] = useState<IncomeFormDto>(INITIAL_INCOME_FORM_DATA);
   const [expenseForm, setExpenseForm] = useState<ExpenseFormDto>(INITIAL_EXPENSE_FORM_DATA);
@@ -57,8 +65,12 @@ const ProjectView = () => {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
 
+
 useEffect(() => {
-    getProjectData() 
+    getProjectData()
+    getEmployeeDetails() 
+    getIncomeDetails()
+    getExpenseDetails()
 }, [])
 
 
@@ -67,11 +79,50 @@ const getProjectData=()=>{
     ProjectService.getProjectById(projectId).then((res:any)=>{
       console.log("first",res.data.data)
       setProjectData(res.data.data)
-
     }).catch((err)=>{
       console.log(err)
     })
   }
+}
+
+const getEmployeeDetails=()=>{
+  if(projectId){
+    setIsEmployeeLoading(true)
+    ProjectService.getEmployeeDetailsByProjectId(projectId).then((res:any)=>{
+      console.log("second",res.data.data.employees)
+      setEmployees(res.data.data.employees)
+      setIsEmployeeLoading(false)
+    }).catch((err)=>{
+      setIsEmployeeLoading(false)
+      console.log(err)
+    })
+  }
+
+}
+const getIncomeDetails=()=>{
+  if(projectId){
+    setIsIncomeLoading(true)
+    ProjectService.getIncomeDetailsByProjectId(projectId).then((res:any)=>{
+      console.log("third",res.data.data.incomeDetails)
+      setIncomes(res.data.data.incomeDetails)
+      setIsIncomeLoading(false)
+    }).catch((err)=>{
+      setIsIncomeLoading(false)
+      console.log(err)
+    })
+  }
+}
+const getExpenseDetails=()=>{
+  if(projectId){
+    setIsExpensesLoading(true)
+    ProjectService.getExpenseDetailsByProjectId(projectId).then((res:any)=>{
+      console.log("fourth",res.data.data.expenseDetails)
+      setExpenses(res.data.data.expenseDetails)
+      setIsExpensesLoading(false)
+    }).catch((err)=>{
+      setIsExpensesLoading(false)
+      console.log(err)
+    })}
 }
   const handleBack = () => {
     navigate(-1);
@@ -134,10 +185,19 @@ const getProjectData=()=>{
     if (type === 'employee') setIsEmployeeModalOpen(false);
   };
 
-const handleClick =(mode: string, id:string)=>{
-  if(mode===SCREEN_MODES.CREATE){
+const handleClick =(mode: string, id:string,property:string)=>{
+
+  if(property==='income'){
+    handleModalOpen('income')
+  }
+  else if(property==='expense'){
+    handleModalOpen('expense')
+  }
+  else{
     handleModalOpen('employee')
   }
+
+  
 
 }
 
@@ -243,7 +303,9 @@ const handleClick =(mode: string, id:string)=>{
   </TabsList>
   <TabPanel value={0}>
 <IncomeTable
- handleClick={(mode: string, expenseId: string) => handleModalOpen('income')}
+incomes={incomes}
+isIncomeLoading={isIncomeLoading}
+ handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'income')}
  isFiltered={false}
  onClearFilters={() => {}}
  onFilterDrawerOpen={() => {}}
@@ -256,7 +318,9 @@ const handleClick =(mode: string, id:string)=>{
   </TabPanel>
   <TabPanel value={1}>
     <ExpensesTable
-    handleClick={(mode: string, expenseId: string) => {}}
+    expenses={expenses}
+    isExpensesLoading={isExpensesLoading}
+    handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'expense')}
     isFiltered={false}
     onClearFilters={() => {}}
     onFilterDrawerOpen={() => {}}
@@ -270,7 +334,9 @@ const handleClick =(mode: string, id:string)=>{
   <TabPanel value={2}>
 
 <EmployeesTable
-  handleClick={handleClick}
+isEmployeeLoading={isEmployeeLoading}
+  employees={employees}
+  handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'employee')}
   isFiltered={false}
   onClearFilters={() => {}}
   onFilterDrawerOpen={() => {}}
@@ -316,7 +382,6 @@ const handleClick =(mode: string, id:string)=>{
   open={isEmployeeModalOpen}
   onClose={() => handleModalClose('employee')}
   onSave={() => {
-    // Implement your save logic here
     handleModalClose('employee');
   }}
   employeeForm={employeeForm}

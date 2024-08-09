@@ -283,18 +283,19 @@ const onSave=async()=>{
   setProjectForm(validateData)
   if(isValid){
     setIsLoading(true)
-    const projectData:createProjectDto={
-      _id:projectForm._id.value,
-      clientContactNumber:projectForm.clientContactNumber.value,
-      clientEmail:projectForm.clientEmail.value,
-      projectName:projectForm.projectName.value,
-      startDate:projectForm.startDate.value,
-      endDate:projectForm.endDate.value,
-      status:projectForm.status.value,
-      createdBy:projectForm.createdBy.value,
-      category:projectForm.category.value,
-    }
+  
+
     if(mode===SCREEN_MODES.CREATE){
+      const projectData:createProjectDto={
+        clientContactNumber:projectForm.clientContactNumber.value,
+        clientEmail:projectForm.clientEmail.value,
+        projectName:projectForm.projectName.value,
+        startDate:projectForm.startDate.value,
+        endDate:projectForm.endDate.value,
+        status:projectForm.status.value,
+        createdBy:projectForm.createdBy.value,
+        category:projectForm.category.value,
+      }
 
       ProjectService.createProject(projectData).then(async (res:any)=>{
         await getProjects();
@@ -309,6 +310,17 @@ const onSave=async()=>{
       })
     }
     if(mode===SCREEN_MODES.EDIT){
+      const projectData:createProjectDto={
+        _id:projectForm._id.value,
+        clientContactNumber:projectForm.clientContactNumber.value,
+        clientEmail:projectForm.clientEmail.value,
+        projectName:projectForm.projectName.value,
+        startDate:projectForm.startDate.value,
+        endDate:projectForm.endDate.value,
+        status:projectForm.status.value,
+        createdBy:projectForm.createdBy.value,
+        category:projectForm.category.value,
+      }
       ProjectService.updateProject(projectData).then(async (res:any)=>{
         await getProjects();
         await getProjectsCounts();

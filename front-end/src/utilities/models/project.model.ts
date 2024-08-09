@@ -14,17 +14,30 @@ export interface createProjectDto{
 
 
 export interface Expense {
-    date: Date;
+    _id: string
+    category: string;
+    date: string;
     amount: number;
     description?: string;
     vendor?: string;
     invoiceNumber?: string;
   }
 export interface Income {
-    date: Date;
+    _id: string;
+    invoiceNumber: string;
+    date: string;
     amount: number;
     description?: string;
-    source?: string;
+    receivedBy: string;
+  }
+
+  export  interface employee{
+    _id:string
+    employeeID:string
+    employeeName:string
+    email:string
+    position:string
+    projectStartedDate:string
   }
   export interface Project {
     _id: string;
@@ -93,6 +106,8 @@ export interface ExpenseFormDto {
   date: FormFieldDto<string>;
 }
 export interface EmployeeFormDto {
+  _id: FormFieldDto<string>;
+  employeeID: FormFieldDto<string>;
   employeeName: FormFieldDto<string>;
   email: FormFieldDto<string>;
   position: FormFieldDto<string>;

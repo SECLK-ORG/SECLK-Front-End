@@ -38,7 +38,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '50%',
+        width: '70%',
         bgcolor: 'background.paper',
         border: '1px solid #e0e0e0',
         boxShadow: 24,
@@ -50,7 +50,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         <Divider />
         <Box sx={{ padding: '16px' }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -66,7 +66,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Vendor"
@@ -77,7 +77,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 helperText={helperText && expenseForm.vendor.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Amount"
@@ -88,7 +88,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 helperText={helperText && expenseForm.amount.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Description"
@@ -99,7 +99,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 helperText={helperText && expenseForm.description.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 label="Invoice Number"
@@ -110,7 +110,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 helperText={helperText && expenseForm.invoiceNumber.error}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 type="date"

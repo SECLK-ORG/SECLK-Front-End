@@ -2,83 +2,28 @@ import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box, Typography,
-  TableCell
+  TableCell,
+  CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material';
-import { Pagination } from '@mui/material';
+import { Visibility, Edit, Search } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { StyledTextField } from '../../assets/theme/theme';
-
-interface Expense {
-  name: string;
-  category: string;
-  vendor: string;
-  amount: string;
-  description: string;
-  invoiceNumber: string;
-  date: string;
-}
+import { Expense } from '../../utilities/models';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface ExpensesTableProps {
   page: number;
   rowsPerPage: number;
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
-  onChangeRowsPerPage: (event:any,) => void;
+  onChangeRowsPerPage: (event: any) => void;
   onFilterDrawerOpen: () => void;
   onClearFilters: () => void;
   isFiltered: boolean;
   handleClick: (mode: string, expenseId: string) => void;
+  expenses: Expense[];
+  isExpensesLoading?: boolean;
 }
-
-const expenses: Expense[] = [
-  {
-    name: 'Expense 1',
-    category: 'Salary',
-    vendor: 'Kalana Malith',
-    amount: '$200',
-    description: 'Software Engineer',
-    invoiceNumber: '100 200 300',
-    date: '23/08/2023',
-  },
-  {
-    name: 'Expense 2',
-    category: 'Subscription',
-    vendor: 'Freepik',
-    amount: '$25',
-    description: 'Subscription payment',
-    invoiceNumber: '101 202 303',
-    date: '23/08/2023',
-  },
-  {
-    name: 'Expense 3',
-    category: 'Salary',
-    vendor: 'Nuwan Thushara',
-    amount: '$100',
-    description: 'UX Designer',
-    invoiceNumber: '102 203 304',
-    date: '23/08/2023',
-  },
-  {
-    name: 'Expense 4',
-    category: 'Salary',
-    vendor: 'Kalana Perera',
-    amount: '$150',
-    description: 'QA Engineer',
-    invoiceNumber: '103 204 305',
-    date: '23/08/2023',
-  },
-  {
-    name: 'Expense 5',
-    category: 'Salary',
-    vendor: 'Kesara Charith',
-    amount: '$250',
-    description: 'QA Engineer',
-    invoiceNumber: '104 205 306',
-    date: '23/08/2023',
-  },
-];
 
 const ExpensesTable: React.FC<ExpensesTableProps> = ({
   page,
@@ -88,13 +33,14 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   onFilterDrawerOpen,
   onClearFilters,
   isFiltered,
-  handleClick
+  handleClick,
+  expenses,
+  isExpensesLoading
 }) => {
-
   return (
-    <div style={{  }}>
+    <div>
       <TableContainer component={Paper}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem',borderBottom:"1px solid #e0e0e0" }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', borderBottom: "1px solid #e0e0e0" }}>
           <StyledTextField
             variant="outlined"
             placeholder="Search"
@@ -117,21 +63,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 Clear Filters
               </IconButton>
             )}
-            {/* <CustomButton
-               variant="outlined"
-               endIcon={<FilterAltOutlinedIcon />}
-               style={{ textTransform: 'full-width', backgroundColor: 'white' }}
-               onClick={onFilterDrawerOpen}
 
-            >
-              Filters
-            </CustomButton> */}
             <CustomButton
-            text='add Expense'
-            backgroundColor='#437EF7'
-            color='white'
-            variant='contained'
-            onClick={onFilterDrawerOpen}
+              text='Add Expense'
+              backgroundColor='#437EF7'
+              color='white'
+              variant='contained'
+              onClick={() => { handleClick(SCREEN_MODES.CREATE, "") }}
             />
           </div>
         </div>
@@ -148,37 +86,50 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {expenses.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((expense, index) => (
-              <TableRow key={index}>
-                <TableCell>{expense.category}</TableCell>
-                <TableCell>{expense.vendor}</TableCell>
-                <TableCell>{expense.amount}</TableCell>
-                <TableCell>{expense.description}</TableCell>
-                <TableCell>{expense.invoiceNumber}</TableCell>
-                <TableCell>{expense.date}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => { handleClick('VIEW', expense.name) }}>
-                    <Visibility />
-                  </IconButton>
-                  <IconButton>
-                    <Edit />
-                  </IconButton>
+            {isExpensesLoading ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <CircularProgress />
                 </TableCell>
               </TableRow>
-            ))}
+            ) : expenses.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  No records found
+                </TableCell>
+              </TableRow>
+            ) : (
+              expenses.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((expense, index) => (
+                <TableRow key={index}>
+                  <TableCell>{expense.category}</TableCell>
+                  <TableCell>{expense.vendor}</TableCell>
+                  <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{expense.description}</TableCell>
+                  <TableCell>{expense.invoiceNumber}</TableCell>
+                  <TableCell>{expense.date}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, expense._id) }}>
+                      <Visibility />
+                    </IconButton>
+                    <IconButton>
+                      <Edit />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-
-        <CustomPagination
-  count={Math.ceil(expenses.length / rowsPerPage)}
-  page={page}
-  onChangePage={onChangePage}
-  filteredProjects={expenses}
-  rowsPerPage={rowsPerPage}
-  onChangeRowsPerPage={onChangeRowsPerPage}
-/>
-</Box>
+          <CustomPagination
+            count={Math.ceil(expenses.length / rowsPerPage)}
+            page={page}
+            onChangePage={onChangePage}
+            filteredProjects={expenses}
+            rowsPerPage={rowsPerPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+          />
+        </Box>
       </TableContainer>
     </div>
   );

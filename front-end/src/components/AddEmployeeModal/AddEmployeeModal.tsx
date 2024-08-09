@@ -40,7 +40,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '50%',
+        width: '60%',
         bgcolor: 'background.paper',
         border: '1px solid #e0e0e0',
         boxShadow: 24,
@@ -58,6 +58,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                 <Select
                   label="Employee Name"
                   value={employeeForm.employeeName.value}
+                  disabled={employeeForm.employeeName.disable}
+                  required={employeeForm.employeeName.isRequired}
                   onChange={(event) => onInputHandleChange('employeeName', event.target.value)}
                 >
                   {employees.map((employee, index) => (
@@ -73,6 +75,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                 fullWidth
                 label="Email"
                 value={employeeForm.email.value}
+                disabled={employeeForm.email.disable}
+                required={employeeForm.email.isRequired}
                 onFocus={() => handleInputFocus('email')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('email', event.target.value)}
                 error={!!employeeForm.email.error}
@@ -85,6 +89,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                 <Select
                   label="Position"
                   value={employeeForm.position.value}
+                  disabled={employeeForm.position.disable}
+                  required={employeeForm.position.isRequired}
                   onChange={(event) => onInputHandleChange('position', event.target.value)}
                 >
                   {positions.map((position, index) => (
@@ -102,6 +108,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                 label="Project Started Date"
                 InputLabelProps={{ shrink: true }}
                 value={employeeForm.projectStartedDate.value}
+                disabled={employeeForm.projectStartedDate.disable}
+                required={employeeForm.projectStartedDate.isRequired}
                 onFocus={() => handleInputFocus('projectStartedDate')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('projectStartedDate', event.target.value)}
                 error={!!employeeForm.projectStartedDate.error}
