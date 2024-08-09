@@ -77,3 +77,24 @@ export interface FilterMap{
     name:string
     isSelect:boolean
 }
+
+export interface IncomeFormDto {
+  amount: FormFieldDto<string>;
+  invoiceNumber: FormFieldDto<string>;
+  receivedBy: FormFieldDto<string>;
+  date: FormFieldDto<string>;
+}
+export interface ExpenseFormDto {
+  category: FormFieldDto<string>;
+  vendor: FormFieldDto<string>;
+  amount: FormFieldDto<string>;
+  description: FormFieldDto<string>;
+  invoiceNumber: FormFieldDto<string>;
+  date: FormFieldDto<string>;
+}
+export interface EmployeeFormDto {
+  employeeName: FormFieldDto<string>;
+  email: FormFieldDto<string>;
+  position: FormFieldDto<string>;
+  projectStartedDate: FormFieldDto<string>;
+}

@@ -8,6 +8,7 @@ import { Visibility, Edit, Search, FilterAltOutlined } from '@mui/icons-material
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { StyledTextField } from '../../assets/theme/theme';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface ProjectEmployees {
   name: string;
@@ -76,7 +77,7 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
               backgroundColor='#437EF7'
               color='white'
               variant='contained'
-              onClick={onFilterDrawerOpen}
+              onClick={()=>handleClick(SCREEN_MODES.CREATE, "") }
             />
           </div>
         </div>
@@ -98,7 +99,7 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.projectStartedDate}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => { handleClick('VIEW', employee.name) }}>
+                  <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, employee.name) }}>
                     <Visibility />
                   </IconButton>
                   <IconButton>

@@ -24,12 +24,15 @@ const updateProject = async (project: createProjectDto): Promise<AxiosResponse<a
 const getProjectById = async (projectId: string): Promise<AxiosResponse<any[]>> => {
     return await axiosPrivateInstance.get(`/api/projects/getProjectById/${projectId}`)
 }
+const getIncomeDetailsByProjectId=async (projectId: string): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.get(`/api/projects/project/${projectId}/incomeDetails`)
+}
 export const ProjectService = {
     createProject,
     getProjects,
     getProjectCountByStatus,
     deleteProject,
     updateProject,
-
-    getProjectById
+    getProjectById,
+    getIncomeDetailsByProjectId
 }

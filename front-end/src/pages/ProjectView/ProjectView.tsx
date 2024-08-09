@@ -1,20 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Grid,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,19 +15,50 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { Project, ProjectStatus } from "../../utilities/models";
+import { EmployeeFormDto, ExpenseFormDto, IncomeFormDto, Project, ProjectStatus } from "../../utilities/models";
+import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
+import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
+import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
+import { SCREEN_MODES } from "../../utilities/constants/app.constants";
 
 const ProjectView = () => {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
+  const INITIAL_INCOME_FORM_DATA: IncomeFormDto = {
+    amount: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    invoiceNumber: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    receivedBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    date: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
+  };
+  const INITIAL_EXPENSE_FORM_DATA: ExpenseFormDto = {
+    category: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    vendor: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    amount: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    description: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
+    invoiceNumber: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    date: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
+  };
+  
+  const INITIAL_EMPLOYEE_FORM_DATA: EmployeeFormDto = {
+    employeeName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    email: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "" },
+    position: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    projectStartedDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
+  };
+  
 
   const [projectData, setProjectData] = useState<Project>({} as Project)
 
+  
+  const [incomeForm, setIncomeForm] = useState<IncomeFormDto>(INITIAL_INCOME_FORM_DATA);
+  const [expenseForm, setExpenseForm] = useState<ExpenseFormDto>(INITIAL_EXPENSE_FORM_DATA);
+  const [employeeForm, setEmployeeForm] = useState<EmployeeFormDto>(INITIAL_EMPLOYEE_FORM_DATA);
+  const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
 
 useEffect(() => {
-
-    getProjectData()
-  
+    getProjectData() 
 }, [])
 
 
@@ -56,6 +76,71 @@ const getProjectData=()=>{
   const handleBack = () => {
     navigate(-1);
   };
+
+  const onInputHandleChange = <T extends keyof IncomeFormDto | keyof ExpenseFormDto | keyof EmployeeFormDto>(
+    formType: 'income' | 'expense' | 'employee',
+    property: T,
+    value: string
+  ) => {
+    if (formType === 'income') {
+      setIncomeForm({
+        ...incomeForm,
+        [property]: { ...incomeForm[property as keyof typeof incomeForm], value: value, error: "" },
+      });
+    } else if (formType === 'expense') {
+      setExpenseForm({
+        ...expenseForm,
+        [property]: { ...expenseForm[property as keyof typeof expenseForm], value: value, error: "" },
+      });
+    } else if (formType === 'employee') {
+      setEmployeeForm({
+        ...employeeForm,
+        [property]: { ...employeeForm[property as keyof typeof employeeForm], value: value, error: "" },
+      });
+    }
+  };
+  
+  const handleInputFocus = <T extends keyof IncomeFormDto | keyof ExpenseFormDto | keyof EmployeeFormDto>(
+    formType: 'income' | 'expense' | 'employee',
+    property: T
+  ) => {
+    if (formType === 'income') {
+      setIncomeForm({
+        ...incomeForm,
+        [property]: { ...incomeForm[property as keyof typeof incomeForm], error: "" },
+      });
+    } else if (formType === 'expense') {
+      setExpenseForm({
+        ...expenseForm,
+        [property]: { ...expenseForm[property as keyof typeof expenseForm], error: "" },
+      });
+    } else if (formType === 'employee') {
+      setEmployeeForm({
+        ...employeeForm,
+        [property]: { ...employeeForm[property as keyof typeof employeeForm], error: "" },
+      });
+    }
+  };
+  
+  const handleModalOpen = (type: string) => {
+    if (type === 'income') setIsIncomeModalOpen(true);
+    if (type === 'expense') setIsExpenseModalOpen(true);
+    if (type === 'employee') setIsEmployeeModalOpen(true);
+  };
+
+  const handleModalClose = (type: string) => {
+    if (type === 'income') setIsIncomeModalOpen(false);
+    if (type === 'expense') setIsExpenseModalOpen(false);
+    if (type === 'employee') setIsEmployeeModalOpen(false);
+  };
+
+const handleClick =(mode: string, id:string)=>{
+  if(mode===SCREEN_MODES.CREATE){
+    handleModalOpen('employee')
+  }
+
+}
+
   return (
     <Box  m={1} 
     p={2}
@@ -158,7 +243,7 @@ const getProjectData=()=>{
   </TabsList>
   <TabPanel value={0}>
 <IncomeTable
- handleClick={(mode: string, expenseId: string) => {}}
+ handleClick={(mode: string, expenseId: string) => handleModalOpen('income')}
  isFiltered={false}
  onClearFilters={() => {}}
  onFilterDrawerOpen={() => {}}
@@ -185,7 +270,7 @@ const getProjectData=()=>{
   <TabPanel value={2}>
 
 <EmployeesTable
-  handleClick={(mode: string, expenseId: string) => {}}
+  handleClick={handleClick}
   isFiltered={false}
   onClearFilters={() => {}}
   onFilterDrawerOpen={() => {}}
@@ -198,6 +283,50 @@ const getProjectData=()=>{
   </TabPanel>
 </Tabs>
       </Box>
+
+
+      <AddIncomeModal
+  open={isIncomeModalOpen}
+  onClose={() => handleModalClose('income')}
+  onSave={() => {
+    // Implement your save logic here
+    handleModalClose('income');
+  }}
+  incomeForm={incomeForm}
+  helperText={false}
+  handleInputFocus={(property:any) => handleInputFocus('income', property)}
+  onInputHandleChange={(property:any, value) => onInputHandleChange('income', property, value)}
+/>
+
+<AddExpenseModal
+  open={isExpenseModalOpen}
+  onClose={() => handleModalClose('expense')}
+  onSave={() => {
+    // Implement your save logic here
+    handleModalClose('expense');
+  }}
+  expenseForm={expenseForm}
+  categories={['Category 1', 'Category 2', 'Category 3']}
+  helperText={false}
+  handleInputFocus={(property:any) => handleInputFocus('expense', property)}
+  onInputHandleChange={(property:any, value) => onInputHandleChange('expense', property, value)}
+/>
+
+<AddEmployeeModal
+  open={isEmployeeModalOpen}
+  onClose={() => handleModalClose('employee')}
+  onSave={() => {
+    // Implement your save logic here
+    handleModalClose('employee');
+  }}
+  employeeForm={employeeForm}
+  positions={['Position 1', 'Position 2', 'Position 3']}
+  employees={['Employee 1', 'Employee 2', 'Employee 3']}
+  helperText={false}
+  handleInputFocus={(property:any) => handleInputFocus('employee', property)}
+  onInputHandleChange={(property:any, value) => onInputHandleChange('employee', property, value)}
+/>
+
     </Box>
   );
 };
