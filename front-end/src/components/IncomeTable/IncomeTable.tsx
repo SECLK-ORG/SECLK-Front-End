@@ -6,11 +6,12 @@ import {
   TextField,
   CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search } from '@mui/icons-material';
+import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { Income } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import moment from 'moment';
 
 interface IncomeTableProps {
   page: number;
@@ -102,14 +103,17 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
                   <TableCell>{income.amount}</TableCell>
                   <TableCell>{income.invoiceNumber}</TableCell>
                   <TableCell>{income.receivedBy}</TableCell>
-                  <TableCell>{income.date}</TableCell>
+                  <TableCell>{moment(income.date).format('YYYY-MM-DD ')}</TableCell>
                   <TableCell>{income.description}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, income.invoiceNumber) }}>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, income._id) }}>
                       <Visibility />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.EDIT, income._id) }}>
                       <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.DELETE, income._id) }}>
+                      <Delete />
                     </IconButton>
                   </TableCell>
                 </TableRow>

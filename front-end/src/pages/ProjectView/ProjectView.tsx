@@ -15,11 +15,14 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { employee, EmployeeFormDto, Expense, ExpenseFormDto, Income, IncomeFormDto, Project, ProjectStatus } from "../../utilities/models";
+import { employee, EmployeeFormDto, Expense, ExpenseFormDto, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus } from "../../utilities/models";
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
 import { SCREEN_MODES } from "../../utilities/constants/app.constants";
+import { validateFormData } from "../../utilities/helpers";
+import { showErrorToast, showSuccessToast } from "../../utilities/helpers/alert";
+import DeleteConfirmationModal from "../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 const ProjectView = () => {
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ const ProjectView = () => {
 
   const INITIAL_INCOME_FORM_DATA: IncomeFormDto = {
     amount: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
-    invoiceNumber: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    description: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
     receivedBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
     date: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
   };
@@ -64,6 +67,13 @@ const ProjectView = () => {
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
+
+  const [helperText, setHelperText] = useState(false);
+  const [mode, setMode] = useState(SCREEN_MODES.CREATE);
+  const [id, setId] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [text, setText] = useState("");
+
 
 
 useEffect(() => {
@@ -180,27 +190,123 @@ const getExpenseDetails=()=>{
   };
 
   const handleModalClose = (type: string) => {
-    if (type === 'income') setIsIncomeModalOpen(false);
-    if (type === 'expense') setIsExpenseModalOpen(false);
-    if (type === 'employee') setIsEmployeeModalOpen(false);
+    if (type === 'income') {setIsIncomeModalOpen(false) ;setIncomeForm(INITIAL_INCOME_FORM_DATA)}
+    if (type === 'expense') setIsExpenseModalOpen(false);setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
+    if (type === 'employee') setIsEmployeeModalOpen(false);setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
   };
 
 const handleClick =(mode: string, id:string,property:string)=>{
+  setMode(mode)
+  setId(id)
+  setText(property)
+  if(mode===SCREEN_MODES.DELETE){
+    setDeleteModalOpen(true)
+  }else{
+    if(property==='income'){
+      handleModalOpen('income')
+      if(SCREEN_MODES.EDIT||SCREEN_MODES.VIEW){
+          const isDisable=mode===SCREEN_MODES.VIEW?true:false
+          const data=incomes.find((income:Income)=>(income._id===id)) 
+          if(data){
+                setIncomeForm({
+                  amount: { value: data.amount, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+                  description: { value: data?.description as string, isRequired: isDisable, disable: isDisable, readonly: false, validator: "text", error: "" },
+                  receivedBy: { value: data.receivedBy, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+                  date: { value: data.date, isRequired: true, disable: isDisable, readonly: isDisable, validator: "date", error: "" },
+                })
+           }
+      }
 
-  if(property==='income'){
-    handleModalOpen('income')
+    }else if(property==='expense'){
+      handleModalOpen('expense')
+    }else{
+      handleModalOpen('employee')
+    }
   }
-  else if(property==='expense'){
-    handleModalOpen('expense')
-  }
-  else{
-    handleModalOpen('employee')
-  }
-
-  
-
 }
 
+const handleSave=async (property:string)=>{ 
+  setHelperText(true)
+  if(property==='income'){
+    const [validateData, isValid] =await validateFormData(incomeForm);
+    setIncomeForm(validateData);
+    if(isValid&&projectId){  
+      if(mode===SCREEN_MODES.CREATE){
+        const incomePayload:IncomePayload={
+          amount:incomeForm.amount.value,
+          receivedBy:incomeForm.receivedBy.value,
+          date:incomeForm.date.value,
+          description:incomeForm.description.value
+        }
+        ProjectService.createIncomeDetailByProjectId(projectId,incomePayload).then((res:any)=>{
+          console.log("income",res.data.data)
+          showSuccessToast("Income Added Successfully")
+          getIncomeDetails()
+          handleModalClose('income')
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })
+       
+      }else{
+        const incomePayload:IncomePayload={
+          _id:id,
+          amount:incomeForm.amount.value,
+          receivedBy:incomeForm.receivedBy.value,
+          date:incomeForm.date.value,
+          description:incomeForm.description.value
+        }
+        ProjectService.updateIncomeDetailByProjectId(projectId,id,incomePayload).then((res:any)=>{
+          showSuccessToast("Income Updated Successfully")
+          getIncomeDetails()
+          handleModalClose('income')
+          setIncomeForm(INITIAL_INCOME_FORM_DATA)
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })
+      }
+    
+    
+    
+    
+    
+    
+    }
+   
+  }
+  else if(property==='expense'){
+    console.log("expense",expenseForm)
+  }
+  else{
+    console.log("employee",employeeForm)
+  }
+}
+
+
+const handleDeleteAction=(isConfirm:boolean, property:string)=>{
+  if(isConfirm&&projectId){
+    if(property==='income'){
+      ProjectService.deleteIncomeDetailByProjectId(projectId,id).then((res:any)=>{
+        console.log("delete income",res.data.data)
+        showSuccessToast("Income Deleted Successfully")
+        getIncomeDetails()
+        setDeleteModalOpen(false)
+        setIncomeForm(INITIAL_INCOME_FORM_DATA)
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)
+      })
+    }else if(property==='expense'){
+      console.log("delete expense")
+    }else{
+      console.log("delete employee")
+    }
+  
+  }else{
+    setDeleteModalOpen(false)
+  }
+}
   return (
     <Box  m={1} 
     p={2}
@@ -294,72 +400,67 @@ const handleClick =(mode: string, id:string,property:string)=>{
           </Grid>
         </Grid>
       </Box>
-    <Box className={styles.tabBox}>
-      <Tabs defaultValue={0} orientation="horizontal">
-  <TabsList>
-    <Tab>Income</Tab>
-    <Tab>Expenses</Tab>
-    <Tab>Employees</Tab>
-  </TabsList>
-  <TabPanel value={0}>
-<IncomeTable
-incomes={incomes}
-isIncomeLoading={isIncomeLoading}
- handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'income')}
- isFiltered={false}
- onClearFilters={() => {}}
- onFilterDrawerOpen={() => {}}
- onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
- onChangeRowsPerPage={(event: any) => {}}
- page={1}
- rowsPerPage={5}
-/>
-
-  </TabPanel>
-  <TabPanel value={1}>
-    <ExpensesTable
-    expenses={expenses}
-    isExpensesLoading={isExpensesLoading}
-    handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'expense')}
-    isFiltered={false}
-    onClearFilters={() => {}}
-    onFilterDrawerOpen={() => {}}
-    onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
-    onChangeRowsPerPage={(event: any) => {}}
-    page={1}
-    rowsPerPage={5}
-    
-  />
-  </TabPanel>
-  <TabPanel value={2}>
-
-<EmployeesTable
-isEmployeeLoading={isEmployeeLoading}
-  employees={employees}
-  handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'employee')}
-  isFiltered={false}
-  onClearFilters={() => {}}
-  onFilterDrawerOpen={() => {}}
-  onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
-  onChangeRowsPerPage={(event: any) => {}}
-  page={1}
-  rowsPerPage={5}
-/>
-
-  </TabPanel>
-</Tabs>
-      </Box>
+<Box className={styles.tabBox}>
+  <Tabs defaultValue={0} orientation="horizontal">
+    <TabsList>
+      <Tab>Income</Tab>
+      <Tab>Expenses</Tab>
+      <Tab>Employees</Tab>
+    </TabsList>
+      <TabPanel value={0}>
+          <IncomeTable
+          incomes={incomes}
+          isIncomeLoading={isIncomeLoading}
+          handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'income')}
+          isFiltered={false}
+          onClearFilters={() => {}}
+          onFilterDrawerOpen={() => {}}
+          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
+          onChangeRowsPerPage={(event: any) => {}}
+          page={1}
+          rowsPerPage={5}
+          />
+      </TabPanel>
+      <TabPanel value={1}>
+        <ExpensesTable
+        expenses={expenses}
+        isExpensesLoading={isExpensesLoading}
+        handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'expense')}
+        isFiltered={false}
+        onClearFilters={() => {}}
+        onFilterDrawerOpen={() => {}}
+        onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
+        onChangeRowsPerPage={(event: any) => {}}
+        page={1}
+        rowsPerPage={5}
+        
+      />
+      </TabPanel>
+      <TabPanel value={2}>
+        <EmployeesTable
+          isEmployeeLoading={isEmployeeLoading}
+          employees={employees}
+          handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'employee')}
+          isFiltered={false}
+          onClearFilters={() => {}}
+          onFilterDrawerOpen={() => {}}
+          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
+          onChangeRowsPerPage={(event: any) => {}}
+          page={1}
+          rowsPerPage={5}
+        />
+        </TabPanel>
+  </Tabs>
+</Box>
 
 
-      <AddIncomeModal
+<AddIncomeModal
+  mode={mode}
   open={isIncomeModalOpen}
   onClose={() => handleModalClose('income')}
-  onSave={() => {
-    // Implement your save logic here
-    handleModalClose('income');
-  }}
+  onSave={() => {handleSave('income')}}
   incomeForm={incomeForm}
-  helperText={false}
+  helperText={helperText}
   handleInputFocus={(property:any) => handleInputFocus('income', property)}
   onInputHandleChange={(property:any, value) => onInputHandleChange('income', property, value)}
 />
@@ -367,10 +468,7 @@ isEmployeeLoading={isEmployeeLoading}
 <AddExpenseModal
   open={isExpenseModalOpen}
   onClose={() => handleModalClose('expense')}
-  onSave={() => {
-    // Implement your save logic here
-    handleModalClose('expense');
-  }}
+  onSave={() => {handleSave('expense')}}
   expenseForm={expenseForm}
   categories={['Category 1', 'Category 2', 'Category 3']}
   helperText={false}
@@ -381,9 +479,7 @@ isEmployeeLoading={isEmployeeLoading}
 <AddEmployeeModal
   open={isEmployeeModalOpen}
   onClose={() => handleModalClose('employee')}
-  onSave={() => {
-    handleModalClose('employee');
-  }}
+  onSave={() => {handleSave('employee');}}
   employeeForm={employeeForm}
   positions={['Position 1', 'Position 2', 'Position 3']}
   employees={['Employee 1', 'Employee 2', 'Employee 3']}
@@ -392,7 +488,15 @@ isEmployeeLoading={isEmployeeLoading}
   onInputHandleChange={(property:any, value) => onInputHandleChange('employee', property, value)}
 />
 
-    </Box>
+<DeleteConfirmationModal
+handleDeleteAction={handleDeleteAction}
+onClose={()=>{setDeleteModalOpen(false)}}
+open={deleteModalOpen}
+text={text}
+
+/>
+
+</Box>
   );
 };
 

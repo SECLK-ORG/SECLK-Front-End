@@ -17,7 +17,7 @@ export interface Expense {
     _id: string
     category: string;
     date: string;
-    amount: number;
+    amount: string;
     description?: string;
     vendor?: string;
     invoiceNumber?: string;
@@ -26,7 +26,7 @@ export interface Income {
     _id: string;
     invoiceNumber: string;
     date: string;
-    amount: number;
+    amount: string;
     description?: string;
     receivedBy: string;
   }
@@ -93,7 +93,7 @@ export interface FilterMap{
 
 export interface IncomeFormDto {
   amount: FormFieldDto<string>;
-  invoiceNumber: FormFieldDto<string>;
+  description: FormFieldDto<string>;
   receivedBy: FormFieldDto<string>;
   date: FormFieldDto<string>;
 }
@@ -113,3 +113,28 @@ export interface EmployeeFormDto {
   position: FormFieldDto<string>;
   projectStartedDate: FormFieldDto<string>;
 }
+
+export interface EmployeePayload {
+  employeeID: string;
+  employeeName: string;
+  email: string;
+  position: string;
+  projectStartedDate: string;
+}
+export interface IncomePayload {
+  _id?: string;
+  invoiceNumber?: string;
+  amount: string;
+  description: string;
+  receivedBy: string;
+  date: string;
+}
+export interface ExpensePayload {
+  _id?: string;
+  category: string;
+  amount: number;
+  description: string;
+  vendor: string;
+  date: string;
+}
+

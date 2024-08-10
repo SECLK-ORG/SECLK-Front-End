@@ -40,7 +40,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '60%',
+        width: '70%',
         bgcolor: 'background.paper',
         border: '1px solid #e0e0e0',
         boxShadow: 24,

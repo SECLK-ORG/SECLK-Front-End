@@ -26,13 +26,17 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     <Button
       variant={variant}
       sx={{
-        background: backgroundColor,
+        background: backgroundColor ,
         color: color,
         minWidth: size === 'small' ? '5rem' : size === 'large' ? '10rem' : '7rem',
         height: height,
         textTransform: textTransform,
         borderRadius: "5px",
         border: variant === 'outlined' ? "1px solid #437EF7" : "none",
+        '&:hover': {
+          backgroundColor: "white",
+          color: "#437EF7",
+        },
       }}
       onClick={onClick}
     >

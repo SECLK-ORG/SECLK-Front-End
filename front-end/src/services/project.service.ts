@@ -30,6 +30,36 @@ const getExpenseDetailsByProjectId=async (projectId: string): Promise<AxiosRespo
 const getEmployeeDetailsByProjectId=async (projectId: string): Promise<AxiosResponse<any[]>> => {
     return await axiosPrivateInstance.get(`/api/projects/project/${projectId}/employeeDetails`)
 }
+const createEmployeeDetailByProjectId = async (projectId: string, employeeDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.post(`/api/projects/project/${projectId}/employeeDetails`, employeeDetail);
+};
+const updateEmployeeDetailByProjectId = async (projectId: string, employeeId: string, updatedEmployeeDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.put(`/api/projects/project/${projectId}/employeeDetails/${employeeId}`, updatedEmployeeDetail);
+};
+const deleteEmployeeDetailByProjectId = async (projectId: string, employeeId: string): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.delete(`/api/projects/project/${projectId}/employeeDetails/${employeeId}`);
+};
+const createIncomeDetailByProjectId = async (projectId: string, incomeDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.post(`/api/projects/project/${projectId}/incomeDetails`, incomeDetail);
+};
+const updateIncomeDetailByProjectId = async (projectId: string, incomeId: string, updatedIncomeDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.put(`/api/projects/project/${projectId}/incomeDetails/${incomeId}`, updatedIncomeDetail);
+};
+const deleteIncomeDetailByProjectId = async (projectId: string, incomeId: string): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.delete(`/api/projects/project/${projectId}/incomeDetails/${incomeId}`);
+};
+const createExpenseDetailByProjectId = async (projectId: string, expenseDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.post(`/api/projects/project/${projectId}/expenseDetails`, expenseDetail);
+};
+const updateExpenseDetailByProjectId = async (projectId: string, expenseId: string, updatedExpenseDetail: any): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.put(`/api/projects/project/${projectId}/expenseDetails/${expenseId}`, updatedExpenseDetail);
+};
+const deleteExpenseDetailByProjectId = async (projectId: string, expenseId: string): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.delete(`/api/projects/project/${projectId}/expenseDetails/${expenseId}`);
+};
+
+
+
 
 export const ProjectService = {
     createProject,
@@ -41,4 +71,13 @@ export const ProjectService = {
     getIncomeDetailsByProjectId,
     getExpenseDetailsByProjectId,
     getEmployeeDetailsByProjectId,
+    createEmployeeDetailByProjectId,
+    updateEmployeeDetailByProjectId,
+    deleteEmployeeDetailByProjectId,
+    createIncomeDetailByProjectId,
+    updateIncomeDetailByProjectId,
+    deleteIncomeDetailByProjectId,
+    createExpenseDetailByProjectId,
+    updateExpenseDetailByProjectId,
+    deleteExpenseDetailByProjectId,
 }
