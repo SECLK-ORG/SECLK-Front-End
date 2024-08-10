@@ -1,10 +1,13 @@
 import React from 'react';
-import { Modal, Box, Typography, Divider, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Modal, Box, Typography, Divider, Grid, FormControl, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
-import { ExpenseFormDto } from '../../utilities/models';
+import { ExpenseFormDto, userList } from '../../utilities/models';
+import moment from 'moment';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface AddExpenseModalProps {
+  mode: string;
   open: boolean;
   onClose: () => void;
   onSave: () => void;
@@ -12,7 +15,8 @@ interface AddExpenseModalProps {
   categories: string[];
   helperText?: boolean;
   handleInputFocus: (property: string) => void;
-  onInputHandleChange: (property: string, value: string) => void;
+  onInputHandleChange: (property: string, value: any) => void;
+  employeeList: userList[];
 }
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
@@ -24,7 +28,11 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   helperText,
   handleInputFocus,
   onInputHandleChange,
+  employeeList,
+  mode,
 }) => {
+  const isOtherCategory = expenseForm.category.value === 'Other';
+
   return (
     <Modal
       open={open}
@@ -56,38 +64,78 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 <Select
                   label="Category"
                   value={expenseForm.category.value}
+                  required={expenseForm.category.isRequired}
+                  disabled={expenseForm.category.disable}
+                  error={!!expenseForm.category.error}
                   onChange={(event) => onInputHandleChange('category', event.target.value)}
                 >
                   {categories.map((category, index) => (
-                    <MenuItem key={index} value={category}>
+                    <MenuItem key={index} value={category} >
                       {category}
                     </MenuItem>
                   ))}
-                </Select>
+               </Select>
+               {helperText && expenseForm.category.error && (
+                 <FormHelperText sx={{ color: "#FF0001" }}>{expenseForm.category.error}</FormHelperText>
+               )}
               </FormControl>
             </Grid>
+
             <Grid item xs={12} md={6} lg={4}>
-              <StyledTextField
+              {isOtherCategory ? (
+                <StyledTextField
+                  fullWidth
+                  label="Vendor"
+                  value={expenseForm.vendor.value}
+                  onFocus={() => handleInputFocus('vendor')}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('vendor', event.target.value)}
+                  error={!!expenseForm.vendor.error}
+                  required={expenseForm.vendor.isRequired}
+                  disabled={expenseForm.vendor.disable}
+                  helperText={helperText && expenseForm.vendor.error}
+                />
+              ) : (
+                <Autocomplete
                 fullWidth
-                label="Vendor"
-                value={expenseForm.vendor.value}
-                onFocus={() => handleInputFocus('vendor')}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('vendor', event.target.value)}
-                error={!!expenseForm.vendor.error}
-                helperText={helperText && expenseForm.vendor.error}
+                options={employeeList}
+                getOptionLabel={(option) => option.name || ''}
+                value={
+                  employeeList.find((employee) => employee._id === expenseForm.employeeID?.value?._id) || null
+                }
+                onChange={(event, newValue) => {
+                  onInputHandleChange('employeeID', newValue || {}); // Pass the entire object to store in employeeID
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Vendor"
+                    variant="outlined"
+                    error={!!expenseForm.employeeID.error}
+                    helperText={helperText && expenseForm.employeeID.error}
+                    onFocus={() => handleInputFocus('employeeID')}
+                  />
+                )}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
               />
+
+              )}
             </Grid>
+
             <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
+                type='number'
                 label="Amount"
                 value={expenseForm.amount.value}
                 onFocus={() => handleInputFocus('amount')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('amount', event.target.value)}
                 error={!!expenseForm.amount.error}
+                required={expenseForm.amount.isRequired}
+                disabled={expenseForm.amount.disable}
                 helperText={helperText && expenseForm.amount.error}
               />
             </Grid>
+
             <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
@@ -96,30 +144,24 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 onFocus={() => handleInputFocus('description')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('description', event.target.value)}
                 error={!!expenseForm.description.error}
+                required={expenseForm.description.isRequired}
+                disabled={expenseForm.description.disable}
                 helperText={helperText && expenseForm.description.error}
               />
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <StyledTextField
-                fullWidth
-                label="Invoice Number"
-                value={expenseForm.invoiceNumber.value}
-                onFocus={() => handleInputFocus('invoiceNumber')}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('invoiceNumber', event.target.value)}
-                error={!!expenseForm.invoiceNumber.error}
-                helperText={helperText && expenseForm.invoiceNumber.error}
-              />
-            </Grid>
+
             <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
                 fullWidth
                 type="date"
                 label="Date"
                 InputLabelProps={{ shrink: true }}
-                value={expenseForm.date.value}
+                value={moment(expenseForm.date.value).format('YYYY-MM-DD')}
                 onFocus={() => handleInputFocus('date')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('date', event.target.value)}
                 error={!!expenseForm.date.error}
+                required={expenseForm.date.isRequired}
+                disabled={expenseForm.date.disable}
                 helperText={helperText && expenseForm.date.error}
               />
             </Grid>

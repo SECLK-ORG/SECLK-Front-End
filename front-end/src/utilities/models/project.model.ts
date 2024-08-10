@@ -19,8 +19,9 @@ export interface Expense {
     date: string;
     amount: string;
     description?: string;
-    vendor?: string;
+    vendor: string;
     invoiceNumber?: string;
+    employeeID?: userList;
   }
 export interface Income {
     _id: string;
@@ -100,6 +101,7 @@ export interface IncomeFormDto {
 export interface ExpenseFormDto {
   category: FormFieldDto<string>;
   vendor: FormFieldDto<string>;
+  employeeID: FormFieldDto<userList>;
   amount: FormFieldDto<string>;
   description: FormFieldDto<string>;
   invoiceNumber: FormFieldDto<string>;
@@ -132,9 +134,17 @@ export interface IncomePayload {
 export interface ExpensePayload {
   _id?: string;
   category: string;
-  amount: number;
+  amount: string;
   description: string;
   vendor: string;
   date: string;
+  employeeID?: userList;
+  invoiceNumber?: string;
 }
 
+
+export interface userList{
+_id:string
+email:string
+name:string
+}

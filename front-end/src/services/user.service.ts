@@ -19,6 +19,9 @@ const getAllUsers=():Promise<AxiosResponse<any[]>> => {
     return axiosPrivateInstance.post(`/api/users/all`);
 }
 
+const searchUsers=(payload:any):Promise<AxiosResponse<any[]>> => {
+    return axiosPrivateInstance.get(`/api/users/search?q=${payload}`);
+}
 
 
 
@@ -26,5 +29,6 @@ export const UserService = {
     login,
     resetPassword,
     getAllUsers,
-    forgotPassword
+    forgotPassword,
+    searchUsers
 }

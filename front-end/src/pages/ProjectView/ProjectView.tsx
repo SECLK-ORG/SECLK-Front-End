@@ -15,7 +15,7 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { employee, EmployeeFormDto, Expense, ExpenseFormDto, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus } from "../../utilities/models";
+import { employee, EmployeeFormDto, Expense, ExpenseFormDto, ExpensePayload, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus, userList } from "../../utilities/models";
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
@@ -23,6 +23,7 @@ import { SCREEN_MODES } from "../../utilities/constants/app.constants";
 import { validateFormData } from "../../utilities/helpers";
 import { showErrorToast, showSuccessToast } from "../../utilities/helpers/alert";
 import DeleteConfirmationModal from "../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal";
+import { UserService } from "../../services/user.service";
 
 const ProjectView = () => {
   const navigate = useNavigate();
@@ -39,8 +40,9 @@ const ProjectView = () => {
     vendor: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
     amount: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
     description: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
-    invoiceNumber: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    invoiceNumber: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
     date: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
+    employeeID: { value: {} as userList, isRequired: false, disable: false, readonly: false, validator: "object", error: "" },
   };
   
   const INITIAL_EMPLOYEE_FORM_DATA: EmployeeFormDto = {
@@ -68,6 +70,8 @@ const ProjectView = () => {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
 
+  const [employeeList, setEmployeeList] = useState<userList[]>([]);
+
   const [helperText, setHelperText] = useState(false);
   const [mode, setMode] = useState(SCREEN_MODES.CREATE);
   const [id, setId] = useState("");
@@ -81,9 +85,16 @@ useEffect(() => {
     getEmployeeDetails() 
     getIncomeDetails()
     getExpenseDetails()
+    getSearchValues()
 }, [])
 
-
+const getSearchValues=()=>{
+  UserService.searchUsers(" ").then((res:any)=>{
+    console.log("search",res.data.data)
+  
+    setEmployeeList(res.data.data)
+  }).catch((err)=>{})
+}
 const getProjectData=()=>{
   if(projectId){
     ProjectService.getProjectById(projectId).then((res:any)=>{
@@ -137,30 +148,42 @@ const getExpenseDetails=()=>{
   const handleBack = () => {
     navigate(-1);
   };
-
-  const onInputHandleChange = <T extends keyof IncomeFormDto | keyof ExpenseFormDto | keyof EmployeeFormDto>(
-    formType: 'income' | 'expense' | 'employee',
-    property: T,
-    value: string
-  ) => {
-    if (formType === 'income') {
-      setIncomeForm({
-        ...incomeForm,
-        [property]: { ...incomeForm[property as keyof typeof incomeForm], value: value, error: "" },
-      });
-    } else if (formType === 'expense') {
-      setExpenseForm({
-        ...expenseForm,
-        [property]: { ...expenseForm[property as keyof typeof expenseForm], value: value, error: "" },
-      });
-    } else if (formType === 'employee') {
-      setEmployeeForm({
-        ...employeeForm,
-        [property]: { ...employeeForm[property as keyof typeof employeeForm], value: value, error: "" },
-      });
+  const onInputHandleChange = <
+  T extends keyof IncomeFormDto | keyof ExpenseFormDto | keyof EmployeeFormDto
+>(
+  formType: 'income' | 'expense' | 'employee',
+  property: T,
+  value: any
+) => {
+  if (formType === 'income') {
+    setIncomeForm((prevForm) => ({
+      ...prevForm,
+      [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+    }));
+  } else if (formType === 'expense') {
+    if (property === 'employeeID') {
+      const employee = employeeList.find((employee) => employee._id === value._id);
+      if (employee) {
+        setExpenseForm((prevForm) => ({
+          ...prevForm,
+          vendor: { ...prevForm.vendor, value: employee.name, error: "" },
+          [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+        }));
+      }
+    } else {
+      setExpenseForm((prevForm) => ({
+        ...prevForm,
+        [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+      }));
     }
-  };
-  
+  } else if (formType === 'employee') {
+    setEmployeeForm((prevForm) => ({
+      ...prevForm,
+      [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+    }));
+  }
+};
+
   const handleInputFocus = <T extends keyof IncomeFormDto | keyof ExpenseFormDto | keyof EmployeeFormDto>(
     formType: 'income' | 'expense' | 'employee',
     property: T
@@ -219,6 +242,29 @@ const handleClick =(mode: string, id:string,property:string)=>{
 
     }else if(property==='expense'){
       handleModalOpen('expense')
+      if (SCREEN_MODES.EDIT || SCREEN_MODES.VIEW) {
+        const isDisable = mode === SCREEN_MODES.VIEW;
+        const data: Expense = expenses.find((expense: Expense) => expense._id === id) as Expense;
+      
+        if (data) {
+          let employee = undefined;
+      
+          if (data.category !== "Other" && data.employeeID) {
+            employee = employeeList.find((employee: userList) => employee._id === data.employeeID?._id);
+          }
+      
+          setExpenseForm({
+            category: { value: data.category, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+            vendor: { value: data.category === "Other" ? data.vendor : employee?.name || "", isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+            amount: { value: data.amount, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+            description: { value: data.description || "", isRequired: isDisable, disable: isDisable, readonly: false, validator: "text", error: "" },
+            invoiceNumber: { value: data.invoiceNumber || "", isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+            date: { value: data.date, isRequired: true, disable: isDisable, readonly: isDisable, validator: "date", error: "" },
+            employeeID: { value: data.category === "Other" ? {} as userList : data.employeeID || {} as userList, isRequired: data.category !== "Other", disable: isDisable, readonly: isDisable, validator: "object", error: "" },
+          });
+        }
+      }
+      
     }else{
       handleModalOpen('employee')
     }
@@ -266,17 +312,55 @@ const handleSave=async (property:string)=>{
           console.log(err)
         })
       }
-    
-    
-    
-    
-    
-    
     }
    
   }
   else if(property==='expense'){
     console.log("expense",expenseForm)
+    const [validateData, isValid] =await validateFormData(expenseForm);
+    setExpenseForm(validateData);
+    if(isValid&&projectId){
+      if(mode===SCREEN_MODES.CREATE){
+        const expensePayload:ExpensePayload={
+          amount:expenseForm.amount.value,
+          vendor:expenseForm.vendor.value,
+          date:expenseForm.date.value,
+          description:expenseForm.description.value,
+          category:expenseForm.category.value,
+          employeeID:expenseForm.employeeID.value as userList,
+          invoiceNumber:expenseForm.invoiceNumber.value
+        }
+        ProjectService.createExpenseDetailByProjectId(projectId,expensePayload).then((res:any)=>{
+          console.log("expense",res.data.data)
+          showSuccessToast("Expense Added Successfully")
+          getExpenseDetails()
+          handleModalClose('expense')
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })
+      }else{
+        const expensePayload:ExpensePayload={
+          _id:id,
+          amount:expenseForm.amount.value,
+          vendor:expenseForm.vendor.value,
+          date:expenseForm.date.value,
+          description:expenseForm.description.value,
+          category:expenseForm.category.value,
+          invoiceNumber:expenseForm.invoiceNumber.value
+        }
+        ProjectService.updateExpenseDetailByProjectId(projectId,id,expensePayload).then((res:any)=>{
+          showSuccessToast("Expense Updated Successfully")
+          getExpenseDetails()
+          handleModalClose('expense')
+          setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })
+      }
+    }
+
   }
   else{
     console.log("employee",employeeForm)
@@ -299,6 +383,16 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
       })
     }else if(property==='expense'){
       console.log("delete expense")
+      ProjectService.deleteExpenseDetailByProjectId(projectId,id).then((res:any)=>{
+        console.log("delete expense",res.data.data)
+        showSuccessToast("Expense Deleted Successfully")
+        getExpenseDetails()
+        setDeleteModalOpen(false)
+        setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)
+      })
     }else{
       console.log("delete employee")
     }
@@ -466,12 +560,14 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
 />
 
 <AddExpenseModal
+  mode={mode}
+  employeeList={employeeList}
   open={isExpenseModalOpen}
   onClose={() => handleModalClose('expense')}
   onSave={() => {handleSave('expense')}}
   expenseForm={expenseForm}
-  categories={['Category 1', 'Category 2', 'Category 3']}
-  helperText={false}
+  categories={['Salary', 'Bones', 'Other']}
+  helperText={helperText}
   handleInputFocus={(property:any) => handleInputFocus('expense', property)}
   onInputHandleChange={(property:any, value) => onInputHandleChange('expense', property, value)}
 />

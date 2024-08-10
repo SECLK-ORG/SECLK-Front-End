@@ -5,12 +5,13 @@ import {
   TableCell,
   CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search } from '@mui/icons-material';
+import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { StyledTextField } from '../../assets/theme/theme';
 import { Expense } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import moment from 'moment';
 
 interface ExpensesTableProps {
   page: number;
@@ -106,13 +107,16 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   <TableCell>{expense.amount}</TableCell>
                   <TableCell>{expense.description}</TableCell>
                   <TableCell>{expense.invoiceNumber}</TableCell>
-                  <TableCell>{expense.date}</TableCell>
+                  <TableCell>{moment(expense.date).format('YYYY-MM-DD')}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, expense._id) }}>
                       <Visibility />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.EDIT, expense._id) }}>
                       <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.DELETE, expense._id) }}>
+                      <Delete />
                     </IconButton>
                   </TableCell>
                 </TableRow>
