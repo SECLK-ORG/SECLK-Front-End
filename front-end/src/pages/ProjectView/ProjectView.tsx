@@ -15,7 +15,7 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { employee, EmployeeFormDto, Expense, ExpenseFormDto, ExpensePayload, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus, userList } from "../../utilities/models";
+import { employee, EmployeeFormDto, EmployeePayload, Expense, ExpenseFormDto, ExpensePayload, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus, userList } from "../../utilities/models";
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
@@ -47,10 +47,10 @@ const ProjectView = () => {
   
   const INITIAL_EMPLOYEE_FORM_DATA: EmployeeFormDto = {
     _id: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
-    employeeID: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "" },
+    employeeID: { value:  {} as userList, isRequired: true, disable: false, readonly: false, validator: "object", error: "" },
     employeeName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
-    email: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "" },
-    position: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "" },
+    email: { value: "", isRequired: true, disable: true, readonly: true, validator: "email", error: "" },
+    position: { value: "", isRequired: true, disable: true, readonly: true, validator: "text", error: "" },
     projectStartedDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
   };
   
@@ -177,10 +177,23 @@ const getExpenseDetails=()=>{
       }));
     }
   } else if (formType === 'employee') {
-    setEmployeeForm((prevForm) => ({
-      ...prevForm,
-      [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
-    }));
+    if(property==='employeeID'){
+      const employee = employeeList.find((employee) => employee._id === value._id);
+      if (employee) {
+        setEmployeeForm((prevForm) => ({
+          ...prevForm,
+          employeeName: { ...prevForm.employeeName, value: employee.name, error: "" },
+          email: { ...prevForm.email, value: employee.email, error: "" },
+          position: { ...prevForm.position, value: employee.position, error: "" },
+          [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+        }));
+      }
+    }else{
+      setEmployeeForm((prevForm) => ({
+        ...prevForm,
+        [property]: { ...prevForm[property as keyof typeof prevForm], value: value, error: "" },
+      }));
+    }
   }
 };
 
@@ -267,6 +280,20 @@ const handleClick =(mode: string, id:string,property:string)=>{
       
     }else{
       handleModalOpen('employee')
+      if (SCREEN_MODES.EDIT || SCREEN_MODES.VIEW) {
+        const isDisable = mode === SCREEN_MODES.VIEW;
+        const data: employee = employees.find((employee: employee) => employee._id === id) as employee;
+        if (data) {
+          setEmployeeForm({
+            _id: { value: data._id, isRequired: false, disable: true, readonly: true, validator: "text", error: "" },
+            employeeID: { value: { _id: data.employeeID, name: data.employeeName,email:data.email,position:data.position }, isRequired: true, disable: isDisable, readonly: isDisable, validator: "object", error: "" },
+            employeeName: { value: data.employeeName, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
+            email: { value: data.email, isRequired: true, disable: true, readonly: true, validator: "email", error: "" },
+            position: { value: data.position, isRequired: true, disable: true, readonly: true, validator: "text", error: "" },
+            projectStartedDate: { value: data.projectStartedDate, isRequired: true, disable: isDisable, readonly: isDisable, validator: "date", error: "" },
+          });
+        }
+      }
     }
   }
 }
@@ -362,8 +389,47 @@ const handleSave=async (property:string)=>{
     }
 
   }
-  else{
+  else if(property==='employee') {
     console.log("employee",employeeForm)
+    const [validateData, isValid] =await validateFormData(employeeForm);
+    setEmployeeForm(validateData);
+    if(isValid&&projectId){
+      if(mode===SCREEN_MODES.CREATE){
+        const employeePayload:EmployeePayload={
+          employeeID:employeeForm.employeeID.value,
+          employeeName:employeeForm.employeeName.value,
+          email:employeeForm.email.value,
+          position:employeeForm.position.value,
+          projectStartedDate:employeeForm.projectStartedDate.value
+        }
+        ProjectService.createEmployeeDetailByProjectId(projectId,employeePayload).then((res:any)=>{
+          console.log("employee",res.data.data)
+          showSuccessToast("Employee Added Successfully")
+          getEmployeeDetails()
+          handleModalClose('employee')
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })
+      }else{
+        const employeePayload:EmployeePayload={
+          _id:id,
+          employeeID:employeeForm.employeeID.value,
+          employeeName:employeeForm.employeeName.value,
+          email:employeeForm.email.value,
+          position:employeeForm.position.value,
+          projectStartedDate:employeeForm.projectStartedDate.value
+        }
+        ProjectService.updateEmployeeDetailByProjectId(projectId,id,employeePayload).then((res:any)=>{
+          showSuccessToast("Employee Updated Successfully")
+          getEmployeeDetails()
+          handleModalClose('employee')
+          setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
+        }).catch((err)=>{
+          showErrorToast(err)
+          console.log(err)
+        })}
+    }
   }
 }
 
@@ -395,6 +461,17 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
       })
     }else{
       console.log("delete employee")
+      ProjectService.deleteEmployeeDetailByProjectId(projectId,id).then((res:any)=>{
+        console.log("delete employee",res.data.data)
+        showSuccessToast("Employee Deleted Successfully")
+        getEmployeeDetails()
+        setDeleteModalOpen(false)
+        setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)
+        setDeleteModalOpen(false)
+      })
     }
   
   }else{
@@ -573,13 +650,15 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
 />
 
 <AddEmployeeModal
+ mode={mode}
+ employeeList={employeeList}
   open={isEmployeeModalOpen}
   onClose={() => handleModalClose('employee')}
   onSave={() => {handleSave('employee');}}
   employeeForm={employeeForm}
   positions={['Position 1', 'Position 2', 'Position 3']}
   employees={['Employee 1', 'Employee 2', 'Employee 3']}
-  helperText={false}
+  helperText={helperText}
   handleInputFocus={(property:any) => handleInputFocus('employee', property)}
   onInputHandleChange={(property:any, value) => onInputHandleChange('employee', property, value)}
 />

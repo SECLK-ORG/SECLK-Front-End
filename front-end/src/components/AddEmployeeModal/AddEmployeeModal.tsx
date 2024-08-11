@@ -1,10 +1,12 @@
 import React from 'react';
-import { Modal, Box, Typography, Divider, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Modal, Box, Typography, Divider, Grid, FormControl, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
-import { EmployeeFormDto } from '../../utilities/models';
+import { EmployeeFormDto, userList } from '../../utilities/models';
+import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 
 interface AddEmployeeModalProps {
+  mode: string;
   open: boolean;
   onClose: () => void;
   onSave: () => void;
@@ -13,10 +15,12 @@ interface AddEmployeeModalProps {
   employees: string[];
   helperText?: boolean;
   handleInputFocus: (property: string) => void;
-  onInputHandleChange: (property: string, value: string) => void;
+  onInputHandleChange: (property: string, value: any) => void;
+  employeeList: userList[];
 }
 
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
+  mode,
   open,
   onClose,
   onSave,
@@ -26,6 +30,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   helperText,
   handleInputFocus,
   onInputHandleChange,
+  employeeList,
 }) => {
   return (
     <Modal
@@ -46,29 +51,40 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
         boxShadow: 24,
       }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
-          <Typography id="add-employee-modal-title" variant="h6">Add Employee</Typography>
+       {SCREEN_MODES.VIEW===mode &&   <Typography id="add-employee-modal-title" variant="h6">View Employee</Typography>}
+       {SCREEN_MODES.CREATE===mode &&   <Typography id="add-employee-modal-title" variant="h6">Add Employee</Typography>}
+
           <CloseIcon sx={{ cursor: "pointer" }} onClick={onClose} />
         </Box>
         <Divider />
         <Box sx={{ padding: '16px' }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
-              <FormControl fullWidth>
-                <InputLabel>Employee Name</InputLabel>
-                <Select
-                  label="Employee Name"
-                  value={employeeForm.employeeName.value}
-                  disabled={employeeForm.employeeName.disable}
-                  required={employeeForm.employeeName.isRequired}
-                  onChange={(event) => onInputHandleChange('employeeName', event.target.value)}
-                >
-                  {employees.map((employee, index) => (
-                    <MenuItem key={index} value={employee}>
-                      {employee}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+               <Autocomplete
+                fullWidth
+                options={employeeList}
+                getOptionLabel={(option) => option.name || ''}
+                disabled={employeeForm.employeeID.disable}
+                value={
+                  employeeList.find((employee) => employee._id === employeeForm.employeeID?.value?._id) || null
+                }
+                onChange={(event, newValue) => {
+                  onInputHandleChange('employeeID', newValue || {}); 
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Employee Name"
+                    variant="outlined"
+                    error={!!employeeForm.employeeID.error}
+                    helperText={helperText && employeeForm.employeeID.error}
+                    onFocus={() => handleInputFocus('employeeID')}
+                  />
+                )}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+              />
+
+            
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
@@ -84,22 +100,17 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
               />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <FormControl fullWidth>
-                <InputLabel>Position</InputLabel>
-                <Select
-                  label="Position"
-                  value={employeeForm.position.value}
-                  disabled={employeeForm.position.disable}
-                  required={employeeForm.position.isRequired}
-                  onChange={(event) => onInputHandleChange('position', event.target.value)}
-                >
-                  {positions.map((position, index) => (
-                    <MenuItem key={index} value={position}>
-                      {position}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <StyledTextField
+                fullWidth
+                label="Position"
+                value={employeeForm.position.value}
+                disabled={employeeForm.position.disable}
+                required={employeeForm.position.isRequired}
+                onFocus={() => handleInputFocus('position')}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('position', event.target.value)}
+                error={!!employeeForm.position.error}
+                helperText={helperText && employeeForm.position.error}
+              />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <StyledTextField
@@ -119,7 +130,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            <CustomButton onClick={onSave}>Save</CustomButton>
+            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave}>Save</CustomButton>}
+            {/* {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave}>Update</CustomButton>} */}
           </Box>
         </Box>
       </Box>

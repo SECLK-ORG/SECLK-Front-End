@@ -109,7 +109,7 @@ export interface ExpenseFormDto {
 }
 export interface EmployeeFormDto {
   _id: FormFieldDto<string>;
-  employeeID: FormFieldDto<string>;
+  employeeID: FormFieldDto<userList>;
   employeeName: FormFieldDto<string>;
   email: FormFieldDto<string>;
   position: FormFieldDto<string>;
@@ -117,7 +117,8 @@ export interface EmployeeFormDto {
 }
 
 export interface EmployeePayload {
-  employeeID: string;
+  _id?: string
+  employeeID: userList;
   employeeName: string;
   email: string;
   position: string;
@@ -147,4 +148,5 @@ export interface userList{
 _id:string
 email:string
 name:string
+position:string
 }

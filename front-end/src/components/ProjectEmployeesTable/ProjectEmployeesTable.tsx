@@ -1,16 +1,17 @@
 import React from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Typography,
+  IconButton, InputAdornment, Box,
   TableCell,
   CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search } from '@mui/icons-material';
+import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { StyledTextField } from '../../assets/theme/theme';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { employee } from '../../utilities/models';
+import moment from 'moment';
 
 interface ProjectEmployeesTableProps {
   page: number;
@@ -101,14 +102,19 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                   <TableCell>{employee.employeeName}</TableCell>
                   <TableCell>{employee.position}</TableCell>
                   <TableCell>{employee.email}</TableCell>
-                  <TableCell>{employee.projectStartedDate}</TableCell>
+                  <TableCell>{moment(employee.projectStartedDate).format('YYYY-MM-DD')}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, employee._id) }}>
                       <Visibility />
                     </IconButton>
-                    <IconButton>
+                    {/* <IconButton onClick={() => { handleClick(SCREEN_MODES.EDIT, employee._id) }}> 
                       <Edit />
+                    </IconButton> */}
+                    <IconButton onClick={() => { handleClick(SCREEN_MODES.DELETE, employee._id) }}>
+                      <Delete />
                     </IconButton>
+                    
+                    
                   </TableCell>
                 </TableRow>
               ))

@@ -31,7 +31,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   employeeList,
   mode,
 }) => {
-  const isOtherCategory = expenseForm.category.value === 'Other';
+  const isOtherCategory = expenseForm?.category?.value === 'Other';
 
   return (
     <Modal
@@ -52,7 +52,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         boxShadow: 24,
       }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
-          <Typography id="add-expense-modal-title" variant="h6">Add Expense</Typography>
+          {SCREEN_MODES.CREATE===mode &&   <Typography id="add-expense-modal-title" variant="h6">Add Expense</Typography>}
+          {SCREEN_MODES.VIEW===mode &&   <Typography id="add-expense-modal-title" variant="h6">View Expense</Typography>}
+          {SCREEN_MODES.EDIT===mode &&   <Typography id="add-expense-modal-title" variant="h6">Update Expense</Typography>}
+
           <CloseIcon sx={{ cursor: "pointer" }} onClick={onClose} />
         </Box>
         <Divider />
@@ -168,7 +171,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            <CustomButton onClick={onSave}>Save</CustomButton>
+            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave}>Save</CustomButton>}
+            {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave}>Update</CustomButton>}
           </Box>
         </Box>
       </Box>
