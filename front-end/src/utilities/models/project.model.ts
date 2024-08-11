@@ -55,6 +55,7 @@ export interface Income {
     createdBy: string;
     incomeDetails: Income[];
     expenseDetails: Expense[];
+    agreedAmount: number;
   }
   
   export interface ProjectStatusDto {
@@ -149,4 +150,18 @@ _id:string
 email:string
 name:string
 position:string
+}
+
+export interface ProjectSummary {
+  agreedAmount: number;
+  totalIncome: number;
+  totalExpenses: number;
+  incomeCurrentMonth: number;
+  expensesCurrentMonth: number;
+  remainingExpenses: number;
+  remainingIncome: number;
+  totalProfit: number;
+  currentMonthProfit: number;
+  ExpensesPercentage: number;
+  IncomePercentage: number;
 }

@@ -4,37 +4,46 @@ import { BorderLinearProgress } from '../../assets/theme/theme';
 import styles from './ProjectInfoCard.module.scss';
 
 interface ProjectInfoCardProps {
+  agreementAmount?: number;
   title: string;
-  Value: string;
+  Value: number;
   label: string;
-  Value2: string;
+  Value2: number;
   label2: string;
   remaining?: string;
   remainingLabel?: string;
   color?: string;
+  Progress?:any;
 }
 
 
 
-const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, label,Value, Value2, label2, remaining, remainingLabel, color }) => {
-  const parsedRemaining = remaining ? parseFloat(remaining) : null;
+const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, label,Value, Value2, label2, remaining, remainingLabel, color,Progress,agreementAmount }) => {
+  
   
   return (
     <Card className={styles.projectCard}>
       <CardContent sx={{boxShadow:"none"}}>
       <Grid container spacing={2} alignItems="center">
-          <Grid sm={6} item >
-            <Typography variant="h5">{title}</Typography>
+          <Grid sm={6} item  >
+          <Typography variant="h5">
+            { title}  
+        </Typography>
+    
           </Grid>
-          <Grid sm={6} item>
-          <BorderLinearProgress variant="determinate" value={50} />
+          {title==="Profit"&& <Grid sm={6} item>
           </Grid>
-          <Grid sm={6} item >
+          }
+          {title!=="Profit"&&<>  <Grid sm={6} item>
+          <BorderLinearProgress variant="determinate" value={Progress} />
+          </Grid>
+         <Grid sm={6} item >
             <Typography className={styles.commonText}>All time</Typography>
           </Grid>
           <Grid sm={6}  item>
-          <Typography  className={styles.remainTex}>25% remaining</Typography>
+          <Typography  className={styles.remainTex}>{`${(100-Progress).toFixed(2)}% remaining`}</Typography>
           </Grid>
+          </>  }
           <Grid sm={5} item>
            <Box className={styles.valueBox}>
             <Typography className={styles.value}>{Value}</Typography>

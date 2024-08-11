@@ -59,7 +59,9 @@ const deleteExpenseDetailByProjectId = async (projectId: string, expenseId: stri
 };
 
 
-
+const getProjectSummary = async (projectId: string): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.get(`/api/projects/project/${projectId}/summary`)
+}
 
 export const ProjectService = {
     createProject,
@@ -80,4 +82,5 @@ export const ProjectService = {
     createExpenseDetailByProjectId,
     updateExpenseDetailByProjectId,
     deleteExpenseDetailByProjectId,
+    getProjectSummary
 }

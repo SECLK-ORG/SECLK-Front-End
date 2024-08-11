@@ -11,8 +11,6 @@ interface AddEmployeeModalProps {
   onClose: () => void;
   onSave: () => void;
   employeeForm: EmployeeFormDto;
-  positions: string[];
-  employees: string[];
   helperText?: boolean;
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: any) => void;
@@ -25,8 +23,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   onClose,
   onSave,
   employeeForm,
-  positions,
-  employees,
+
   helperText,
   handleInputFocus,
   onInputHandleChange,

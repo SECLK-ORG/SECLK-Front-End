@@ -15,7 +15,7 @@ import { TabsList, TabPanel ,  Tab,} from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import ExpensesTable from "../../components/ExpensesTable/ExpensesTable";
 import { ProjectService } from "../../services/project.service";
-import { employee, EmployeeFormDto, EmployeePayload, Expense, ExpenseFormDto, ExpensePayload, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus, userList } from "../../utilities/models";
+import { employee, EmployeeFormDto, EmployeePayload, Expense, ExpenseFormDto, ExpensePayload, Income, IncomeFormDto, IncomePayload, Project, ProjectStatus, ProjectSummary, userList } from "../../utilities/models";
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
@@ -56,6 +56,7 @@ const ProjectView = () => {
   
 
   const [projectData, setProjectData] = useState<Project>({} as Project)
+  const [projectSummary, setProjectSummary] = useState<ProjectSummary>({} as ProjectSummary)
   const [employees, setEmployees] = useState<employee[]>([]);
   const [incomes, setIncomes] = useState<Income[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -86,8 +87,20 @@ useEffect(() => {
     getIncomeDetails()
     getExpenseDetails()
     getSearchValues()
+    getProjectSummary()
 }, [])
 
+
+const getProjectSummary=()=>{
+  if(projectId){
+    ProjectService.getProjectSummary(projectId).then((res:any)=>{
+      console.log("projectsummary",res.data.data)
+      setProjectSummary(res.data.data)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+}
 const getSearchValues=()=>{
   UserService.searchUsers(" ").then((res:any)=>{
     console.log("search",res.data.data)
@@ -316,6 +329,7 @@ const handleSave=async (property:string)=>{
           showSuccessToast("Income Added Successfully")
           getIncomeDetails()
           handleModalClose('income')
+          getProjectSummary()
         }).catch((err)=>{
           showErrorToast(err)
           console.log(err)
@@ -333,6 +347,7 @@ const handleSave=async (property:string)=>{
           showSuccessToast("Income Updated Successfully")
           getIncomeDetails()
           handleModalClose('income')
+          getProjectSummary()
           setIncomeForm(INITIAL_INCOME_FORM_DATA)
         }).catch((err)=>{
           showErrorToast(err)
@@ -361,6 +376,7 @@ const handleSave=async (property:string)=>{
           console.log("expense",res.data.data)
           showSuccessToast("Expense Added Successfully")
           getExpenseDetails()
+          getProjectSummary()
           handleModalClose('expense')
         }).catch((err)=>{
           showErrorToast(err)
@@ -380,6 +396,7 @@ const handleSave=async (property:string)=>{
           showSuccessToast("Expense Updated Successfully")
           getExpenseDetails()
           handleModalClose('expense')
+          getProjectSummary()
           setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
         }).catch((err)=>{
           showErrorToast(err)
@@ -537,34 +554,37 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
 
       <Box mt={3} mb={3}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={6} xl={4}>
+          <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
             <ProjectInfoCard
-              label="This Month"
+              agreementAmount={projectSummary.agreedAmount}
+              label="Received Amount"
               title="Total Income"
-              Value="$2500"
-              Value2="$1742"
+              Progress={projectSummary.IncomePercentage}
+              Value={projectSummary.totalIncome}
+              Value2={projectSummary.remainingIncome}
               label2="This Month"
               remaining="25"
               remainingLabel="25% Remaining"
               color="#5DC264"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={6} xl={4}>
+          <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
             <ProjectInfoCard
-              label="This Month"
+              label="Total Spent"
               title="Total Expenses"
-              Value="$1300"
-              Value2="$331"
+              Progress={projectSummary.ExpensesPercentage}
+              Value={projectSummary.totalExpenses}
+              Value2={projectSummary.remainingExpenses}
               label2="Remaining"
               color="#F15146"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={6} xl={4}>
+          <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
             <ProjectInfoCard
-              label="This Month"
+              label="Total profit"
               title="Profit"
-              Value="$1300"
-              Value2="$331"
+              Value={projectSummary.totalProfit}
+              Value2={projectSummary.currentMonthProfit}
               label2="This Month"
               color="#5DC264"
             />
@@ -656,8 +676,6 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
   onClose={() => handleModalClose('employee')}
   onSave={() => {handleSave('employee');}}
   employeeForm={employeeForm}
-  positions={['Position 1', 'Position 2', 'Position 3']}
-  employees={['Employee 1', 'Employee 2', 'Employee 3']}
   helperText={helperText}
   handleInputFocus={(property:any) => handleInputFocus('employee', property)}
   onInputHandleChange={(property:any, value) => onInputHandleChange('employee', property, value)}
