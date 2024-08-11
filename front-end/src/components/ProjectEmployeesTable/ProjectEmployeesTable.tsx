@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box,
@@ -38,6 +38,14 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
   employees,
   isEmployeeLoading
 }) => {
+
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const filteredEmployees = employees.filter((employee) =>employee.employeeName.toLowerCase().includes(searchValue.toLowerCase()))
   return (
     <div>
       <TableContainer component={Paper}>
@@ -45,6 +53,9 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
           <StyledTextField
             variant="outlined"
             placeholder="Search"
+             size='small'
+            value={searchValue}
+            onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -90,14 +101,14 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : employees.length === 0 ? (
+            ) : filteredEmployees.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   No records found
                 </TableCell>
               </TableRow>
             ) : (
-              employees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
+              filteredEmployees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
                 <TableRow key={index}>
                   <TableCell>{employee.employeeName}</TableCell>
                   <TableCell>{employee.position}</TableCell>

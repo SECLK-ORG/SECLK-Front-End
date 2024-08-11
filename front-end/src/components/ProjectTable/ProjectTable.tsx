@@ -10,8 +10,9 @@ import styles from './ProjectTable.module.scss';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { Project } from '../../utilities/models';
-import { ProjectStatus } from '../../utilities/models/common.model';
+import { predefinedRanges, ProjectStatus } from '../../utilities/models/common.model';
 import moment from 'moment';
+import { DateRangePicker } from 'rsuite';
 
 interface ProjectTableProps {
   projects: Project[];
@@ -45,10 +46,15 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
-
-  const filteredProjects = projects.filter((project) =>
-    project.projectName.toLowerCase().includes(searchValue.toLowerCase()) 
-  );
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch = project.projectName.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesDateRange =
+      (!dateRange ||
+        (moment(project.startDate).isSameOrAfter(dateRange[0], 'day') &&
+         moment(project.endDate).isSameOrBefore(dateRange[1], 'day')));
+    return matchesSearch && matchesDateRange;
+  });
 
 
 
@@ -61,6 +67,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             placeholder="Search By Project Name"
             value={searchValue}
             onChange={handleSearchChange}
+            size='small'
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -71,6 +78,16 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             }}
             style={{ marginRight: '10px' }}
           />
+                  <DateRangePicker
+          showOneCalendar
+          ranges={predefinedRanges}
+          value={dateRange}
+          onChange={(newValue) => setDateRange(newValue as [Date, Date] | null)}
+          format="MM/dd/yyyy"
+          placeholder="Select Date Range"
+          style={{ marginRight: '10px' }}
+        />
+
           <div>
             {isFiltered && (
               <CustomButton

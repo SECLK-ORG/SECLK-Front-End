@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box, Typography,
@@ -9,9 +9,12 @@ import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { StyledTextField } from '../../assets/theme/theme';
-import { Expense } from '../../utilities/models';
+import { Expense, predefinedRanges } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import moment from 'moment';
+import { DateRangePicker } from 'rsuite';
+import { addDays } from 'date-fns';
+import 'rsuite/DateRangePicker/styles/index.css';
 
 interface ExpensesTableProps {
   page: number;
@@ -38,6 +41,23 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   expenses,
   isExpensesLoading
 }) => {
+  const [searchValue, setSearchValue] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const filterExpenses = expenses.filter((expense) => {
+    const matchesSearch = expense.vendor.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesDateRange =
+      (!dateRange || 
+        (moment(expense.date).isSameOrAfter(dateRange[0], 'day') &&
+         moment(expense.date).isSameOrBefore(dateRange[1], 'day')));
+
+    return matchesSearch && matchesDateRange;
+  });
+
   return (
     <div>
       <TableContainer component={Paper}>
@@ -45,6 +65,9 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
           <StyledTextField
             variant="outlined"
             placeholder="Search"
+            size='small'
+            value={searchValue}
+            onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -55,7 +78,16 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             }}
             style={{ marginRight: '10px' }}
           />
+        <DateRangePicker
+            showOneCalendar
+            ranges={predefinedRanges}
+            value={dateRange}
+            onChange={(newValue) => setDateRange(newValue as [Date, Date] | null)}
+            format="MM/dd/yyyy"
+            placeholder="Select Date Range"
+          />
           <div>
+        
             {isFiltered && (
               <IconButton
                 style={{ background: "#437EF7", color: "white", marginInline: "1rem" }}
@@ -64,7 +96,6 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 Clear Filters
               </IconButton>
             )}
-
             <CustomButton
               text='Add Expense'
               backgroundColor='#437EF7'
@@ -93,14 +124,14 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : expenses.length === 0 ? (
+            ) : filterExpenses.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   No records found
                 </TableCell>
               </TableRow>
             ) : (
-              expenses.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((expense, index) => (
+              filterExpenses.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((expense, index) => (
                 <TableRow key={index}>
                   <TableCell>{expense.category}</TableCell>
                   <TableCell>{expense.vendor}</TableCell>

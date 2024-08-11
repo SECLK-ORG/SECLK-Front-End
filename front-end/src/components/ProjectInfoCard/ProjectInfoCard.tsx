@@ -35,7 +35,7 @@ const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({ title, label,Value, V
           </Grid>
           }
           {title!=="Profit"&&<>  <Grid sm={6} item>
-          <BorderLinearProgress variant="determinate" value={Progress} />
+          <BorderLinearProgress variant="determinate" value={Progress ?? 100} />
           </Grid>
          <Grid sm={6} item >
             <Typography className={styles.commonText}>All time</Typography>

@@ -6,8 +6,6 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate, useParams } from "react-router-dom";
 import { EmployeesTable, IncomeTable, ProjectDetailsBox, ProjectInfoCard } from "../../components";
 import styles from "./ProjectView.module.scss";

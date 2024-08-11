@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box, Typography,
@@ -9,10 +9,12 @@ import {
 import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
-import { Income } from '../../utilities/models';
+import { Income, predefinedRanges } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
+import { DateRangePicker } from 'rsuite';
+import { addDays } from 'date-fns';
 import moment from 'moment';
-
+import 'rsuite/dist/rsuite.min.css';
 interface IncomeTableProps {
   page: number;
   isIncomeLoading: boolean;
@@ -26,6 +28,7 @@ interface IncomeTableProps {
   incomes: Income[];
 }
 
+
 const IncomeTable: React.FC<IncomeTableProps> = ({
   page,
   rowsPerPage,
@@ -38,6 +41,23 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
   incomes,
   isIncomeLoading
 }) => {
+  const [searchValue, setSearchValue] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const filterIncomes = incomes.filter((income) => {
+    const matchesSearch = income.receivedBy.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesDateRange =
+      (!dateRange || 
+        (moment(income.date).isSameOrAfter(dateRange[0], 'day') &&
+         moment(income.date).isSameOrBefore(dateRange[1], 'day')));
+
+    return matchesSearch && matchesDateRange;
+  });
+
   return (
     <div>
       <TableContainer component={Paper}>
@@ -45,6 +65,9 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
           <TextField
             variant="outlined"
             placeholder="Search"
+            value={searchValue}
+            size='small'
+            onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -54,6 +77,14 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
               style: { backgroundColor: 'white', width: "25rem" }
             }}
             style={{ marginRight: '10px' }}
+          />
+          <DateRangePicker
+            showOneCalendar
+            ranges={predefinedRanges}
+            value={dateRange}
+            onChange={(newValue) => setDateRange(newValue as [Date, Date] | null)}
+            format="MM/dd/yyyy"
+            placeholder="Select Date Range"
           />
           <div>
             {isFiltered && (
@@ -91,19 +122,19 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : incomes.length === 0 ? (
+            ) : filterIncomes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   No records found
                 </TableCell>
               </TableRow>
             ) : (
-              incomes.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((income, index) => (
+              filterIncomes.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((income) => (
                 <TableRow key={income._id}>
                   <TableCell>{income.amount}</TableCell>
                   <TableCell>{income.invoiceNumber}</TableCell>
                   <TableCell>{income.receivedBy}</TableCell>
-                  <TableCell>{moment(income.date).format('YYYY-MM-DD ')}</TableCell>
+                  <TableCell>{moment(income.date).format('YYYY-MM-DD')}</TableCell>
                   <TableCell>{income.description}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => { handleClick(SCREEN_MODES.VIEW, income._id) }}>

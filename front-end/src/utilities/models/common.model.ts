@@ -1,3 +1,6 @@
+import { addDays } from "date-fns";
+import moment from "moment";
+
 export interface FormFieldDto<V> {
     value: V;
     validator: "text" | "number" | "date" | "object" | "array" | "dates" |"email"|"mobile"| null;
@@ -29,3 +32,31 @@ export interface FormFieldDto<V> {
     role: string;
     userId: string;
   }
+
+  export const predefinedRanges = [
+    {
+      label: 'Today',
+      value: [new Date(), new Date()] as [Date, Date],
+      placement: 'left' as 'left',
+    },
+    {
+      label: 'Yesterday',
+      value: [addDays(new Date(), -1), addDays(new Date(), -1)] as [Date, Date],
+      placement: 'left' as 'left',
+    },
+    {
+      label: 'Last 7 Days',
+      value: [addDays(new Date(), -7), new Date()] as [Date, Date],
+      placement: 'left' as 'left',
+    },
+    {
+      label: 'Last 30 Days',
+      value: [addDays(new Date(), -30), new Date()] as [Date, Date],
+      placement: 'left' as 'left',
+    },
+    {
+      label: 'Current Month',
+      value: [moment().startOf('month').toDate(), moment().endOf('month').toDate()] as [Date, Date],
+      placement: 'left' as 'left',
+    }
+  ];
