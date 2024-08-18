@@ -46,3 +46,39 @@ export interface  loginFormDto{
     _id:FormFieldDto<string>
     position:FormFieldDto<string>
   }
+
+  export interface Employee {
+    _id:string
+    name: string;
+    email: string;
+    startDate: string;
+    contactNumber: string;
+    position: string;
+    status: 'Active' | 'Inactive';
+    workLocation: string;
+    role: string;
+  }
+
+  export interface createEmployeeFormDto{
+    _id:FormFieldDto<string>
+    name:FormFieldDto<string>
+    email:FormFieldDto<string>
+    startDate:FormFieldDto<string>
+    contactNumber:FormFieldDto<string>
+    position:FormFieldDto<string>
+    status:FormFieldDto<string>
+    workLocation: FormFieldDto<string>;  
+    role: FormFieldDto<string>;
+  }
+
+export interface EmployeePayloadDto{
+_id?:string
+name:string
+email:string
+startDate:string
+contactNumber:string
+position:string
+status:string
+workLocation:string
+role:string
+}

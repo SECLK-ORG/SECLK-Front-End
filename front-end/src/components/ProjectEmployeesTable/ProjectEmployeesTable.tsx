@@ -125,7 +125,6 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                       <Delete />
                     </IconButton>
                     
-                    
                   </TableCell>
                 </TableRow>
               ))

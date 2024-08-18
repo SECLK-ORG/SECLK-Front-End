@@ -1,54 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Typography, TableCell
+  IconButton, InputAdornment, Box, Typography, CircularProgress
 } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Visibility, Edit, Search } from '@mui/icons-material';
-import { CustomButton, StyledTextField } from '../../assets/theme/theme';
+import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
+import { CustomButton, StyledTableCell, StyledTableRow, StyledTextField } from '../../assets/theme/theme';
 import CustomPagination from '../CustomPagination/CustomPagination';
-
-interface Employee {
-  name: string;
-  email: string;
-  hireDate: string;
-  phoneNumber: string;
-  position: string;
-  status: 'Active' | 'Inactive';
-}
+import { Employee } from '../../utilities/models';
+import moment from 'moment';
 
 interface EmployeeTableProps {
   page: number;
   rowsPerPage: number;
-  categoryFilters: { [key: string]: boolean };
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
   onChangeRowsPerPage: (event: any) => void;
   onFilterDrawerOpen: () => void;
   onClearFilters: () => void;
   isFiltered: boolean;
   handleClick: (mode: string, employeeId: string) => void;
-  statusFilters: { [key: string]: boolean };
+  employees: Employee[];
+  isLoading: boolean;
 }
 
-const employees: Employee[] = [
-  { name: 'Chaminda Silva', email: 'chaminda.silva@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 77 1234567', position: 'Software Engineer', status: 'Active' },
-  { name: 'Nimal Perera', email: 'nimal.perera@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 71 2345678', position: 'Software Engineer', status: 'Active' },
-  { name: 'Malini Fernando', email: 'malini.fernando@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 3456789', position: 'Software Engineer', status: 'Active' },
-  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-  { name: 'Saman Bandara', email: 'saman.bandara@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 70 4567890', position: 'UX Engineer', status: 'Active' },
-  { name: 'Priya Rajapakse', email: 'priya.rajapakse@seclk.com', hireDate: '23/08/2023', phoneNumber: '+94 76 5678901', position: 'QA Engineer', status: 'Inactive' },
-];
-
 const getStatusStyles = (status: 'Active' | 'Inactive') => {
-  if (status === 'Active') {
+  if (status === 'Active'||'active') {
     return {
       dotColor: '#2D8A39',
       backgroundColor: '#F0FAF0',
@@ -66,36 +42,35 @@ const getStatusStyles = (status: 'Active' | 'Inactive') => {
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
   page,
   rowsPerPage,
-  categoryFilters,
-  statusFilters,
   onChangePage,
   onChangeRowsPerPage,
   onFilterDrawerOpen,
   onClearFilters,
   isFiltered,
-  handleClick
+  handleClick,
+  employees,
+  isLoading
 }) => {
-  // Filter employees based on position and status filters
-  const filteredEmployees = employees
-    .filter((employee) =>
-      (categoryFilters['Software Engineer'] && employee.position === 'Software Engineer') ||
-      (categoryFilters['UX Engineer'] && employee.position === 'UX Engineer') ||
-      (categoryFilters['QA Engineer'] && employee.position === 'QA Engineer') ||
-      (!categoryFilters['Software Engineer'] && !categoryFilters['UX Engineer'] && !categoryFilters['QA Engineer'])
-    )
-    .filter((employee) =>
-      (statusFilters['Active'] && employee.status === 'Active') ||
-      (statusFilters['Inactive'] && employee.status === 'Inactive') ||
-      (!statusFilters['Active'] && !statusFilters['Inactive'])
-    );
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const filteredEmployees = employees.filter((employee) =>
+    employee.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   return (
     <div style={{ margin: "1rem", padding: "1rem" }}>
       <TableContainer component={Paper}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', border: "1px solid #dee2e6",borderTopLeftRadius:"8px",borderTopRightRadius:"8px" }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', border: "1px solid #dee2e6", borderTopLeftRadius: "8px", borderTopRightRadius: "8px" }}>
           <StyledTextField
             variant="outlined"
-            placeholder="Search"
+            placeholder="Search By Employee Name"
+            value={searchValue}
+            onChange={handleSearchChange}
+            size='small'
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -110,7 +85,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             {isFiltered && (
               <CustomButton
                 variant="contained"
-                sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
+                sx={{ background: "#437EF7", color: "white", marginInline: "1rem" }}
                 onClick={onClearFilters}
               >
                 Clear Filters
@@ -118,88 +93,105 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             )}
             <CustomButton
               variant="outlined"
-              endIcon={<FilterAltOutlinedIcon />}
               sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
+              endIcon={<FilterAltOutlinedIcon />}
               onClick={onFilterDrawerOpen}
             >
               Filters
             </CustomButton>
           </div>
         </div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Hired Date</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Position</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredEmployees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
-              <TableRow key={index}>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.email}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
-                <TableCell>{employee.phoneNumber}</TableCell>
-                <TableCell>{employee.position}</TableCell>
-                <TableCell>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    sx={{
-                      backgroundColor: getStatusStyles(employee.status).backgroundColor,
-                      borderRadius: '5px',
-                      padding: '2px 8px',
-                      maxWidth: '5.3rem'
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        backgroundColor: getStatusStyles(employee.status).dotColor,
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        marginRight: '0.5rem'
-                      }}
-                    ></Box>
-                    <Typography
-                      sx={{
-                        color: getStatusStyles(employee.status).textColor,
-                        fontWeight: '600'
-                      }}
-                    >
-                      {employee.status}
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <IconButton onClick={() => { handleClick('VIEW', "234") }}>
-                    <Visibility />
-                  </IconButton>
-                  <IconButton>
-                    <Edit />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
-          
-        <CustomPagination
-  count={Math.ceil(filteredEmployees.length / rowsPerPage)}
-  page={page}
-  onChangePage={onChangePage}
-  filteredProjects={filteredEmployees}
-  rowsPerPage={rowsPerPage}
-  onChangeRowsPerPage={onChangeRowsPerPage}
-/>
-         
-        </Box>
+    
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Employee Name</StyledTableCell>
+                  <StyledTableCell>Email</StyledTableCell>
+                  <StyledTableCell>Hired Date</StyledTableCell>
+                  <StyledTableCell>Phone Number</StyledTableCell>
+                  <StyledTableCell>Position</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Actions</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {isLoading ? (
+                <StyledTableRow>
+                <StyledTableCell colSpan={7} align="center">
+                   <CircularProgress />
+                </StyledTableCell>
+              </StyledTableRow>
+        ) :filteredEmployees.length > 0 ? (
+                  filteredEmployees.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage).map((employee, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>{employee.name}</StyledTableCell>
+                      <StyledTableCell>{employee.email}</StyledTableCell>
+                      <StyledTableCell>{moment(employee.startDate).format('YYYY-MM-DD')}</StyledTableCell>
+                      <StyledTableCell>{employee.contactNumber}</StyledTableCell>
+                      <StyledTableCell>{employee.position}</StyledTableCell>
+                      <StyledTableCell>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          sx={{
+                            backgroundColor: getStatusStyles(employee.status).backgroundColor,
+                            borderRadius: '5px',
+                            padding: '2px 8px',
+                            maxWidth: '5.3rem'
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              backgroundColor: getStatusStyles(employee.status).dotColor,
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              marginRight: '0.5rem'
+                            }}
+                          ></Box>
+                          <Typography
+                            sx={{
+                              color: getStatusStyles(employee.status).textColor,
+                              fontWeight: '600'
+                            }}
+                          >
+                            {employee.status}
+                          </Typography>
+                        </Box>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <IconButton onClick={() => handleClick('VIEW', employee._id)}>
+                          <Visibility />
+                        </IconButton>
+                        <IconButton onClick={() => handleClick('EDIT', employee._id)}>
+                          <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => handleClick('DELETE', employee._id)}>
+                          <Delete />
+                        </IconButton>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                ) : (
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={7} align="center">
+                      No Records Found
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )}
+              </TableBody>
+            </Table>
+            <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
+              <CustomPagination
+                count={Math.ceil(filteredEmployees.length / rowsPerPage)}
+                page={page}
+                onChangePage={onChangePage}
+                filteredProjects={filteredEmployees}
+                rowsPerPage={rowsPerPage}
+                onChangeRowsPerPage={onChangeRowsPerPage}
+              />
+            </Box>
+        
       </TableContainer>
     </div>
   );
