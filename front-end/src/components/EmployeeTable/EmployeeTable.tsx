@@ -24,7 +24,7 @@ interface EmployeeTableProps {
 }
 
 const getStatusStyles = (status: 'Active' | 'Inactive') => {
-  if (status === 'Active'||'active') {
+  if (status === 'Active') {
     return {
       dotColor: '#2D8A39',
       backgroundColor: '#F0FAF0',
