@@ -157,10 +157,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
           <CustomPagination
-            count={Math.ceil(expenses.length / rowsPerPage)}
+            count={Math.ceil(filterExpenses.length / rowsPerPage)}
             page={page}
             onChangePage={onChangePage}
-            filteredProjects={expenses}
+            filteredProjects={filterExpenses}
             rowsPerPage={rowsPerPage}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />

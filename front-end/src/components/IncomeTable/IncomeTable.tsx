@@ -154,12 +154,12 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
         </Table>
         <Box display="flex" justifyContent="center" sx={{ borderTop: "1px solid #dee2e6", borderRadius: "1px", padding: "1rem" }}>
           <CustomPagination
-            count={Math.ceil(incomes.length / rowsPerPage)}
+            count={Math.ceil(filterIncomes.length / rowsPerPage)}
             page={page}
             onChangePage={onChangePage}
             rowsPerPage={rowsPerPage}
             onChangeRowsPerPage={onChangeRowsPerPage}
-            filteredProjects={incomes}
+            filteredProjects={filterIncomes}
           />
         </Box>
       </TableContainer>

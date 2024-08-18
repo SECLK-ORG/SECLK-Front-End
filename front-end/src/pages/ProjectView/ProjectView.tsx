@@ -77,6 +77,14 @@ const ProjectView = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [text, setText] = useState("");
 
+  const [incomePage, setIncomePage] = useState(1);
+  const [incomeRowsPerPage, setIncomeRowsPerPage] = useState(5);
+
+  const [expensePage, setExpensePage] = useState(1);
+  const [expenseRowsPerPage, setExpenseRowsPerPage] = useState(5);
+
+  const [employeePage, setEmployeePage] = useState(1);
+  const [employeeRowsPerPage, setEmployeeRowsPerPage] = useState(5);
 
 
 useEffect(() => {
@@ -493,6 +501,32 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
     setDeleteModalOpen(false)
   }
 }
+const handleChangeRowsPerPage=(event: React.ChangeEvent<HTMLInputElement>,type:string)=>{
+  if (type === 'income'){
+    setIncomeRowsPerPage(parseInt(event.target.value, 10));
+    setIncomePage(1);
+  }
+  if (type === 'expense'){
+    setExpenseRowsPerPage(parseInt(event.target.value, 10));
+    setExpensePage(1);
+  }
+  if (type === 'employee'){
+    setEmployeeRowsPerPage(parseInt(event.target.value, 10));
+    setEmployeePage(1);
+  }
+}
+const handleChangePage=(newPage: any,type:string)=>{
+  if (type === 'income'){
+    setIncomePage(newPage);
+  }
+  if (type === 'expense'){
+    setExpensePage(newPage);
+  }
+  if (type === 'employee'){
+    setEmployeePage(newPage);
+  }
+
+}
   return (
     <Box  m={1} 
     p={2}
@@ -604,10 +638,10 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
           isFiltered={false}
           onClearFilters={() => {}}
           onFilterDrawerOpen={() => {}}
-          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
-          onChangeRowsPerPage={(event: any) => {}}
-          page={1}
-          rowsPerPage={5}
+          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => handleChangePage(newPage ,"income")}
+          onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => handleChangeRowsPerPage(event,'income')}
+          page={incomePage}
+          rowsPerPage={incomeRowsPerPage}
           />
       </TabPanel>
       <TabPanel value={1}>
@@ -618,10 +652,10 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
         isFiltered={false}
         onClearFilters={() => {}}
         onFilterDrawerOpen={() => {}}
-        onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
-        onChangeRowsPerPage={(event: any) => {}}
-        page={1}
-        rowsPerPage={5}
+        onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => handleChangePage(newPage,"expense")}
+          onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => handleChangeRowsPerPage(event,'expense')}
+        page={expensePage}
+        rowsPerPage={expenseRowsPerPage}
         
       />
       </TabPanel>
@@ -633,10 +667,10 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
           isFiltered={false}
           onClearFilters={() => {}}
           onFilterDrawerOpen={() => {}}
-          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => {}}
-          onChangeRowsPerPage={(event: any) => {}}
-          page={1}
-          rowsPerPage={5}
+          onChangePage={(event: React.ChangeEvent<unknown>, newPage: number) => handleChangePage(newPage,'employee')}
+          onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => handleChangeRowsPerPage(event,'employee')}
+          page={employeePage}
+          rowsPerPage={employeeRowsPerPage}
         />
         </TabPanel>
   </Tabs>
