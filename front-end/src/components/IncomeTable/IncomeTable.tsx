@@ -14,7 +14,7 @@ import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { DateRangePicker } from 'rsuite';
 import { addDays } from 'date-fns';
 import moment from 'moment';
-import 'rsuite/dist/rsuite.min.css';
+import 'rsuite/dist/rsuite-no-reset.min.css';
 interface IncomeTableProps {
   page: number;
   isIncomeLoading: boolean;

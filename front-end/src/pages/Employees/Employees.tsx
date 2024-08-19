@@ -50,14 +50,14 @@ const Employees: React.FC = () => {
 
   useEffect(() => {
     getAllEmployees();
-    fetchPositions();
+    fetchFilters();
   }, []);
 
-  // useEffect(() => {
-  //   if (isFiltered) {
-  //     handleStatusORCategoryChange();
-  //   }
-  // }, [statuses, categories, isFiltered]);
+  useEffect(() => {
+    if (isFiltered) {
+      handleStatusORCategoryChange();
+    }
+  }, [statuses, categories, isFiltered]);
 
   const getAllEmployees = async () => {
     try {
@@ -73,48 +73,47 @@ const Employees: React.FC = () => {
     }
   };
 
-  const fetchPositions = async () => {
+  const fetchFilters = async () => {
     try {
       const response:any = await PositionService.getPositions();
+      if(response.data.data){
+       const positions:any[] =response.data.data.map((positions: any) => ({
+        ...positions,
+        name: positions.positions,
+        isSelect: false
+      }));
+       setCategories(positions)
+      }
       setPositions(response.data.data);
+      const employeeStatuses: FilterMap[] = [
+            { _id: 'active', name: 'Active', isSelect: false },
+            { _id: 'inactive', name: 'Inactive', isSelect: false }
+          ];
+          setStatuses(employeeStatuses);
     } catch (error) {
       console.error('Error fetching positions:', error);
     }
   };
 
+  const handleStatusORCategoryChange = () => {
+    const selectedStatuses = statuses.filter(status => status.isSelect);
+    const selectedCategories = categories.filter(category => category.isSelect);
+    let updated = employees;
 
-  // const fetchFilters = async () => {
-  //   // Fetch categories and statuses here
-  //   // Assuming similar logic to the projects component
-  //   const fetchedCategories: FilterMap[] = []; // replace with actual fetch logic
-  //   setCategories(fetchedCategories);
+    if (selectedStatuses.length > 0) {
+      updated = updated.filter(employee =>
+        selectedStatuses.some(status => status.name === employee.status)
+      );
+    }
 
-  //   const employeeStatuses: FilterMap[] = [
-  //     { _id: 'active', name: 'Active', isSelect: false },
-  //     { _id: 'inactive', name: 'Inactive', isSelect: false }
-  //   ];
-  //   setStatuses(employeeStatuses);
-  // };
+    if (selectedCategories.length > 0) {
+      updated = updated.filter(employee =>
+        selectedCategories.some(category => category.name === employee.position)
+      );
+    }
 
-  // const handleStatusORCategoryChange = () => {
-  //   const selectedStatuses = statuses.filter(status => status.isSelect);
-  //   const selectedCategories = categories.filter(category => category.isSelect);
-  //   let updated = employees;
-
-  //   if (selectedStatuses.length > 0) {
-  //     updated = updated.filter(employee =>
-  //       selectedStatuses.some(status => status.name === employee.status)
-  //     );
-  //   }
-
-  //   if (selectedCategories.length > 0) {
-  //     updated = updated.filter(employee =>
-  //       selectedCategories.some(category => category.name === employee.position)
-  //     );
-  //   }
-
-  //   setEmployees(updated);
-  // };
+    setEmployees(updated);
+  };
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);

@@ -59,7 +59,11 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           <CloseIcon sx={{ cursor: "pointer" }} onClick={onClose} />
         </Box>
         <Divider />
+        
         <Box sx={{ padding: '16px' }}>
+        <Typography sx={{ fontWeight: "600", marginBlock: "1rem", fontSize: "14px" }}>
+            General Details
+          </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <FormControl fullWidth>

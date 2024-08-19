@@ -32,7 +32,16 @@ const updateEmployeeDetail=(payload:EmployeePayloadDto):Promise<AxiosResponse<an
 const deleteEmployee=(id:string):Promise<AxiosResponse<any[]>> => {
     return axiosPrivateInstance.delete(`/api/users/${id}`);
 }
+const getPaymentHistoryByUserID=(id:string):Promise<AxiosResponse<any[]>> => {
+    return axiosPrivateInstance.get(`/api/users/${id}/paymentHistory`);
+}
+const getAssignedProjectsByUserID=(id:string):Promise<AxiosResponse<any[]>> => {
+    return axiosPrivateInstance.get(`/api/users/${id}/assignedProjects`);
+}
 
+const getUserDataById=(id:string):Promise<AxiosResponse<any[]>> => {
+    return axiosPrivateInstance.get(`/api/users/${id}`);
+}
 export const UserService = {
     login,
     resetPassword,
@@ -41,5 +50,8 @@ export const UserService = {
     searchUsers,
     createUser,
     updateEmployeeDetail,
-    deleteEmployee
+    deleteEmployee,
+    getPaymentHistoryByUserID,
+    getAssignedProjectsByUserID,
+    getUserDataById
 }

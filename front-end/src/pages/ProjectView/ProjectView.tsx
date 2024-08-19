@@ -17,7 +17,7 @@ import { employee, EmployeeFormDto, EmployeePayload, Expense, ExpenseFormDto, Ex
 import AddEmployeeModal from "../../components/AddEmployeeModal/AddEmployeeModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
 import AddIncomeModal from "../../components/AddIncomeModal/AddIncomeModal";
-import { SCREEN_MODES } from "../../utilities/constants/app.constants";
+import { CategoryTypes, SCREEN_MODES } from "../../utilities/constants/app.constants";
 import { validateFormData } from "../../utilities/helpers";
 import { showErrorToast, showSuccessToast } from "../../utilities/helpers/alert";
 import DeleteConfirmationModal from "../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal";
@@ -396,6 +396,7 @@ const handleSave=async (property:string)=>{
           date:expenseForm.date.value,
           description:expenseForm.description.value,
           category:expenseForm.category.value,
+          employeeID:expenseForm.employeeID.value as userList,
           invoiceNumber:expenseForm.invoiceNumber.value
         }
         ProjectService.updateExpenseDetailByProjectId(projectId,id,expensePayload).then((res:any)=>{
@@ -695,7 +696,7 @@ const handleChangePage=(newPage: any,type:string)=>{
   onClose={() => handleModalClose('expense')}
   onSave={() => {handleSave('expense')}}
   expenseForm={expenseForm}
-  categories={['Salary', 'Bones', 'Other']}
+  categories={CategoryTypes}
   helperText={helperText}
   handleInputFocus={(property:any) => handleInputFocus('expense', property)}
   onInputHandleChange={(property:any, value) => onInputHandleChange('expense', property, value)}

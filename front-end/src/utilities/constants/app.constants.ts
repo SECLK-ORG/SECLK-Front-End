@@ -26,6 +26,8 @@ export const SCREEN_MODES = {
   export const USER_ACTION_TYPES = {
     USER_LOGIN: "USER_LOGIN",
   };
+
+  export const CategoryTypes=['Salary', 'Bones', 'Other']
   
   export  interface PROJECT_STATUSType{
     _id:number;

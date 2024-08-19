@@ -14,7 +14,8 @@ import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import moment from 'moment';
 import { DateRangePicker } from 'rsuite';
 import { addDays } from 'date-fns';
-import 'rsuite/DateRangePicker/styles/index.css';
+import 'rsuite/dist/rsuite-no-reset.min.css';
+// import 'rsuite/DateRangePicker/styles/index.css';
 
 interface ExpensesTableProps {
   page: number;

@@ -303,6 +303,7 @@ const onSave=async()=>{
         setModalOpen(false)
         setProjectForm(INITIAL_PROJECT_FORM_DATA)
         showSuccessToast(res.data.message)
+        setIsLoading(false)
       }).catch((error:any)=>{
         console.log(error)
         showErrorToast(error)
@@ -327,7 +328,7 @@ const onSave=async()=>{
         setModalOpen(false)
         setProjectForm(INITIAL_PROJECT_FORM_DATA)
         showSuccessToast(res.data.message)
-
+        setIsLoading(false)
       }).catch((error:any)=>{
         console.log(error)
         showErrorToast(error)
