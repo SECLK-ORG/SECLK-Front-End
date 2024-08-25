@@ -24,9 +24,11 @@ interface ProjectEmployeesTableProps {
   isEmployeeLoading?: boolean;
   employees: employee[];
   handleClick: (mode: string, employeeId: string) => void;
+  isAdmin: boolean;
 }
 
 const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
+  isAdmin,
   page,
   rowsPerPage,
   onChangePage,
@@ -75,13 +77,14 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                 Clear Filters
               </IconButton>
             )}
-            <CustomButton
+          {isAdmin&&  <CustomButton
               text='Add Employee'
               backgroundColor='#437EF7'
               color='white'
               variant='contained'
               onClick={() => handleClick(SCREEN_MODES.CREATE, "")}
             />
+          }
           </div>
         </div>
         <Table>
@@ -121,9 +124,9 @@ const ProjectEmployeesTable: React.FC<ProjectEmployeesTableProps> = ({
                     {/* <IconButton onClick={() => { handleClick(SCREEN_MODES.EDIT, employee._id) }}> 
                       <Edit />
                     </IconButton> */}
-                    <IconButton onClick={() => { handleClick(SCREEN_MODES.DELETE, employee._id) }}>
+                     {isAdmin&&      <IconButton onClick={() => { handleClick(SCREEN_MODES.DELETE, employee._id) }}>
                       <Delete />
-                    </IconButton>
+                    </IconButton>}
                     
                   </TableCell>
                 </TableRow>

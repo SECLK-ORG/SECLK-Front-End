@@ -3,7 +3,7 @@ import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
   IconButton, InputAdornment, Box, Typography, CircularProgress, TableCell
 } from '@mui/material';
-import { Visibility, Edit, Search } from '@mui/icons-material';
+import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import { CustomButton as CSBtn, StyledTextField } from '../../assets/theme/theme';
 import { PaymentHistory, predefinedRanges } from '../../utilities/models';
@@ -17,12 +17,10 @@ interface PaymentHistoryTableProps {
   rowsPerPage: number;
   onChangePage: (event: React.ChangeEvent<unknown>, newPage: number) => void;
   onChangeRowsPerPage: (event: any) => void;
-  onFilterDrawerOpen: () => void;
-  onClearFilters: () => void;
-  isFiltered: boolean;
   handleClick: (mode: string, id: any) => void;
   paymentHistory: PaymentHistory[];
   isLoading: boolean;
+  isAdmin: boolean;
 }
 
 const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
@@ -30,9 +28,7 @@ const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
   rowsPerPage,
   onChangePage,
   onChangeRowsPerPage,
-  onFilterDrawerOpen,
-  onClearFilters,
-  isFiltered,
+  isAdmin,
   handleClick,
   paymentHistory,
   isLoading
@@ -86,12 +82,13 @@ const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
           />
           <div style={{marginInline:"1rem"}}>
           </div>
-         <CustomButton
+          {isAdmin &&   <CustomButton
               text='Add Payment'
               backgroundColor='#437EF7'
               color='white'
               variant='contained'
               onClick={()=>{handleClick(SCREEN_MODES.CREATE,'')}}          />
+            }
               </div>
              
           </div>
@@ -126,12 +123,15 @@ const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
                   <TableCell>{payment.invoiceNumber}</TableCell>
                   <TableCell>{moment(payment.date).format('YYYY-MM-DD')}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleClick('VIEW', payment.invoiceNumber)}>
+                    <IconButton onClick={() => handleClick(SCREEN_MODES.VIEW, payment._id)}>
                       <Visibility />
                     </IconButton>
-                    <IconButton onClick={() => handleClick('EDIT', payment.invoiceNumber)}>
+                    {isAdmin &&      <IconButton onClick={() => handleClick(SCREEN_MODES.EDIT, payment._id)}>
                       <Edit />
-                    </IconButton>
+                    </IconButton>}
+                    {isAdmin &&   <IconButton onClick={() => handleClick(SCREEN_MODES.DELETE, payment._id)}>
+                      <Delete />
+                    </IconButton>}
                   </TableCell>
                 </TableRow>
               ))

@@ -15,6 +15,8 @@ import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationM
 import { CustomButton } from '../../assets/theme/theme';
 import { validateFormData } from '../../utilities/helpers';
 import { PositionService } from '../../services/position.service';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const Employees: React.FC = () => {
 
@@ -29,7 +31,8 @@ const Employees: React.FC = () => {
     role: { value: "User", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     workLocation: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
   };
-
+  const loginState = useSelector((state: RootState) => state.user.login);
+  const [isAdmin,setIsAdmin]=useState<boolean>(false)
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
@@ -53,6 +56,12 @@ const Employees: React.FC = () => {
     fetchFilters();
   }, []);
 
+  useEffect(() => {
+  
+    if (loginState.status === 'success') {
+      setIsAdmin(loginState.data.role === 'Admin');
+    }
+  }, [loginState]);
   useEffect(() => {
     if (isFiltered) {
       handleStatusORCategoryChange();
@@ -294,12 +303,12 @@ const Employees: React.FC = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: "30px" }}>
         <Typography sx={{ fontWeight: "700", fontSize: "30px" }}>Employees</Typography>
-        <CustomButton
+        { isAdmin &&      <CustomButton
           size="large"
           onClick={handleModalOpen}
         >
           Create Employee
-        </CustomButton>
+        </CustomButton>}
       </div>
       <div>
         <Grid container spacing={2} sx={{ justifyContent: "space-evenly", paddingInline: "30px" }}>
@@ -316,6 +325,7 @@ const Employees: React.FC = () => {
       </div>
 
       <EmployeeTable
+         isAdmin={isAdmin}
         isLoading={isLoading}
         page={page}
         employees={employees}

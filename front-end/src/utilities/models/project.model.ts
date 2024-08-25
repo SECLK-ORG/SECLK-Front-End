@@ -34,7 +34,7 @@ export interface Income {
 
   export  interface employee{
     _id:string
-    employeeID:string
+    employeeID:userList
     employeeName:string
     email:string
     position:string

@@ -22,6 +22,9 @@ import { validateFormData } from "../../utilities/helpers";
 import { showErrorToast, showSuccessToast } from "../../utilities/helpers/alert";
 import DeleteConfirmationModal from "../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal";
 import { UserService } from "../../services/user.service";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import moment from "moment";
 
 const ProjectView = () => {
   const navigate = useNavigate();
@@ -52,7 +55,8 @@ const ProjectView = () => {
     projectStartedDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "" },
   };
   
-
+  const loginState = useSelector((state: RootState) => state.user.login);
+  const [isAdmin,setIsAdmin]=useState<boolean>(false)
   const [projectData, setProjectData] = useState<Project>({} as Project)
   const [projectSummary, setProjectSummary] = useState<ProjectSummary>({} as ProjectSummary)
   const [employees, setEmployees] = useState<employee[]>([]);
@@ -87,14 +91,27 @@ const ProjectView = () => {
   const [employeeRowsPerPage, setEmployeeRowsPerPage] = useState(5);
 
 
+
+  useEffect(() => {
+    // Set isAdmin based on the loginState
+    if (loginState.status === 'success') {
+      setIsAdmin(loginState.data.role === 'Admin');
+      
+    }
+  }, [loginState]);
+
 useEffect(() => {
-    getProjectData()
-    getEmployeeDetails() 
-    getIncomeDetails()
-    getExpenseDetails()
-    getSearchValues()
-    getProjectSummary()
-}, [])
+  getProjectData();
+  getEmployeeDetails();
+  getSearchValues();
+  getProjectSummary();
+
+  if (isAdmin) {
+    getIncomeDetails();
+    getExpenseDetails();
+  }
+}, [isAdmin]);
+
 
 
 const getProjectSummary=()=>{
@@ -302,14 +319,16 @@ const handleClick =(mode: string, id:string,property:string)=>{
       if (SCREEN_MODES.EDIT || SCREEN_MODES.VIEW) {
         const isDisable = mode === SCREEN_MODES.VIEW;
         const data: employee = employees.find((employee: employee) => employee._id === id) as employee;
+       
         if (data) {
           setEmployeeForm({
             _id: { value: data._id, isRequired: false, disable: true, readonly: true, validator: "text", error: "" },
-            employeeID: { value: { _id: data.employeeID, name: data.employeeName,email:data.email,position:data.position }, isRequired: true, disable: isDisable, readonly: isDisable, validator: "object", error: "" },
+            employeeID: { value: data.employeeID, isRequired: true, disable: isDisable, readonly: isDisable, validator: "object", error: "" },
             employeeName: { value: data.employeeName, isRequired: true, disable: isDisable, readonly: isDisable, validator: "text", error: "" },
             email: { value: data.email, isRequired: true, disable: true, readonly: true, validator: "email", error: "" },
             position: { value: data.position, isRequired: true, disable: true, readonly: true, validator: "text", error: "" },
-            projectStartedDate: { value: data.projectStartedDate, isRequired: true, disable: isDisable, readonly: isDisable, validator: "date", error: "" },
+            projectStartedDate: { value: moment(data.projectStartedDate).format('YYYY-MM-DD'), isRequired: true, disable: isDisable, readonly: isDisable, validator: "date", error: "" },
+
           });
         }
       }
@@ -582,10 +601,11 @@ const handleChangePage=(newPage: any,type:string)=>{
       </Box>
 
       <ProjectDetailsBox
+      isAdmin={isAdmin}
       projectData={projectData }
       />
 
-      <Box mt={3} mb={3}>
+{isAdmin&&  <Box mt={3} mb={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
             <ProjectInfoCard
@@ -624,13 +644,15 @@ const handleChangePage=(newPage: any,type:string)=>{
           </Grid>
         </Grid>
       </Box>
+      }
 <Box className={styles.tabBox}>
-  <Tabs defaultValue={0} orientation="horizontal">
+  <Tabs defaultValue={ 0 } orientation="horizontal">
     <TabsList>
-      <Tab>Income</Tab>
-      <Tab>Expenses</Tab>
+      {isAdmin && <Tab>Income</Tab>}
+      {isAdmin && <Tab>Expenses</Tab>}
       <Tab>Employees</Tab>
     </TabsList>
+    {isAdmin && (
       <TabPanel value={0}>
           <IncomeTable
           incomes={incomes}
@@ -645,7 +667,8 @@ const handleChangePage=(newPage: any,type:string)=>{
           rowsPerPage={incomeRowsPerPage}
           />
       </TabPanel>
-      <TabPanel value={1}>
+    )}
+     {isAdmin &&  <TabPanel value={1}>
         <ExpensesTable
         expenses={expenses}
         isExpensesLoading={isExpensesLoading}
@@ -660,8 +683,10 @@ const handleChangePage=(newPage: any,type:string)=>{
         
       />
       </TabPanel>
-      <TabPanel value={2}>
+      }
+      <TabPanel value={isAdmin?2:0}>
         <EmployeesTable
+        isAdmin={isAdmin}
           isEmployeeLoading={isEmployeeLoading}
           employees={employees}
           handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'employee')}

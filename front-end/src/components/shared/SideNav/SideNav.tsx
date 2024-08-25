@@ -19,9 +19,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './SideNav.module.scss';
 import { logo } from '../../../assets/images/';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginClear } from '../../../redux/userSlice/userSlice';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { RootState } from '../../../redux/store';
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
@@ -29,7 +30,8 @@ export default function PermanentDrawerLeft() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const loginState = useSelector((state: RootState) => state.user.login);
+  const [isAdmin,setIsAdmin]=React.useState<boolean>(false)
   React.useEffect(() => {
     const path = location.pathname;
     if (path.includes('configurations')) {
@@ -57,6 +59,13 @@ export default function PermanentDrawerLeft() {
     dispatch(loginClear());
   };
 
+
+  React.useEffect(() => {
+  
+    if (loginState.status === 'success') {
+      setIsAdmin(loginState.data.role === 'Admin');
+    }
+  }, [loginState]);
   return (
     <>
       <CssBaseline />
@@ -79,14 +88,14 @@ export default function PermanentDrawerLeft() {
           <img src={logo} alt="Logo" />
         </Box>
         <List>
-          <ListItem disablePadding className={selectedItem === 'Configurations' ? styles.selected : ''}>
+        { isAdmin &&    <ListItem disablePadding className={selectedItem === 'Configurations' ? styles.selected : ''}>
             <ListItemButton onClick={() => handleNavigate('Configurations')}>
               <ListItemIcon>
                 <SettingsOutlinedIcon sx={{ color: selectedItem === 'Configurations' ? '#FFFFFF' : '#A5ACBA' }} />
               </ListItemIcon>
               <ListItemText primary="Configurations" sx={{ color: selectedItem === 'Configurations' ? '#FFFFFF' : '#A5ACBA' }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem>}
           <ListItem disablePadding className={selectedItem === 'Projects' ? styles.selected : ''}>
             <ListItemButton onClick={() => handleNavigate('Projects')}>
               <ListItemIcon>
@@ -108,9 +117,9 @@ export default function PermanentDrawerLeft() {
         <Box sx={{ flexGrow: 1 }} />
         <List>
           <ListItem>
-            <ListItemText primary="ADMINISTRATION" className={styles.sectionHeader} />
+            {/* <ListItemText primary="ADMINISTRATION" className={styles.sectionHeader} /> */}
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <UpdateIcon sx={{ color: '#A5ACBA' }} />
@@ -143,7 +152,7 @@ export default function PermanentDrawerLeft() {
               <ListItemText primary="Account" />
               <ExpandMoreIcon sx={{ color: '#A5ACBA' }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem disablePadding>
             <ListItemButton onClick={handleSignOut}>
               <ListItemIcon>

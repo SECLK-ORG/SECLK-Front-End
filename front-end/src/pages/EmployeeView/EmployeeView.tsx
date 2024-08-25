@@ -8,12 +8,16 @@ import styles from './EmployeeView.module.scss';
 import { TabsList, TabPanel, Tab } from "../../assets/theme/theme";
 import { Tabs } from '@mui/base/Tabs';
 import { UserService } from '../../services/user.service';
-import { PaymentHistory, PaymentFormDto, ProjectByUser, EmployeePayloadDto, ExpensePayload, userList } from '../../utilities/models';
+import { PaymentHistory, PaymentFormDto, ProjectByUser, EmployeePayloadDto, ExpensePayload, userList, AddToProjectFormDto, ProjectList, EmployeePayload } from '../../utilities/models';
 import AddPaymentModal from '../../components/AddPaymentModal/AddPaymentModal';
 import { validateFormData } from '../../utilities/helpers';
 import { showSuccessToast, showErrorToast } from '../../utilities/helpers/alert';
 import { CategoryTypes, SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { ProjectService } from '../../services/project.service';
+import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal';
+import AddToProjectModal from '../../components/AddToProjectModal/AddToProjectModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const EmployeeView = () => {
   const navigate = useNavigate();
@@ -37,6 +41,16 @@ const EmployeeView = () => {
     vendor:{ value: '', isRequired: true, disable: false, readonly: false, validator: 'text', error: '' },
   };
 
+  const INITIAL_ADD_TO_PROJECT_FORM_DATA:AddToProjectFormDto={
+    project:{ value: {} as ProjectList, isRequired: true, disable: false, readonly: false, validator: 'object', error: '' },
+    position: { value: '', isRequired: true, disable: false, readonly: false, validator: 'text', error: '' },
+    projectStartedDate: { value: '', isRequired: true, disable: false, readonly: false, validator: 'date', error: '' },
+    _id: { value: '', isRequired: true, disable: false, readonly: false, validator: 'text', error: '' },
+    email: { value: '', isRequired: true, disable: false, readonly: false, validator: 'text', error: '' },
+    employeeID:{value: {} as userList,isRequired: true, disable: false, readonly: false, validator: 'object', error: '' },
+    employeeName:{ value: '', isRequired: true, disable: false, readonly: false, validator: 'text', error: '' },
+  }
+ const  [addToProjectForm,setAddToProjectForm]=useState<AddToProjectFormDto>(INITIAL_ADD_TO_PROJECT_FORM_DATA)
   const [paymentForm, setPaymentForm] = useState<PaymentFormDto>(INITIAL_PAYMENT_FORM_DATA);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [addPaymentModalOpen, setAddPaymentModalOpen] = useState<boolean>(false);
@@ -46,15 +60,27 @@ const EmployeeView = () => {
   const [isGetassignedProjectsLoading,setIsGetAssignedProjectsLoading]=useState<boolean>(false)
   const [isGetUserDataIsLoading,setIsGetUserDataIsLoading]=useState<boolean>(false)
   const [isGetPaymentDataIsLoading,setIsGetPaymentDataIsLoading]=useState<boolean>(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [selectedPaymentId, setSelectedPaymentId] = useState<string>('');
+  const [AllProjectList,setAllProjectList]=useState<ProjectList[]>([])
+  const loginState = useSelector((state: RootState) => state.user.login);
+  const [isAdmin,setIsAdmin]=useState<boolean>(false)
   useEffect(() => {
     if (id) {
       getPaymentHistoryData();
       getAssignedProjectsByUserID()
       getUserDataByID()
+      getALlProjectList()
     }
   }, [id]);
 
-
+  useEffect(() => {
+  
+    if (loginState.status === 'success') {
+      setIsAdmin(loginState.data.role === 'Admin');
+    }
+  }, [loginState]);
+  
   useEffect(() => {
   if(id&&userData){
     setPaymentForm({
@@ -73,6 +99,7 @@ const EmployeeView = () => {
         }
       }
     })
+   setAADFormData()
   }
   }, [id,userData])
   
@@ -80,6 +107,46 @@ const EmployeeView = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  const setAADFormData=()=>{
+    if(id&&userData){
+    setAddToProjectForm({
+      ...addToProjectForm,
+      employeeID:{
+        ...addToProjectForm.employeeID,
+        value:{
+          _id:id,
+          email:userData.email,
+          name:userData.name,
+          position:userData.position
+        }},
+        email:{
+          ...addToProjectForm.email,
+          value:userData.email
+        },
+        _id:{
+          ...addToProjectForm._id,
+          value:id
+        },
+        employeeName:{
+          ...addToProjectForm.employeeName,
+          value:userData.name
+        },
+        position:{
+          ...addToProjectForm.position,
+          value:userData.position
+        },
+    })
+  }
+}
+  const getALlProjectList=()=>{
+    ProjectService.getProjectsList().then((res:any)=>{
+      setAllProjectList(res.data.data)
+      console.log("resposegetALlProjectList",res.data.data)
+    }).catch((err)=>{
+      console.log("errr",err)
+    })
+  }
   const getPaymentHistoryData = () => {
     if (id) {
       setIsGetPaymentDataIsLoading(true)
@@ -160,24 +227,91 @@ const getUserDataByID=()=>{
     setPage(1);
   };
 
-  const handleClick = (mode: string, id: string) => {
+  const handleClick = (mode: string, paymentId: string) => {
+    setMode(mode)
+    setSelectedPaymentId(paymentId)
+    const isDisabled=mode===SCREEN_MODES.VIEW
     if(mode ===SCREEN_MODES.CREATE){
       setAddPaymentModalOpen(true);
     }
-    if (mode === 'VIEW') {
-      // Implement view functionality
-    } else if (mode === 'EDIT') {
-      // Implement edit functionality
+    if (mode === SCREEN_MODES.VIEW ||mode ===SCREEN_MODES.EDIT) {
+      const payment:any= paymentHistory.find((item:PaymentHistory)=>item._id===paymentId)
+      const projectId=payment?.projectId._id
+      const project:any= projectList.find((item:ProjectByUser)=>item._id===projectId)
+      setAddPaymentModalOpen(true);
+      setPaymentForm({
+        ...paymentForm,
+        project:{
+          ...paymentForm.project,
+          value:project,
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        amount:{
+          ...paymentForm.amount,
+          value:payment.amount,
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        category:{
+          ...paymentForm.category,
+          value:payment.category,
+          disable:isDisabled,
+          readonly:isDisabled
+        }, 
+        date:{
+          ...paymentForm.date,
+          value:payment.date,
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        description:{
+          ...paymentForm.description,
+          value:payment.description,
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        employeeID:{
+          ...paymentForm.employeeID,
+          value:{
+            _id:id||'',
+            email:userData?.email||'',
+            name:userData?.name||'',
+            position:userData?.position||''
+          },
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        invoiceNumber:{
+          ...paymentForm.invoiceNumber,
+          value:payment.invoiceNumber,
+          disable:isDisabled,
+          readonly:isDisabled
+        },
+        vendor:{
+          ...paymentForm.vendor,
+          value:userData?.name||'',
+          disable:isDisabled,
+          readonly:isDisabled
+        }
+      })
+    }
+    if(mode === SCREEN_MODES.DELETE){
+ 
+      setIsDeleteModalOpen(true)
     }
   };
 
   const handleModalOpen = () => {
     setModalOpen(true);
+
   };
 
   const handleModalClose = () => {
     setPaymentForm(INITIAL_PAYMENT_FORM_DATA);
     setAddPaymentModalOpen(false);
+    setModalOpen(false);
+    setAddToProjectForm(INITIAL_ADD_TO_PROJECT_FORM_DATA)
   };
 
   const handleInputFocus = (property: string) => {
@@ -210,7 +344,6 @@ const getUserDataByID=()=>{
     if (isValid) {
       setIsLoading(true);
       if(mode===SCREEN_MODES.CREATE){
-
       const expensePayload:ExpensePayload={
         amount:paymentForm.amount.value,
         vendor:paymentForm.vendor.value,
@@ -230,21 +363,31 @@ const getUserDataByID=()=>{
         showErrorToast(err)
         console.log(err)
       })
-    }
-      // Implement the save functionality here
-      // Assuming you have a PaymentService to save the payment details
+     }else if(mode===SCREEN_MODES.EDIT){
+      const payment:any= paymentHistory.find((item:PaymentHistory)=>item._id===selectedPaymentId)
+      const expensePayload:ExpensePayload={
+        _id:payment.expenseId,
+        amount:paymentForm.amount.value,
+        vendor:paymentForm.vendor.value,
+        date:paymentForm.date.value,
+        description:paymentForm.description.value,
+        category:paymentForm.category.value,
+        employeeID:paymentForm.employeeID.value as userList,
+        invoiceNumber:paymentForm.invoiceNumber.value
+      }
+      ProjectService.updateExpenseDetailByProjectId(paymentForm.project.value._id,payment.expenseId,expensePayload).then((res:any)=>{
+        getPaymentHistoryData();
+        getAssignedProjectsByUserID()
+        showSuccessToast("Expense Updated Successfully")
+        handleModalClose()
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)
+      })
+    
 
-      // Example:
-      // PaymentService.savePayment(paymentForm).then((res: any) => {
-      //   getPaymentHistoryData();
-      //   handleModalClose();
-      //   showSuccessToast(res.data.message);
-      //   setIsLoading(false);
-      // }).catch((error: any) => {
-      //   console.log(error);
-      //   showErrorToast(error);
-      //   setIsLoading(false);
-      // });
+     }
+    
     }
   };
 
@@ -254,6 +397,79 @@ const getUserDataByID=()=>{
 
   const handleClearFilters=()=>{
     
+  }
+
+  const handleDeleteAction = (confirm: boolean) => {
+    if (confirm && selectedPaymentId) {
+    const payment= paymentHistory.find((item:PaymentHistory)=>item._id===selectedPaymentId)
+    const projectId=payment?.projectId._id
+    const expenseId=payment?.expenseId
+    if(projectId&&expenseId){
+      ProjectService.deleteExpenseDetailByProjectId(projectId,expenseId).then((res:any)=>{
+        console.log("delete expense",res.data.data)
+        showSuccessToast("Expense Deleted Successfully")
+        setIsDeleteModalOpen(false)
+        getPaymentHistoryData();
+        getAssignedProjectsByUserID()
+        setPaymentForm(INITIAL_PAYMENT_FORM_DATA)
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)
+        setIsDeleteModalOpen(false)
+      })
+    }
+    }
+  };
+
+  const addToProjectHandleInputChange=(property:string,value:any)=>{
+    setAddToProjectForm({
+      ...addToProjectForm,
+      [property]:{
+        ...addToProjectForm[property as keyof typeof addToProjectForm],
+        value:value
+      }
+    })
+  }
+  const addToProjectHandleFocus=(property:string)=>{
+    setAddToProjectForm({
+      ...addToProjectForm,
+      [property]:{
+        ...addToProjectForm[property as keyof typeof addToProjectForm],
+        error:''
+      }
+    })
+  }
+
+  const handleAddToProjectSave=async ()=>{
+    setHelperText(true);
+    const [validateData, isValid] = await validateFormData(addToProjectForm);
+    setAddToProjectForm(validateData);
+    console.log("first",validateData)
+    if(isValid){
+      const employeePayload:EmployeePayload={
+        employeeID:addToProjectForm.employeeID.value,
+        employeeName:addToProjectForm.employeeName.value,
+        email:addToProjectForm.email.value,
+        position:addToProjectForm.position.value,
+        projectStartedDate:addToProjectForm.projectStartedDate.value
+      }
+      ProjectService.createEmployeeDetailByProjectId(addToProjectForm.project.value._id,employeePayload).then((res:any)=>{
+       
+        showSuccessToast("Employee Added Successfully")
+        getAssignedProjectsByUserID()
+        handleModalClose()
+      }).catch((err)=>{
+        showErrorToast(err)
+        console.log(err)   
+        handleModalClose()
+      })
+    }
+
+  }
+  const oncloseAddProjectModal=()=>{
+    setModalOpen(false)
+    setAddToProjectForm(INITIAL_ADD_TO_PROJECT_FORM_DATA)
+    setAADFormData()
   }
   return (
     <Box m={1} p={2} sx={{ border: "1px solid #E0E0E0", borderRadius: "8px" }}>
@@ -295,14 +511,6 @@ const getUserDataByID=()=>{
             </Typography>
           </Box>
         </Box>
-        <Box>
-          <CustomButton
-            sx={{ backgroundColor: "#437EF7", color: "white", height: "2.5rem", textTransform: "capitalize" }}
-            onClick={handleModalOpen}
-          >
-            Edit Employee
-          </CustomButton>
-        </Box>
       </Box>
       {isGetUserDataIsLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '10rem' }}>
@@ -317,11 +525,10 @@ const getUserDataByID=()=>{
     <Typography sx={{ fontWeight: "600", fontSize: "20px", marginBottom: "1rem" }}>
       Projects {projectList.length}
     </Typography>
-    <CustomButton
-      sx={{ backgroundColor: "#437EF7", color: "white", height: "2.5rem", textTransform: "capitalize" }}
-    >
+   {isAdmin && <CustomButton sx={{ backgroundColor: "#437EF7", color: "white", height: "2.5rem", textTransform: "capitalize" }}  onClick={handleModalOpen}>
       Add to Project
     </CustomButton>
+    }
   </Box>
 
   {isGetassignedProjectsLoading ? (
@@ -358,15 +565,13 @@ const getUserDataByID=()=>{
           </TabsList>
           <TabPanel value={0}>
             <PaymentHistoryTable
+              isAdmin={isAdmin}
               isLoading={isGetPaymentDataIsLoading}
               paymentHistory={paymentHistory}
               page={page}
               rowsPerPage={rowsPerPage}
               onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              onFilterDrawerOpen={handleFilterDrawerOpen}
-              onClearFilters={handleClearFilters}
-              isFiltered={isFiltered}
+              onChangeRowsPerPage={handleChangeRowsPerPage}        
               handleClick={handleClick}
             />
           </TabPanel>
@@ -384,7 +589,25 @@ const getUserDataByID=()=>{
         paymentForm={paymentForm}
         helperText={helperText} 
         projects={projectList}      />
+        <DeleteConfirmationModal
+          handleDeleteAction={handleDeleteAction}
+          text={"Payment"}
+          onClose={() => setIsDeleteModalOpen(false)}
+          open={isDeleteModalOpen}
+        />
+
+       < AddToProjectModal
+       helperText={helperText}
+        open={modalOpen}
+        onClose={() => oncloseAddProjectModal()}
+        onSave={handleAddToProjectSave}
+        projectList={AllProjectList}
+        addToProjectForm={addToProjectForm}
+        handleInputFocus={addToProjectHandleFocus}
+        handleInputChange={addToProjectHandleInputChange}
+       />
     </Box>
+    
   );
 };
 

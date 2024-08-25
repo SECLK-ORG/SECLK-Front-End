@@ -9,6 +9,8 @@ import { CustomButton, StyledTableCell, StyledTableRow, StyledTextField } from '
 import CustomPagination from '../CustomPagination/CustomPagination';
 import { Employee } from '../../utilities/models';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 interface EmployeeTableProps {
   page: number;
@@ -21,6 +23,7 @@ interface EmployeeTableProps {
   handleClick: (mode: string, employeeId: string) => void;
   employees: Employee[];
   isLoading: boolean;
+  isAdmin: boolean;
 }
 
 const getStatusStyles = (status: 'Active' | 'Inactive') => {
@@ -40,6 +43,7 @@ const getStatusStyles = (status: 'Active' | 'Inactive') => {
 };
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  isAdmin,
   page,
   rowsPerPage,
   onChangePage,
@@ -52,7 +56,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   isLoading
 }) => {
   const [searchValue, setSearchValue] = useState('');
-
+  const loginState = useSelector((state: RootState) => state.user.login);
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
@@ -91,7 +95,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 Clear Filters
               </CustomButton>
             )}
-            <CustomButton
+         <CustomButton
               variant="outlined"
               sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}
               endIcon={<FilterAltOutlinedIcon />}
@@ -160,15 +164,17 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell>
-                        <IconButton onClick={() => handleClick('VIEW', employee._id)}>
-                          <Visibility />
-                        </IconButton>
-                        <IconButton onClick={() => handleClick('EDIT', employee._id)}>
+                        {(isAdmin || (!isAdmin && employee._id === loginState.data.userId)) && (
+                              <IconButton onClick={() => handleClick('VIEW', employee._id)}>
+                                <Visibility />
+                              </IconButton>
+                            )}
+                          { isAdmin &&     <IconButton onClick={() => handleClick('EDIT', employee._id)}>
                           <Edit />
-                        </IconButton>
-                        <IconButton onClick={() => handleClick('DELETE', employee._id)}>
+                        </IconButton>}
+                        { isAdmin &&    <IconButton onClick={() => handleClick('DELETE', employee._id)}>
                           <Delete />
-                        </IconButton>
+                        </IconButton>}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))

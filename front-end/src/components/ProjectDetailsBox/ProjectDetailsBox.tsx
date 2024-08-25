@@ -4,8 +4,9 @@ import { Project } from '../../utilities/models'
 import moment from 'moment'
 interface ProjectDetailsBoxProps {
   projectData:Project
+  isAdmin:boolean
 }
-const ProjectDetailsBox : React.FC<ProjectDetailsBoxProps> = ({projectData}) => {
+const ProjectDetailsBox : React.FC<ProjectDetailsBoxProps> = ({projectData,isAdmin}) => {
   return (
     <Grid container spacing={3}>
     <Grid item xs={6} sm={6} xl={3}sx={{ display:"flex",alignItems:"center"}}>
@@ -25,11 +26,12 @@ const ProjectDetailsBox : React.FC<ProjectDetailsBoxProps> = ({projectData}) => 
     <Typography sx={{color:"#272D37",fontSize:"1rem",fontWeight:"600",lineHeight:"24px",marginInline:"1rem"  }}>{projectData.clientEmail}</Typography>
      
     </Grid>
-    <Grid item xs={6} sm={6} xl={3} sx={{ display:"flex",alignItems:"center"}}>
+    { isAdmin &&  <Grid item xs={6} sm={6} xl={3} sx={{ display:"flex",alignItems:"center"}}>
     <Typography sx={{color:"#5F6D7E",fontSize:"1rem",fontWeight:"400",lineHeight:"24px" }}>Quoted Amount</Typography>
     <Typography sx={{color:"#272D37",fontSize:"1rem",fontWeight:"600",lineHeight:"24px",marginInline:"1rem"  }}>{projectData.agreedAmount}</Typography>
      
     </Grid>
+    }
   </Grid>
   
   )

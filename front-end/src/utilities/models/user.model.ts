@@ -118,4 +118,16 @@ export interface ProjectByUser {
   position: string;
   projectStartedDate: string;
 }
-
+export interface ProjectList {
+  _id:string
+  projectName: string;
+}
+export interface AddToProjectFormDto {
+  _id: FormFieldDto<string>;
+  employeeID: FormFieldDto<userList>;
+  employeeName: FormFieldDto<string>;
+  email: FormFieldDto<string>;
+  position: FormFieldDto<string>;
+  projectStartedDate: FormFieldDto<string>;
+  project:FormFieldDto<ProjectList>;
+}

@@ -58,7 +58,7 @@ const Projects: React.FC = () => {
   useEffect(() => {
 if(loginState.status === 'success'){
   setProjectForm({...projectForm,createdBy:{...projectForm.createdBy,value:loginState.data.userId}})
-  setIsAdmin(loginState.data.role==='admin'?true:false)
+  setIsAdmin(loginState.data.role==='Admin'?true:false)
 }
 }, [loginState.data.role, loginState.data.userId, loginState.status, projectForm]);
   

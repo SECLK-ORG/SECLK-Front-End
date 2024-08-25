@@ -9,6 +9,9 @@ const createProject = async (project: createProjectDto): Promise<AxiosResponse<a
 const getProjects = async (): Promise<AxiosResponse<any[]>> => {
     return await axiosPrivateInstance.get(`/api/projects/all`)
 }
+const getProjectsList = async (): Promise<AxiosResponse<any[]>> => {
+    return await axiosPrivateInstance.get(`/api/projects/getProjectList`)
+}
 const getProjectCountByStatus = async (): Promise<AxiosResponse<any[]>> => {
     return await axiosPrivateInstance.get(`/api/projects/getProjectStatusCount`)
 }
@@ -82,5 +85,6 @@ export const ProjectService = {
     createExpenseDetailByProjectId,
     updateExpenseDetailByProjectId,
     deleteExpenseDetailByProjectId,
-    getProjectSummary
+    getProjectSummary,
+    getProjectsList
 }
