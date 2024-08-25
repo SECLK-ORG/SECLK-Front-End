@@ -343,12 +343,13 @@ const onSave=async()=>{
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: "30px" }}>
         <Typography sx={{ fontWeight: "700", fontSize: "30px" }}>Projects</Typography>
-        <CustomButton
+        {isAdmin &&  <CustomButton
           size="large"
           onClick={handleModalOpen}
         >
           Create Project
         </CustomButton>
+        }
       </div>
       <div>
         <Grid container spacing={2} sx={{ justifyContent: "space-evenly", paddingInline: "30px" }}>
