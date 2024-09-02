@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserStateDto } from '../../utilities/models';
-import { APP_ACTION_STATUS, COMMON_ACTION_TYPES, USER_ACTION_TYPES } from '../../utilities/constants/app.constants';
+import { APP_ACTION_STATUS } from '../../utilities/constants/app.constants';
 import { jwtDecode } from 'jwt-decode';
 
 const INITIAL_STATE: UserStateDto = {

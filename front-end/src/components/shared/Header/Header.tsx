@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import styles from './Header.module.scss';
 import Box from '@mui/material/Box';
-import { jwtDecode } from 'jwt-decode';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { loginUserData } from '../../../utilities/models';

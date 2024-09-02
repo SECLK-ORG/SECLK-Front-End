@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardContent, Typography, useMediaQuery } from '@mui/material';
-import { EmojiObjects } from '@mui/icons-material';
 import styles from './InfoCard.module.scss';
 interface InfoCardProps {
   title: string;
