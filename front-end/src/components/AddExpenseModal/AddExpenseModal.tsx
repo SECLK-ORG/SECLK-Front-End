@@ -17,9 +17,11 @@ interface AddExpenseModalProps {
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: any) => void;
   employeeList: userList[];
+  isExpensesLoading?: boolean;
 }
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
+  isExpensesLoading,
   open,
   onClose,
   onSave,
@@ -175,8 +177,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave}>Save</CustomButton>}
-            {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave}>Update</CustomButton>}
+            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave} loading={isExpensesLoading}>Save</CustomButton>}
+            {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave} loading={isExpensesLoading}>Update</CustomButton>}
           </Box>
         </Box>
       </Box>

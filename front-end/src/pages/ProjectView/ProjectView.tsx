@@ -342,6 +342,7 @@ const handleSave=async (property:string)=>{
     const [validateData, isValid] =await validateFormData(incomeForm);
     setIncomeForm(validateData);
     if(isValid&&projectId){  
+      setIsIncomeLoading(true)
       if(mode===SCREEN_MODES.CREATE){
         const incomePayload:IncomePayload={
           amount:incomeForm.amount.value,
@@ -354,8 +355,10 @@ const handleSave=async (property:string)=>{
           showSuccessToast("Income Added Successfully")
           getIncomeDetails()
           handleModalClose('income')
+          setIsIncomeLoading(false)
           getProjectSummary()
         }).catch((err)=>{
+          setIsIncomeLoading(false)
           showErrorToast(err)
           console.log(err)
         })
@@ -374,7 +377,9 @@ const handleSave=async (property:string)=>{
           handleModalClose('income')
           getProjectSummary()
           setIncomeForm(INITIAL_INCOME_FORM_DATA)
+          setIsIncomeLoading(false)
         }).catch((err)=>{
+          setIsIncomeLoading(false)
           showErrorToast(err)
           console.log(err)
         })
@@ -387,6 +392,7 @@ const handleSave=async (property:string)=>{
     const [validateData, isValid] =await validateFormData(expenseForm);
     setExpenseForm(validateData);
     if(isValid&&projectId){
+      setIsExpensesLoading(true)
       if(mode===SCREEN_MODES.CREATE){
         const expensePayload:ExpensePayload={
           amount:expenseForm.amount.value,
@@ -403,8 +409,10 @@ const handleSave=async (property:string)=>{
           getExpenseDetails()
           getProjectSummary()
           handleModalClose('expense')
+          setIsExpensesLoading(false)
         }).catch((err)=>{
           showErrorToast(err)
+          setIsExpensesLoading(false)
           console.log(err)
         })
       }else{
@@ -424,7 +432,9 @@ const handleSave=async (property:string)=>{
           handleModalClose('expense')
           getProjectSummary()
           setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
+          setIsExpensesLoading(false)
         }).catch((err)=>{
+          setIsExpensesLoading(false)
           showErrorToast(err)
           console.log(err)
         })
@@ -437,6 +447,7 @@ const handleSave=async (property:string)=>{
     const [validateData, isValid] =await validateFormData(employeeForm);
     setEmployeeForm(validateData);
     if(isValid&&projectId){
+      setIsEmployeeLoading(true)
       if(mode===SCREEN_MODES.CREATE){
         const employeePayload:EmployeePayload={
           employeeID:employeeForm.employeeID.value,
@@ -449,8 +460,12 @@ const handleSave=async (property:string)=>{
           console.log("employee",res.data.data)
           showSuccessToast("Employee Added Successfully")
           getEmployeeDetails()
+         setIsEmployeeLoading(false)
+
           handleModalClose('employee')
         }).catch((err)=>{
+         setIsEmployeeLoading(false)
+
           showErrorToast(err)
           console.log(err)
         })
@@ -466,11 +481,13 @@ const handleSave=async (property:string)=>{
         ProjectService.updateEmployeeDetailByProjectId(projectId,id,employeePayload).then((res:any)=>{
           showSuccessToast("Employee Updated Successfully")
           getEmployeeDetails()
+          setIsEmployeeLoading(false)
           handleModalClose('employee')
           setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
         }).catch((err)=>{
           showErrorToast(err)
           console.log(err)
+          setIsEmployeeLoading(false)
         })}
     }
   }
@@ -480,39 +497,48 @@ const handleSave=async (property:string)=>{
 const handleDeleteAction=(isConfirm:boolean, property:string)=>{
   if(isConfirm&&projectId){
     if(property==='income'){
+      setIsIncomeLoading(true)
       ProjectService.deleteIncomeDetailByProjectId(projectId,id).then((res:any)=>{
         console.log("delete income",res.data.data)
         showSuccessToast("Income Deleted Successfully")
         getIncomeDetails()
         setDeleteModalOpen(false)
+        setIsIncomeLoading(false)
         setIncomeForm(INITIAL_INCOME_FORM_DATA)
       }).catch((err)=>{
+        setIsIncomeLoading(false)
         showErrorToast(err)
         console.log(err)
       })
     }else if(property==='expense'){
       console.log("delete expense")
+      setIsExpensesLoading(true)
       ProjectService.deleteExpenseDetailByProjectId(projectId,id).then((res:any)=>{
         console.log("delete expense",res.data.data)
         showSuccessToast("Expense Deleted Successfully")
         getExpenseDetails()
         setDeleteModalOpen(false)
         setExpenseForm(INITIAL_EXPENSE_FORM_DATA)
+        setIsExpensesLoading(false)
       }).catch((err)=>{
         showErrorToast(err)
+        setIsExpensesLoading(false)
         console.log(err)
       })
     }else{
       console.log("delete employee")
+      setIsEmployeeLoading(true)
       ProjectService.deleteEmployeeDetailByProjectId(projectId,id).then((res:any)=>{
         console.log("delete employee",res.data.data)
         showSuccessToast("Employee Deleted Successfully")
         getEmployeeDetails()
         setDeleteModalOpen(false)
         setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
+        setIsEmployeeLoading(false)
       }).catch((err)=>{
         showErrorToast(err)
         console.log(err)
+        setIsEmployeeLoading(false)
         setDeleteModalOpen(false)
       })
     }
@@ -647,11 +673,17 @@ const handleChangePage=(newPage: any,type:string)=>{
       }
 <Box className={styles.tabBox}>
   <Tabs defaultValue={ 0 } orientation="horizontal">
-    <TabsList>
-      {isAdmin && <Tab>Income</Tab>}
-      {isAdmin && <Tab>Expenses</Tab>}
+  <TabsList>
+  {isAdmin ? (
+    <>
+      <Tab>Income</Tab>
+      <Tab>Expenses</Tab>
       <Tab>Employees</Tab>
-    </TabsList>
+    </>
+  ) : (
+    <Tab>Employees</Tab>
+  )}
+</TabsList>
     {isAdmin && (
       <TabPanel value={0}>
           <IncomeTable
@@ -686,7 +718,7 @@ const handleChangePage=(newPage: any,type:string)=>{
       }
       <TabPanel value={isAdmin?2:0}>
         <EmployeesTable
-        isAdmin={isAdmin}
+         isAdmin={isAdmin}
           isEmployeeLoading={isEmployeeLoading}
           employees={employees}
           handleClick={(mode:string,employeeId:string)=>handleClick(mode,employeeId,'employee')}
@@ -704,6 +736,7 @@ const handleChangePage=(newPage: any,type:string)=>{
 
 
 <AddIncomeModal
+  isIncomeLoading={isIncomeLoading}
   mode={mode}
   open={isIncomeModalOpen}
   onClose={() => handleModalClose('income')}
@@ -715,6 +748,7 @@ const handleChangePage=(newPage: any,type:string)=>{
 />
 
 <AddExpenseModal
+isExpensesLoading={isExpensesLoading}
   mode={mode}
   employeeList={employeeList}
   open={isExpenseModalOpen}
@@ -728,6 +762,7 @@ const handleChangePage=(newPage: any,type:string)=>{
 />
 
 <AddEmployeeModal
+isEmployeeLoading={isEmployeeLoading}
  mode={mode}
  employeeList={employeeList}
   open={isEmployeeModalOpen}

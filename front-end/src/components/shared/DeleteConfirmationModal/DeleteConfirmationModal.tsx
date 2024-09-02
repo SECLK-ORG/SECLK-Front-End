@@ -10,9 +10,10 @@ interface DeleteConfirmationModalProps {
   text: string;
   onClose: () => void;
   handleDeleteAction: (confirm: boolean,property:string) => void;
+  isLoading?: boolean;
 }
 
-const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,open, onClose, handleDeleteAction }) => {
+const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,open, onClose, handleDeleteAction ,isLoading}) => {
 
 
 
@@ -60,7 +61,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,
               <CustomButton
                 fullWidth
                 variant="contained"
-               
+                 loading={isLoading?isLoading:false}
                 onClick={() => handleDeleteAction(false,text)}
               >
                 No

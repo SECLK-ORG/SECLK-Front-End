@@ -15,6 +15,7 @@ interface AddIncomeModalProps {
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: string) => void;
   mode: string;
+  isIncomeLoading:boolean
 }
 
 const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
@@ -25,6 +26,7 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
   incomeForm,
   helperText,
   handleInputFocus,
+  isIncomeLoading,
   onInputHandleChange,
 }) => {
   return (
@@ -116,8 +118,8 @@ const AddIncomeModal: React.FC<AddIncomeModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            {mode === SCREEN_MODES.CREATE && <CustomButton onClick={onSave}>Save</CustomButton>}
-            {mode === SCREEN_MODES.EDIT && <CustomButton onClick={onSave}>Update</CustomButton>}
+            {mode === SCREEN_MODES.CREATE && <CustomButton onClick={onSave}  loading={isIncomeLoading}>Save</CustomButton>}
+            {mode === SCREEN_MODES.EDIT && <CustomButton onClick={onSave} loading={isIncomeLoading}>Update</CustomButton>}
 
             
           </Box>
