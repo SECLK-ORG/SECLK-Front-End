@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CreateEmployeeModal,  InfoCard } from '../../components';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
@@ -62,11 +62,7 @@ const Employees: React.FC = () => {
       setIsAdmin(loginState.data.role === 'Admin');
     }
   }, [loginState]);
-  useEffect(() => {
-    if (isFiltered) {
-      handleStatusORCategoryChange();
-    }
-  }, [statuses, categories, isFiltered]);
+
 
   const getAllEmployees = async () => {
     try {
@@ -104,7 +100,7 @@ const Employees: React.FC = () => {
     }
   };
 
-  const handleStatusORCategoryChange = () => {
+  const handleStatusORCategoryChange = useCallback(() => {
     const selectedStatuses = statuses.filter(status => status.isSelect);
     const selectedCategories = categories.filter(category => category.isSelect);
     let updated = employees;
@@ -122,7 +118,14 @@ const Employees: React.FC = () => {
     }
 
     setEmployees(updated);
-  };
+  }, [statuses, categories, employees]);
+
+  useEffect(() => {
+    if (isFiltered) {
+      handleStatusORCategoryChange();
+    }
+  }, [statuses, categories, isFiltered, handleStatusORCategoryChange]);
+
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);

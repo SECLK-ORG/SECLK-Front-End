@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
@@ -18,14 +18,12 @@ import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationM
 import AddToProjectModal from '../../components/AddToProjectModal/AddToProjectModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { tr } from 'date-fns/locale';
 
 const EmployeeView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [isFiltered, setIsFiltered] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [mode, setMode] = useState(SCREEN_MODES.CREATE);
@@ -66,50 +64,15 @@ const EmployeeView = () => {
   const [AllProjectList,setAllProjectList]=useState<ProjectList[]>([])
   const loginState = useSelector((state: RootState) => state.user.login);
   const [isAdmin,setIsAdmin]=useState<boolean>(false)
-  useEffect(() => {
-    if (id) {
-      getPaymentHistoryData();
-      getAssignedProjectsByUserID()
-      getUserDataByID()
-      getALlProjectList()
-    }
-  }, [id]);
+  
 
-  useEffect(() => {
-  
-    if (loginState.status === 'success') {
-      setIsAdmin(loginState.data.role === 'Admin');
-    }
-  }, [loginState]);
-  
-  useEffect(() => {
-  if(id&&userData){
-    setPaymentForm({
-      ...paymentForm,
-      vendor:{
-        ...paymentForm.vendor,
-        value:userData?.name
-      },
-      employeeID:{
-        ...paymentForm.employeeID,
-        value:{
-          _id:id,
-          email:userData.email,
-          name:userData.name,
-          position:userData.position
-        }
-      }
-    })
-   setAADFormData()
-  }
-  }, [id,userData])
   
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const setAADFormData=()=>{
+  const setAADFormData=useCallback(()=>{
     if(id&&userData){
     setAddToProjectForm({
       ...addToProjectForm,
@@ -139,86 +102,106 @@ const EmployeeView = () => {
         },
     })
   }
-}
-  const getALlProjectList=()=>{
-    ProjectService.getProjectsList().then((res:any)=>{
-      setAllProjectList(res.data.data)
-      console.log("resposegetALlProjectList",res.data.data)
-    }).catch((err)=>{
-      console.log("errr",err)
-    })
+},[id,userData,addToProjectForm])
+
+useEffect(() => { 
+  
+  if (loginState.status === 'success') {
+    setIsAdmin(loginState.data.role === 'Admin');
   }
-  const getPaymentHistoryData = () => {
-    if (id) {
-      setIsGetPaymentDataIsLoading(true)
-      UserService.getPaymentHistoryByUserID(id)
-        .then((res: any) => {
-          setPaymentHistory(res.data.paymentHistory);
-          const totalAmount = res.data.paymentHistory.reduce((acc: number, curr: any) => {
-            return acc + curr.amount;
-          }, 0);
-          
-          setUserData(prevUserData => {
-            if (!prevUserData) {
-              // Handle the case where prevUserData is undefined
-              return {
-                _id: '',
-                name: '',
-                email: '',
-                startDate: '',
-                contactNumber: '',
-                position: '',
-                status: '',
-                workLocation: '',
-                role: '',
-                totalPaidAmount: totalAmount,
-              };
-            }
-          
-            return {
-              ...prevUserData,
-              totalPaidAmount: totalAmount,
-            };
-          })
-          setIsGetPaymentDataIsLoading(false)
+}, [loginState]);
 
-        }).catch((err) => {
-          setIsGetPaymentDataIsLoading(false)
-
-          console.log("error", err);
-        });
+useEffect(() => {
+if(id&&userData){
+  setPaymentForm({
+    ...paymentForm,
+    vendor:{
+      ...paymentForm.vendor,
+      value:userData?.name
+    },
+    employeeID:{
+      ...paymentForm.employeeID,
+      value:{
+        _id:id,
+        email:userData.email,
+        name:userData.name,
+        position:userData.position
+      }
     }
-  };
-const getAssignedProjectsByUserID=()=>{
-  if(id){
-    setIsGetAssignedProjectsLoading(true)
+  })
+ setAADFormData()
+}
+}, [id, paymentForm, setAADFormData, userData])
+
+const getALlProjectList = useCallback(() => {
+  ProjectService.getProjectsList().then((res: any) => {
+    setAllProjectList(res.data.data);
+    console.log("resposegetALlProjectList", res.data.data);
+  }).catch((err) => {
+    console.log("errr", err);
+  });
+}, []);
+
+const getPaymentHistoryData = useCallback(() => {
+  if (id) {
+    setIsGetPaymentDataIsLoading(true);
+    UserService.getPaymentHistoryByUserID(id)
+      .then((res: any) => {
+        setPaymentHistory(res.data.paymentHistory);
+        const totalAmount = res.data.paymentHistory.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+
+        setUserData((prevUserData:any) => ({
+          ...prevUserData,
+          totalPaidAmount: totalAmount,
+        }));
+        setIsGetPaymentDataIsLoading(false);
+      }).catch((err) => {
+        setIsGetPaymentDataIsLoading(false);
+        console.log("error", err);
+      });
+  }
+}, [id]);
+
+
+const getAssignedProjectsByUserID = useCallback(() => {
+  if (id) {
+    setIsGetAssignedProjectsLoading(true);
     UserService.getAssignedProjectsByUserID(id)
-    .then((res:any)=>{
-      setProjectList(res.data.data)
-      console.log(res.data.data);
-      setIsGetAssignedProjectsLoading(false)
-    })
-    .catch((err)=>{
-      setIsGetAssignedProjectsLoading(false)
-      console.log("error",err);
-    })
+      .then((res: any) => {
+        setProjectList(res.data.data);
+        console.log(res.data.data);
+        setIsGetAssignedProjectsLoading(false);
+      })
+      .catch((err) => {
+        setIsGetAssignedProjectsLoading(false);
+        console.log("error", err);
+      });
   }
-}
+}, [id]);
 
-const getUserDataByID=()=>{
-  if(id){
-    setIsGetUserDataIsLoading(true)
-    UserService.getUserDataById(id).then((res:any)=>{
-      setUserData(res.data.data)
-      console.log("res",res.data.data)
-      setIsGetUserDataIsLoading(false)
-    }).catch((error)=>{
-      setIsGetUserDataIsLoading(false)
-      console.log("error",error)
-    })
-
+const getUserDataByID = useCallback(() => {
+  if (id) {
+    setIsGetUserDataIsLoading(true);
+    UserService.getUserDataById(id).then((res: any) => {
+      setUserData(res.data.data);
+      console.log("res", res.data.data);
+      setIsGetUserDataIsLoading(false);
+    }).catch((error) => {
+      setIsGetUserDataIsLoading(false);
+      console.log("error", error);
+    });
   }
-}
+}, [id]);
+
+useEffect(() => {
+  if (id) {
+    getPaymentHistoryData();
+    getAssignedProjectsByUserID();
+    getUserDataByID();
+    getALlProjectList();
+  }
+}, [id, getPaymentHistoryData, getAssignedProjectsByUserID, getUserDataByID, getALlProjectList]);
+
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
   };
@@ -394,14 +377,6 @@ const getUserDataByID=()=>{
     
     }
   };
-
-  const handleFilterDrawerOpen=()=>{
-
-  }
-
-  const handleClearFilters=()=>{
-    
-  }
 
   const handleDeleteAction = (confirm: boolean) => {
     if (confirm && selectedPaymentId) {

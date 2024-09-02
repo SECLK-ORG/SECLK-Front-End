@@ -8,7 +8,6 @@ import { resetImage } from '../../assets/images';
 import { ResetFormDto, ResetPayload } from '../../utilities/models';
 import { validateFormData } from '../../utilities/helpers';
 import { UserService } from '../../services/user.service';
-import { error } from 'console';
 import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
 const ResetPassWord: React.FC = () => {
     const location = useLocation();
@@ -52,7 +51,7 @@ const ResetPassWord: React.FC = () => {
                 console.error('Invalid token', error);
             }
         }
-    }, [token]);
+    }, [resetData.token, token]);
     
     const handleResetPassword = async() => {
         setResetBtnLoading(true)

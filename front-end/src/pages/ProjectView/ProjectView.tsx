@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -25,7 +25,6 @@ import { UserService } from "../../services/user.service";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import moment from "moment";
-
 const ProjectView = () => {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -100,6 +99,90 @@ const ProjectView = () => {
     }
   }, [loginState]);
 
+  
+  const getProjectSummary = useCallback(() => {
+    if (projectId) {
+      ProjectService.getProjectSummary(projectId)
+        .then((res: any) => {
+          console.log("projectsummary", res.data.data);
+          setProjectSummary(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [projectId]);
+
+  const getSearchValues = useCallback(() => {
+    UserService.searchUsers(" ")
+      .then((res: any) => {
+        console.log("search", res.data.data);
+        setEmployeeList(res.data.data);
+      })
+      .catch((err) => {});
+  }, []);
+
+  const getProjectData = useCallback(() => {
+    if (projectId) {
+      ProjectService.getProjectById(projectId)
+        .then((res: any) => {
+          console.log("first", res.data.data);
+          setProjectData(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [projectId]);
+
+  const getEmployeeDetails = useCallback(() => {
+    if (projectId) {
+      setIsEmployeeLoading(true);
+      ProjectService.getEmployeeDetailsByProjectId(projectId)
+        .then((res: any) => {
+          console.log("second", res.data.data.employees);
+          setEmployees(res.data.data.employees);
+          setIsEmployeeLoading(false);
+        })
+        .catch((err) => {
+          setIsEmployeeLoading(false);
+          console.log(err);
+        });
+    }
+  }, [projectId]);
+
+  const getIncomeDetails = useCallback(() => {
+    if (projectId) {
+      setIsIncomeLoading(true);
+      ProjectService.getIncomeDetailsByProjectId(projectId)
+        .then((res: any) => {
+          console.log("third", res.data.data.incomeDetails);
+          setIncomes(res.data.data.incomeDetails);
+          setIsIncomeLoading(false);
+        })
+        .catch((err) => {
+          setIsIncomeLoading(false);
+          console.log(err);
+        });
+    }
+  }, [projectId]);
+
+  const getExpenseDetails = useCallback(() => {
+    if (projectId) {
+      setIsExpensesLoading(true);
+      ProjectService.getExpenseDetailsByProjectId(projectId)
+        .then((res: any) => {
+          console.log("fourth", res.data.data.expenseDetails);
+          setExpenses(res.data.data.expenseDetails);
+          setIsExpensesLoading(false);
+        })
+        .catch((err) => {
+          setIsExpensesLoading(false);
+          console.log(err);
+        });
+    }
+  }, [projectId]);
+
 useEffect(() => {
   getProjectData();
   getEmployeeDetails();
@@ -110,77 +193,8 @@ useEffect(() => {
     getIncomeDetails();
     getExpenseDetails();
   }
-}, [isAdmin]);
+}, [isAdmin, getEmployeeDetails, getExpenseDetails, getIncomeDetails,getSearchValues, getProjectData, getProjectSummary]);
 
-
-
-const getProjectSummary=()=>{
-  if(projectId){
-    ProjectService.getProjectSummary(projectId).then((res:any)=>{
-      console.log("projectsummary",res.data.data)
-      setProjectSummary(res.data.data)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  }
-}
-const getSearchValues=()=>{
-  UserService.searchUsers(" ").then((res:any)=>{
-    console.log("search",res.data.data)
-  
-    setEmployeeList(res.data.data)
-  }).catch((err)=>{})
-}
-const getProjectData=()=>{
-  if(projectId){
-    ProjectService.getProjectById(projectId).then((res:any)=>{
-      console.log("first",res.data.data)
-      setProjectData(res.data.data)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  }
-}
-
-const getEmployeeDetails=()=>{
-  if(projectId){
-    setIsEmployeeLoading(true)
-    ProjectService.getEmployeeDetailsByProjectId(projectId).then((res:any)=>{
-      console.log("second",res.data.data.employees)
-      setEmployees(res.data.data.employees)
-      setIsEmployeeLoading(false)
-    }).catch((err)=>{
-      setIsEmployeeLoading(false)
-      console.log(err)
-    })
-  }
-
-}
-const getIncomeDetails=()=>{
-  if(projectId){
-    setIsIncomeLoading(true)
-    ProjectService.getIncomeDetailsByProjectId(projectId).then((res:any)=>{
-      console.log("third",res.data.data.incomeDetails)
-      setIncomes(res.data.data.incomeDetails)
-      setIsIncomeLoading(false)
-    }).catch((err)=>{
-      setIsIncomeLoading(false)
-      console.log(err)
-    })
-  }
-}
-const getExpenseDetails=()=>{
-  if(projectId){
-    setIsExpensesLoading(true)
-    ProjectService.getExpenseDetailsByProjectId(projectId).then((res:any)=>{
-      console.log("fourth",res.data.data.expenseDetails)
-      setExpenses(res.data.data.expenseDetails)
-      setIsExpensesLoading(false)
-    }).catch((err)=>{
-      setIsExpensesLoading(false)
-      console.log(err)
-    })}
-}
   const handleBack = () => {
     navigate(-1);
   };

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Box, Grid, Typography } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import { forgotImage, messageSent } from '../../assets/images';
