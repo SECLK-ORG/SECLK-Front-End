@@ -52,6 +52,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,
                 variant="contained"
                 color="secondary"
                 sx={{ backgroundColor: "#f0f0f0", color: "#437EF7" }}
+                loading={isLoading?isLoading:false}
                 onClick={() => handleDeleteAction(true,text)}
               >
                 Yes
