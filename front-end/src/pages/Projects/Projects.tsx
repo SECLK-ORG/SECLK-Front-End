@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ProjectTable from '../../components/ProjectTable/ProjectTable';
 import FilterDrawerCategory from '../../components/FilterDrawer/FilterDrawerCategory';
 import { CreateProjectModal, InfoCard } from '../../components';
@@ -7,10 +7,10 @@ import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutli
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors';
 import { Grid, Typography } from '@mui/material';
-import { PROJECT_STATUS, PROJECT_STATUSType, SCREEN_MODES } from '../../utilities/constants/app.constants';
+import { PROJECT_STATUS, SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
-import { createProjectDto, FilterMap, loginUserData, Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
+import { createProjectDto, FilterMap,Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
 import { ProjectService } from '../../services/project.service';
 import { CategoryService } from '../../services/category.service';
 import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal';
@@ -18,7 +18,6 @@ import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert'
 import { validateFormData } from '../../utilities/helpers';
 import { RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-
 
 const Projects: React.FC = () => {
 
@@ -69,33 +68,36 @@ if(loginState.status === 'success'){
   }, []);
 
 
-  useEffect(() => {
-    if(isFiltered){
-    handleStatusORCategoryChange()
-  }
-  }, [statuses, categories, isFiltered]);
-  
 
 
-  const handleStatusORCategoryChange = () => {
+  const handleStatusORCategoryChange = useCallback(() => {
     const selectedStatuses = statuses.filter(status => status.isSelect);
     const selectedCategories = categories.filter(category => category.isSelect);
     let updated = projects;
 
     if (selectedStatuses.length > 0) {
-        updated = updated.filter((project: Project) => 
-            selectedStatuses.some((status: FilterMap) => status.name === project.status)
-        );
+      updated = updated.filter((project: Project) =>
+        selectedStatuses.some((status: FilterMap) => status.name === project.status)
+      );
     }
 
     if (selectedCategories.length > 0) {
-        updated = updated.filter((project: Project) => 
-            selectedCategories.some((category: FilterMap) => category.name === project.category)
-        );
+      updated = updated.filter((project: Project) =>
+        selectedCategories.some((category: FilterMap) => category.name === project.category)
+      );
     }
 
     setProjects(updated);
+  }, [statuses, categories, projects]);
+
+
+  useEffect(() => {
+    if(isFiltered){
+    handleStatusORCategoryChange()
   }
+  }, [statuses, categories, isFiltered, handleStatusORCategoryChange]);
+  
+
  
   const getProjects = async () => {
     try {

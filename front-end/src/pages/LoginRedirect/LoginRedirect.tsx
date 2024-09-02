@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const LoginRedirect = () => {
@@ -7,7 +7,7 @@ const LoginRedirect = () => {
 
   useEffect(() => {
     navigate('/reset',{state: { token } })
-  }, [token])
+  }, [navigate, token])
 
   return (
     <div>....loading</div>

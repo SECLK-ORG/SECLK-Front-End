@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Button, Typography, Box, IconButton, InputAdornment } from '@mui/material';
+import { Grid,  Typography, Box, IconButton, InputAdornment } from '@mui/material';
 import styles from './Login.module.scss';
-import background from '../../assets/images/background.png'; // Ensure the path is correct
+import background from '../../assets/images/background.png'; 
 import { useNavigate } from 'react-router-dom';
 import {logo} from '../../assets/images';
 import { CustomButton, CustomVisibilityIcon, CustomVisibilityOffIcon, StyledTextField } from '../../assets/theme/theme';
 import { Rectangle1,Rectangle2 } from '../../assets/images';
 import { loginFormDto, loginPayloadDto } from '../../utilities/models';
 import { validateFormData } from '../../utilities/helpers';
-import { UserService } from '../../services/user.service';
-
-import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { loginClear, loginRequest } from '../../redux/userSlice/userSlice'; 
+import {  loginRequest } from '../../redux/userSlice/userSlice'; 
 import { RootState } from '../../redux/store';
 import { APP_ACTION_STATUS } from '../../utilities/constants/app.constants';
 const Login: React.FC = () => {
@@ -54,7 +50,6 @@ const Login: React.FC = () => {
           },
         });
   }
-
   useEffect(() => {
     if (loginState.status === APP_ACTION_STATUS.SUCCESS) {
         setIsBtnLoading(false)
@@ -64,7 +59,7 @@ const Login: React.FC = () => {
  
       setIsBtnLoading(false)
     }
-  }, [loginState, dispatch]);
+  }, [loginState, dispatch, navigate]);
 
 
   const handleLogin=async ()=>{
@@ -79,17 +74,6 @@ const Login: React.FC = () => {
         password: loginForm.password.value
       }
       dispatch(loginRequest(payload));
-      // UserService.login(payload).then((result:any)=>{
-      //   localStorage.setItem('accessToken',result.data.data)
-      //   localStorage.setItem('isLogin',"true")
-      //   showSuccessToast(result.data.message)
-      //   setIsBtnLoading(false)
-      //   navigate('/projects')
-      // }).catch((error:any)=>{
-      // showErrorToast(error)
-      // setIsBtnLoading(false)
-      // })
-
     }
     
       
