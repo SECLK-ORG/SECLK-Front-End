@@ -5,7 +5,7 @@ import {
   TableCell,
   CircularProgress
 } from '@mui/material';
-import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
+import { Visibility,  Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
 import CustomButton from '../shared/CustomButton/CustomButton';
 import { StyledTextField } from '../../assets/theme/theme';
