@@ -17,9 +17,11 @@ interface AddPaymentModalProps {
   helperText?: boolean;
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: any) => void;
+  isLoading?: boolean;
 }
 
 const AddPaymentModal: React.FC<AddPaymentModalProps> = ({
+  isLoading,
   open,
   onClose,
   onSave,
@@ -156,8 +158,8 @@ const AddPaymentModal: React.FC<AddPaymentModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave}>Save</CustomButton>}
-            {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave}>Update</CustomButton>}
+            {SCREEN_MODES.CREATE === mode && <CustomButton loading={isLoading} onClick={onSave}>Save</CustomButton>}
+            {SCREEN_MODES.EDIT === mode && <CustomButton loading={isLoading} onClick={onSave}>Update</CustomButton>}
           </Box>
         </Box>
       </Box>

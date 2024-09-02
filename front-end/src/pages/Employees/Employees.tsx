@@ -349,6 +349,7 @@ const Employees: React.FC = () => {
       />
 
       <CreateEmployeeModal
+      isLoading={isLoading}
       positions={positions}
         open={modalOpen}
         mode={mode}
@@ -361,6 +362,7 @@ const Employees: React.FC = () => {
       />
 
       <DeleteConfirmationModal
+         isLoading={isLoading}
         handleDeleteAction={handleDeleteAction}
         text={"Employee"}
         onClose={() => setIsDeleteModalOpen(false)}

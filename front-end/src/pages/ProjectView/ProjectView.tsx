@@ -775,6 +775,7 @@ isEmployeeLoading={isEmployeeLoading}
 />
 
 <DeleteConfirmationModal
+isLoading={text==='income'?isIncomeLoading:text==='expense'?isExpensesLoading:isEmployeeLoading}
 handleDeleteAction={handleDeleteAction}
 onClose={()=>{setDeleteModalOpen(false)}}
 open={deleteModalOpen}

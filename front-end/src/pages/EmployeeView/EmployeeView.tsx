@@ -18,6 +18,7 @@ import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationM
 import AddToProjectModal from '../../components/AddToProjectModal/AddToProjectModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { tr } from 'date-fns/locale';
 
 const EmployeeView = () => {
   const navigate = useNavigate();
@@ -357,10 +358,11 @@ const getUserDataByID=()=>{
         getAssignedProjectsByUserID()
         showSuccessToast("Expense Added Successfully")
         setAddPaymentModalOpen(false)
-
+        setIsLoading(false);
       }).catch((err)=>{
         setAddPaymentModalOpen(false)
         showErrorToast(err)
+        setIsLoading(false);
         console.log(err)
       })
      }else if(mode===SCREEN_MODES.EDIT){
@@ -380,7 +382,9 @@ const getUserDataByID=()=>{
         getAssignedProjectsByUserID()
         showSuccessToast("Expense Updated Successfully")
         handleModalClose()
+        setIsLoading(false);
       }).catch((err)=>{
+        setIsLoading(false);
         showErrorToast(err)
         console.log(err)
       })
@@ -405,6 +409,7 @@ const getUserDataByID=()=>{
     const projectId=payment?.projectId._id
     const expenseId=payment?.expenseId
     if(projectId&&expenseId){
+      setIsLoading(true);
       ProjectService.deleteExpenseDetailByProjectId(projectId,expenseId).then((res:any)=>{
         console.log("delete expense",res.data.data)
         showSuccessToast("Expense Deleted Successfully")
@@ -412,8 +417,10 @@ const getUserDataByID=()=>{
         getPaymentHistoryData();
         getAssignedProjectsByUserID()
         setPaymentForm(INITIAL_PAYMENT_FORM_DATA)
+        setIsLoading(false);
       }).catch((err)=>{
         showErrorToast(err)
+        setIsLoading(false);
         console.log(err)
         setIsDeleteModalOpen(false)
       })
@@ -446,6 +453,7 @@ const getUserDataByID=()=>{
     setAddToProjectForm(validateData);
     console.log("first",validateData)
     if(isValid){
+      setIsLoading(true);
       const employeePayload:EmployeePayload={
         employeeID:addToProjectForm.employeeID.value,
         employeeName:addToProjectForm.employeeName.value,
@@ -458,9 +466,11 @@ const getUserDataByID=()=>{
         showSuccessToast("Employee Added Successfully")
         getAssignedProjectsByUserID()
         handleModalClose()
+        setIsLoading(false);
       }).catch((err)=>{
         showErrorToast(err)
         console.log(err)   
+        setIsLoading(false);
         handleModalClose()
       })
     }
@@ -525,7 +535,7 @@ const getUserDataByID=()=>{
     <Typography sx={{ fontWeight: "600", fontSize: "20px", marginBottom: "1rem" }}>
       Projects {projectList.length}
     </Typography>
-   {isAdmin && <CustomButton sx={{ backgroundColor: "#437EF7", color: "white", height: "2.5rem", textTransform: "capitalize" }}  onClick={handleModalOpen}>
+   {isAdmin && <CustomButton sx={{ backgroundColor: "#437EF7", color: "white", height: "2.5rem", textTransform: "capitalize" }}  loading={isLoading} onClick={handleModalOpen}>
       Add to Project
     </CustomButton>
     }
@@ -579,6 +589,7 @@ const getUserDataByID=()=>{
       </Box>
 
       <AddPaymentModal
+      isLoading={isLoading}
         categories={CategoryTypes}
         handleInputFocus={handleInputFocus}
         mode={mode}
@@ -590,6 +601,7 @@ const getUserDataByID=()=>{
         helperText={helperText} 
         projects={projectList}      />
         <DeleteConfirmationModal
+        isLoading={isLoading}
           handleDeleteAction={handleDeleteAction}
           text={"Payment"}
           onClose={() => setIsDeleteModalOpen(false)}
@@ -597,6 +609,7 @@ const getUserDataByID=()=>{
         />
 
        < AddToProjectModal
+       isLoading={isLoading}
        helperText={helperText}
         open={modalOpen}
         onClose={() => oncloseAddProjectModal()}
