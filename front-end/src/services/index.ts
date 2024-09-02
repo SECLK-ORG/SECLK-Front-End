@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { exceptionHandler } from '../core';
 import {logout } from '../core/authUtils'
-axios.defaults.baseURL = process.env.BACKEND_URL||"http://localhost:9090";
+axios.defaults.baseURL = process.env.BACKEND_URL||"https://seclkbackend-production.up.railway.app";
 export const axiosPublicInstance = axios.create();
 export const axiosPrivateInstance = axios.create();
 
