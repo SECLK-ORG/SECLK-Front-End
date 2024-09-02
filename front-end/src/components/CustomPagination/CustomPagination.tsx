@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pagination, PaginationItem, Box, IconButton, Typography, Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
+import { Pagination, PaginationItem, Box, IconButton, Typography, Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 interface CustomPaginationProps {

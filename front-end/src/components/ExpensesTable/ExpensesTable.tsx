@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Typography,
+  IconButton, InputAdornment, Box,
   TableCell,
   CircularProgress
 } from '@mui/material';
@@ -13,7 +13,6 @@ import { Expense, predefinedRanges } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import moment from 'moment';
 import { DateRangePicker } from 'rsuite';
-import { addDays } from 'date-fns';
 import 'rsuite/dist/rsuite-no-reset.min.css';
 // import 'rsuite/DateRangePicker/styles/index.css';
 

@@ -6,7 +6,7 @@ import {
   Typography
 } from '@mui/material';
 import styles from './FilterDrawerCategory.module.scss';
-import { Category, FilterMap } from '../../utilities/models';
+import {  FilterMap } from '../../utilities/models';
 
 interface FilterDrawerProps {
   filterDrawerOpen: boolean;

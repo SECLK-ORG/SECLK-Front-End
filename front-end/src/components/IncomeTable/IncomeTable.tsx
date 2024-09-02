@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Typography,
+  IconButton, InputAdornment, Box,
   TableCell,
   TextField,
   CircularProgress
@@ -12,7 +12,6 @@ import CustomButton from '../shared/CustomButton/CustomButton';
 import { Income, predefinedRanges } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { DateRangePicker } from 'rsuite';
-import { addDays } from 'date-fns';
 import moment from 'moment';
 import 'rsuite/dist/rsuite-no-reset.min.css';
 interface IncomeTableProps {

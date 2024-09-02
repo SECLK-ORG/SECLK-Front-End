@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import {
   TableContainer, Paper, Table, TableHead, TableRow, TableBody,
-  IconButton, InputAdornment, Box, Typography, CircularProgress, TableCell
+  IconButton, InputAdornment, Box, CircularProgress, TableCell
 } from '@mui/material';
 import { Visibility, Edit, Search, Delete } from '@mui/icons-material';
 import CustomPagination from '../CustomPagination/CustomPagination';
-import { CustomButton as CSBtn, StyledTextField } from '../../assets/theme/theme';
+import {  StyledTextField } from '../../assets/theme/theme';
 import { PaymentHistory, predefinedRanges } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
 import CustomButton from '../shared/CustomButton/CustomButton';

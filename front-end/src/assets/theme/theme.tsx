@@ -3,11 +3,6 @@ import {
     Autocomplete,
     Checkbox,
     createTheme,
-    // Dialog,
-    // DialogActions,
-    // DialogContent,
-    // DialogProps,
-    // DialogTitle,
     Select,
     styled,
     Button,
@@ -21,7 +16,6 @@ import {
     CircularProgress,
   } from "@mui/material";
   import "../theme/constants.scss";
-  import { Tabs } from '@mui/base/Tabs';
 import { TabsList as BaseTabsList } from '@mui/base/TabsList';
 import { TabPanel as BaseTabPanel } from '@mui/base/TabPanel';
 import { buttonClasses } from '@mui/base/Button';
@@ -251,7 +245,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
       borderColor: "red",
     },
   }));
-  const StyledSelect = styled(Select)(() => ({
+  export const StyledSelect = styled(Select)(() => ({
     "& .MuiSelect-root": {
       backgroundColor: "#ffffff",
       color: "#000000",
@@ -350,21 +344,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
       backgroundColor: "#000000",
     },
   }));
-  // export const CustomButton = styled(Button)(({ theme }) => ({
-  //   textTransform: 'none',
-  //   backgroundColor: '#437EF7',
-  //   color: '#ffffff',
-  //   borderColor: '#e0e0e0',
-  //   '&:hover': {
-  //     backgroundColor: '#437EF7',
-  //     borderColor: '#437EF7',
-  //     color:"#ffffff"
-  //   },
-  //   '&.Mui-disabled': {
-  //     backgroundColor: '#e0e0e0',
-  //     color: '#6b6b6b',
-  //   },
-  // }));
+
   interface CustomButtonProps {
     loading?: boolean;
     children: React.ReactNode;
@@ -423,19 +403,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
     900: '#003A75',
   };
   
-  const grey = {
-    50: '#F3F6F9',
-    100: '#E5EAF2',
-    200: '#DAE2ED',
-    300: '#C7D0DD',
-    400: '#B0B8C4',
-    500: '#9DA8B7',
-    600: '#6B7A90',
-    700: '#434D5B',
-    800: '#303740',
-    900: '#1C2025',
-  };
-  
+
   export const Tab = styled(BaseTab)`
   font-family: 'IBM Plex Sans', sans-serif;
   color: #5F6D7E;
