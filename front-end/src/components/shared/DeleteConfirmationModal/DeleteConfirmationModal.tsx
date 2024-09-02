@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Modal, Box, Button, Typography, Divider, Grid
+  Modal, Box, Typography, Divider, Grid
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { CustomButton } from '../../../assets/theme/theme';

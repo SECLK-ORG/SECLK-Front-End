@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Box, Typography, Divider, Grid, TextField, Button, MenuItem, IconButton, FormHelperText } from '@mui/material';
+import { Modal, Box, Typography, Divider, Grid, TextField, MenuItem, IconButton, FormHelperText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { AddToProjectFormDto, ProjectList } from '../../utilities/models';
 import { CustomButton } from '../../assets/theme/theme';

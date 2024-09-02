@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Box, Typography, Divider, Grid, FormControl, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField } from '@mui/material';
+import { Modal, Box, Typography, Divider, Grid, Autocomplete, TextField } from '@mui/material';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import CloseIcon from '@mui/icons-material/Close';
 import { EmployeeFormDto, userList } from '../../utilities/models';
