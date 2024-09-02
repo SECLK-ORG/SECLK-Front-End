@@ -283,8 +283,6 @@ const onSave=async()=>{
   setProjectForm(validateData)
   if(isValid){
     setIsLoading(true)
-  
-
     if(mode===SCREEN_MODES.CREATE){
       const projectData:createProjectDto={
         clientContactNumber:projectForm.clientContactNumber.value,
@@ -390,6 +388,7 @@ const onSave=async()=>{
         statuses={statuses}
       />
       <CreateProjectModal
+      isLoading={isLoading}
       categories={categories}
       onSave={onSave} 
         mode={mode}
@@ -402,6 +401,7 @@ const onSave=async()=>{
        />
 
       <DeleteConfirmationModal
+         isLoading={isLoading}
         handleDeleteAction={handleDeleteAction}
         text={"Project"}
         onClose={() => setIsDeleteModalOpen(false)}

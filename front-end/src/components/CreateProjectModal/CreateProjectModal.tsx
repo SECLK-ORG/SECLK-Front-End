@@ -18,9 +18,11 @@ interface CreateProjectModalProps {
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: string) => void;
   categories:FilterMap[];
+isLoading?: boolean;
 }
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
+  isLoading,
   open,
   mode,
   onClose,
@@ -168,12 +170,12 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 Cancel
               </CustomButton>
               {mode === SCREEN_MODES.CREATE && (
-                <CustomButton onClick={onSave} variant="contained">
+                <CustomButton onClick={onSave} variant="contained" loading={isLoading}>
                   Save
                 </CustomButton>
               )}
               {mode === SCREEN_MODES.EDIT && (
-                <CustomButton onClick={onSave} variant="contained">
+                <CustomButton onClick={onSave} variant="contained" loading={isLoading} >
                   Update
                 </CustomButton>
               )}

@@ -13,10 +13,12 @@ interface AddToProjectModalProps {
   handleInputChange: (field: string, value: any) => void;
   handleInputFocus: (property: string) => void;
   helperText?: boolean;
+  isLoading?: boolean;
 }
 
 const AddToProjectModal: React.FC<AddToProjectModalProps> = ({
     helperText,
+    isLoading,
   open,
   onClose,
   onSave,
@@ -93,8 +95,8 @@ const AddToProjectModal: React.FC<AddToProjectModalProps> = ({
           </Grid>
         </Grid>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-          <CustomButton onClick={onClose} sx={{ marginRight: 1 }}>Cancel</CustomButton>
-          <CustomButton variant="contained" onClick={onSave}>Save</CustomButton>
+          <CustomButton onClick={onClose} loading={isLoading} sx={{ marginRight: 1 }}>Cancel</CustomButton>
+          <CustomButton variant="contained"  loading={isLoading}onClick={onSave}>Save</CustomButton>
         </Box>
       </Box>
     </Modal>

@@ -19,9 +19,11 @@ interface CreateEmployeeModalProps {
   onInputHandleChange: (property: string, value: string) => void;
   mode: string;
   positions: Positions[]; // Update to array of Positions
+  isLoading?: boolean;
 }
 
 const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
+  isLoading,
   mode,
   open,
   onClose,
@@ -202,8 +204,8 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
               <CustomButton onClick={onClose} variant="contained" sx={{ background: "white", color: "#437EF7", marginInline: "1rem" }}>
                 Cancel
               </CustomButton>
-              {mode === SCREEN_MODES.CREATE && <CustomButton onClick={onSave} variant="contained" color="primary">Save</CustomButton>}
-              {mode === SCREEN_MODES.EDIT && <CustomButton onClick={onSave} variant="contained" color="primary">Update</CustomButton>}
+              {mode === SCREEN_MODES.CREATE && <CustomButton onClick={onSave} loading={isLoading} variant="contained" color="primary">Save</CustomButton>}
+              {mode === SCREEN_MODES.EDIT && <CustomButton onClick={onSave} loading={isLoading} variant="contained" color="primary">Update</CustomButton>}
             </Grid>
           </Grid>
         </Box>

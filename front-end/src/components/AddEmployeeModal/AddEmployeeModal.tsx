@@ -15,9 +15,11 @@ interface AddEmployeeModalProps {
   handleInputFocus: (property: string) => void;
   onInputHandleChange: (property: string, value: any) => void;
   employeeList: userList[];
+  isEmployeeLoading?: boolean;
 }
 
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
+  isEmployeeLoading,
   mode,
   open,
   onClose,
@@ -130,7 +132,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "16px" }}>
             <CustomButton onClick={onClose} sx={{ marginRight: '8px' }}>Cancel</CustomButton>
-            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave}>Save</CustomButton>}
+            {SCREEN_MODES.CREATE === mode && <CustomButton onClick={onSave} loading={isEmployeeLoading}>Save</CustomButton>}
             {/* {SCREEN_MODES.EDIT === mode && <CustomButton onClick={onSave}>Update</CustomButton>} */}
           </Box>
         </Box>
