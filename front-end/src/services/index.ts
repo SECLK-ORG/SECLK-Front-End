@@ -13,7 +13,6 @@ axiosPrivateInstance.interceptors.request.use(async (request: any) => {
 
   return request;
 }, (error: any) => {
-  console.log('Req interceptor Error', error);
   return Promise.reject(error);
 });
 // Response interceptor to manage responses & errors

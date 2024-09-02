@@ -104,19 +104,16 @@ const ProjectView = () => {
     if (projectId) {
       ProjectService.getProjectSummary(projectId)
         .then((res: any) => {
-          console.log("projectsummary", res.data.data);
           setProjectSummary(res.data.data);
         })
         .catch((err) => {
-          console.log(err);
-        });
+                });
     }
   }, [projectId]);
 
   const getSearchValues = useCallback(() => {
     UserService.searchUsers(" ")
       .then((res: any) => {
-        console.log("search", res.data.data);
         setEmployeeList(res.data.data);
       })
       .catch((err) => {});
@@ -126,12 +123,10 @@ const ProjectView = () => {
     if (projectId) {
       ProjectService.getProjectById(projectId)
         .then((res: any) => {
-          console.log("first", res.data.data);
           setProjectData(res.data.data);
         })
         .catch((err) => {
-          console.log(err);
-        });
+                });
     }
   }, [projectId]);
 
@@ -140,13 +135,11 @@ const ProjectView = () => {
       setIsEmployeeLoading(true);
       ProjectService.getEmployeeDetailsByProjectId(projectId)
         .then((res: any) => {
-          console.log("second", res.data.data.employees);
           setEmployees(res.data.data.employees);
           setIsEmployeeLoading(false);
         })
         .catch((err) => {
           setIsEmployeeLoading(false);
-          console.log(err);
         });
     }
   }, [projectId]);
@@ -156,13 +149,11 @@ const ProjectView = () => {
       setIsIncomeLoading(true);
       ProjectService.getIncomeDetailsByProjectId(projectId)
         .then((res: any) => {
-          console.log("third", res.data.data.incomeDetails);
           setIncomes(res.data.data.incomeDetails);
           setIsIncomeLoading(false);
         })
         .catch((err) => {
           setIsIncomeLoading(false);
-          console.log(err);
         });
     }
   }, [projectId]);
@@ -172,13 +163,11 @@ const ProjectView = () => {
       setIsExpensesLoading(true);
       ProjectService.getExpenseDetailsByProjectId(projectId)
         .then((res: any) => {
-          console.log("fourth", res.data.data.expenseDetails);
           setExpenses(res.data.data.expenseDetails);
           setIsExpensesLoading(false);
         })
         .catch((err) => {
           setIsExpensesLoading(false);
-          console.log(err);
         });
     }
   }, [projectId]);
@@ -365,7 +354,6 @@ const handleSave=async (property:string)=>{
           description:incomeForm.description.value
         }
         ProjectService.createIncomeDetailByProjectId(projectId,incomePayload).then((res:any)=>{
-          console.log("income",res.data.data)
           showSuccessToast("Income Added Successfully")
           getIncomeDetails()
           handleModalClose('income')
@@ -374,7 +362,6 @@ const handleSave=async (property:string)=>{
         }).catch((err)=>{
           setIsIncomeLoading(false)
           showErrorToast(err)
-          console.log(err)
         })
        
       }else{
@@ -395,14 +382,12 @@ const handleSave=async (property:string)=>{
         }).catch((err)=>{
           setIsIncomeLoading(false)
           showErrorToast(err)
-          console.log(err)
         })
       }
     }
    
   }
   else if(property==='expense'){
-    console.log("expense",expenseForm)
     const [validateData, isValid] =await validateFormData(expenseForm);
     setExpenseForm(validateData);
     if(isValid&&projectId){
@@ -418,7 +403,6 @@ const handleSave=async (property:string)=>{
           invoiceNumber:expenseForm.invoiceNumber.value
         }
         ProjectService.createExpenseDetailByProjectId(projectId,expensePayload).then((res:any)=>{
-          console.log("expense",res.data.data)
           showSuccessToast("Expense Added Successfully")
           getExpenseDetails()
           getProjectSummary()
@@ -427,7 +411,6 @@ const handleSave=async (property:string)=>{
         }).catch((err)=>{
           showErrorToast(err)
           setIsExpensesLoading(false)
-          console.log(err)
         })
       }else{
         const expensePayload:ExpensePayload={
@@ -450,14 +433,12 @@ const handleSave=async (property:string)=>{
         }).catch((err)=>{
           setIsExpensesLoading(false)
           showErrorToast(err)
-          console.log(err)
         })
       }
     }
 
   }
   else if(property==='employee') {
-    console.log("employee",employeeForm)
     const [validateData, isValid] =await validateFormData(employeeForm);
     setEmployeeForm(validateData);
     if(isValid&&projectId){
@@ -471,7 +452,6 @@ const handleSave=async (property:string)=>{
           projectStartedDate:employeeForm.projectStartedDate.value
         }
         ProjectService.createEmployeeDetailByProjectId(projectId,employeePayload).then((res:any)=>{
-          console.log("employee",res.data.data)
           showSuccessToast("Employee Added Successfully")
           getEmployeeDetails()
          setIsEmployeeLoading(false)
@@ -481,7 +461,6 @@ const handleSave=async (property:string)=>{
          setIsEmployeeLoading(false)
 
           showErrorToast(err)
-          console.log(err)
         })
       }else{
         const employeePayload:EmployeePayload={
@@ -500,7 +479,6 @@ const handleSave=async (property:string)=>{
           setEmployeeForm(INITIAL_EMPLOYEE_FORM_DATA)
         }).catch((err)=>{
           showErrorToast(err)
-          console.log(err)
           setIsEmployeeLoading(false)
         })}
     }
@@ -513,7 +491,6 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
     if(property==='income'){
       setIsIncomeLoading(true)
       ProjectService.deleteIncomeDetailByProjectId(projectId,id).then((res:any)=>{
-        console.log("delete income",res.data.data)
         showSuccessToast("Income Deleted Successfully")
         getIncomeDetails()
         setDeleteModalOpen(false)
@@ -522,13 +499,10 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
       }).catch((err)=>{
         setIsIncomeLoading(false)
         showErrorToast(err)
-        console.log(err)
       })
     }else if(property==='expense'){
-      console.log("delete expense")
       setIsExpensesLoading(true)
       ProjectService.deleteExpenseDetailByProjectId(projectId,id).then((res:any)=>{
-        console.log("delete expense",res.data.data)
         showSuccessToast("Expense Deleted Successfully")
         getExpenseDetails()
         setDeleteModalOpen(false)
@@ -537,13 +511,10 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
       }).catch((err)=>{
         showErrorToast(err)
         setIsExpensesLoading(false)
-        console.log(err)
       })
     }else{
-      console.log("delete employee")
       setIsEmployeeLoading(true)
       ProjectService.deleteEmployeeDetailByProjectId(projectId,id).then((res:any)=>{
-        console.log("delete employee",res.data.data)
         showSuccessToast("Employee Deleted Successfully")
         getEmployeeDetails()
         setDeleteModalOpen(false)
@@ -551,7 +522,6 @@ const handleDeleteAction=(isConfirm:boolean, property:string)=>{
         setIsEmployeeLoading(false)
       }).catch((err)=>{
         showErrorToast(err)
-        console.log(err)
         setIsEmployeeLoading(false)
         setDeleteModalOpen(false)
       })

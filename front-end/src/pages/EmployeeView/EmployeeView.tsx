@@ -136,10 +136,9 @@ if(id&&userData){
 const getALlProjectList = useCallback(() => {
   ProjectService.getProjectsList().then((res: any) => {
     setAllProjectList(res.data.data);
-    console.log("resposegetALlProjectList", res.data.data);
   }).catch((err) => {
     console.log("errr", err);
-  });
+    });
 }, []);
 
 const getPaymentHistoryData = useCallback(() => {
@@ -157,7 +156,6 @@ const getPaymentHistoryData = useCallback(() => {
         setIsGetPaymentDataIsLoading(false);
       }).catch((err) => {
         setIsGetPaymentDataIsLoading(false);
-        console.log("error", err);
       });
   }
 }, [id]);
@@ -169,13 +167,12 @@ const getAssignedProjectsByUserID = useCallback(() => {
     UserService.getAssignedProjectsByUserID(id)
       .then((res: any) => {
         setProjectList(res.data.data);
-        console.log(res.data.data);
         setIsGetAssignedProjectsLoading(false);
       })
       .catch((err) => {
         setIsGetAssignedProjectsLoading(false);
-        console.log("error", err);
-      });
+    console.log("error", err);
+            });
   }
 }, [id]);
 
@@ -184,12 +181,11 @@ const getUserDataByID = useCallback(() => {
     setIsGetUserDataIsLoading(true);
     UserService.getUserDataById(id).then((res: any) => {
       setUserData(res.data.data);
-      console.log("res", res.data.data);
       setIsGetUserDataIsLoading(false);
     }).catch((error) => {
       setIsGetUserDataIsLoading(false);
       console.log("error", error);
-    });
+        });
   }
 }, [id]);
 
@@ -309,7 +305,6 @@ useEffect(() => {
   };
 
   const onInputHandleChange = (property: string, value: any | number) => {
-    console.log("property",property,"value",value)
         setPaymentForm({
           ...paymentForm,
           [property]: {
@@ -324,7 +319,6 @@ useEffect(() => {
     setHelperText(true);
     const [validateData, isValid] = await validateFormData(paymentForm);
     setPaymentForm(validateData);
-    console.log("validateData",validateData)
     if (isValid) {
       setIsLoading(true);
       if(mode===SCREEN_MODES.CREATE){
@@ -346,7 +340,6 @@ useEffect(() => {
         setAddPaymentModalOpen(false)
         showErrorToast(err)
         setIsLoading(false);
-        console.log(err)
       })
      }else if(mode===SCREEN_MODES.EDIT){
       const payment:any= paymentHistory.find((item:PaymentHistory)=>item._id===selectedPaymentId)
@@ -369,7 +362,6 @@ useEffect(() => {
       }).catch((err)=>{
         setIsLoading(false);
         showErrorToast(err)
-        console.log(err)
       })
     
 
@@ -386,7 +378,6 @@ useEffect(() => {
     if(projectId&&expenseId){
       setIsLoading(true);
       ProjectService.deleteExpenseDetailByProjectId(projectId,expenseId).then((res:any)=>{
-        console.log("delete expense",res.data.data)
         showSuccessToast("Expense Deleted Successfully")
         setIsDeleteModalOpen(false)
         getPaymentHistoryData();
@@ -396,7 +387,6 @@ useEffect(() => {
       }).catch((err)=>{
         showErrorToast(err)
         setIsLoading(false);
-        console.log(err)
         setIsDeleteModalOpen(false)
       })
     }
@@ -426,7 +416,6 @@ useEffect(() => {
     setHelperText(true);
     const [validateData, isValid] = await validateFormData(addToProjectForm);
     setAddToProjectForm(validateData);
-    console.log("first",validateData)
     if(isValid){
       setIsLoading(true);
       const employeePayload:EmployeePayload={
@@ -444,7 +433,6 @@ useEffect(() => {
         setIsLoading(false);
       }).catch((err)=>{
         showErrorToast(err)
-        console.log(err)   
         setIsLoading(false);
         handleModalClose()
       })

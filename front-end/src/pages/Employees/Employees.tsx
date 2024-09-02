@@ -274,7 +274,6 @@ const Employees: React.FC = () => {
             role: employeeForm.role.value,
             workLocation: employeeForm.workLocation.value
           }
-          console.log("payload",payload)
           await UserService.createUser(payload);  // Replace with actual service call
           showSuccessToast('Employee created successfully');
         } else if (mode === SCREEN_MODES.EDIT) {

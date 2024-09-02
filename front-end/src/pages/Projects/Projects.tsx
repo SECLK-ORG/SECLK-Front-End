@@ -107,7 +107,6 @@ if(loginState.status === 'success'){
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
     }
   };
   const getProjectsCounts = async () => {
@@ -115,7 +114,6 @@ if(loginState.status === 'success'){
       const projectCountRes:any = await ProjectService.getProjectCountByStatus();
       setProjectCount(projectCountRes.data.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -201,7 +199,6 @@ if(loginState.status === 'success'){
     setMode(mode);
     setId(id);
     if (SCREEN_MODES.VIEW === mode) {
-      console.log('View clicked');
       navigate(`/projects/${id}`);
     }
     if(SCREEN_MODES.DELETE===mode){
@@ -248,7 +245,6 @@ const handleDeleteAction=(confirm:boolean,property:string)=>{
       setIsDeleteModalOpen(false)
       showSuccessToast(res.data.message)
     }).catch((error:any)=>{
-      console.log(error)
       showErrorToast(error)
       setIsDeleteModalOpen(false)
     })
@@ -305,7 +301,6 @@ const onSave=async()=>{
         showSuccessToast(res.data.message)
         setIsLoading(false)
       }).catch((error:any)=>{
-        console.log(error)
         showErrorToast(error)
         setIsLoading(false)
       })
@@ -330,7 +325,6 @@ const onSave=async()=>{
         showSuccessToast(res.data.message)
         setIsLoading(false)
       }).catch((error:any)=>{
-        console.log(error)
         showErrorToast(error)
         setIsLoading(false)
       })
