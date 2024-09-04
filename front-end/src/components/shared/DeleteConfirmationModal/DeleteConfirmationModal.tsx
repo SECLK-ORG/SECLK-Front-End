@@ -62,7 +62,6 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ text,
               <CustomButton
                 fullWidth
                 variant="contained"
-                 loading={isLoading?isLoading:false}
                 onClick={() => handleDeleteAction(false,text)}
               >
                 No
