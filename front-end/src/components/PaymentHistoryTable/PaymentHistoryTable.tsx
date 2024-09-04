@@ -41,7 +41,7 @@ const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
 
 
   const filteredPayments = paymentHistory.filter((payment) => {
-    const matchesSearch =   payment.projectId.projectName.toLowerCase().includes(searchValue.toLowerCase())
+    const matchesSearch =   payment?.projectId?.projectName?.toLowerCase().includes(searchValue.toLowerCase())
     const matchesDateRange =
       (!dateRange || 
         (moment(payment.date).isSameOrAfter(dateRange[0], 'day') &&
