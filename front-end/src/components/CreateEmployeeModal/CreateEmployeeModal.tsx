@@ -80,19 +80,22 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
               />
             </Grid>
             <Grid item xs={6} md={3}>
-              <StyledTextField
-                fullWidth
-                label="Start Date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={moment(employeeForm.startDate.value).format('YYYY-MM-DD')}
-                onFocus={() => handleInputFocus('startDate')}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onInputHandleChange('startDate', event.target.value)}
-                error={!!employeeForm.startDate.error}
-                helperText={helperText && employeeForm.startDate.error}
-                required={employeeForm.startDate.isRequired}
-                disabled={employeeForm.startDate.disable}
-              />
+            <StyledTextField
+              fullWidth
+              label="Start Date"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={employeeForm.startDate?.value 
+                  ? moment(employeeForm.startDate.value).format('YYYY-MM-DD') 
+                  : moment(Date.now()).format('YYYY-MM-DD')} // Fallback to current date if value is not present
+              onFocus={() => handleInputFocus('startDate')}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
+                  onInputHandleChange('startDate', event.target.value)}
+              error={!!employeeForm.startDate.error}
+              helperText={helperText && employeeForm.startDate.error}
+              required={employeeForm.startDate.isRequired}
+              disabled={employeeForm.startDate.disable}
+          />
             </Grid>
             <Grid item xs={6} md={3}>
               <FormControl fullWidth>

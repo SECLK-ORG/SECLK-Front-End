@@ -210,6 +210,7 @@ const Employees: React.FC = () => {
   };
 
   const handleModalOpen = () => {
+    setEmployeeForm(EMPLOYEE_FORM_INITIAL_STATE);
     setMode(SCREEN_MODES.CREATE);
     setModalOpen(true);
   };
