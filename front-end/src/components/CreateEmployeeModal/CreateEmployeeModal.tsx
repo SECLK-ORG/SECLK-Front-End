@@ -85,10 +85,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
               label="Start Date"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={employeeForm.startDate?.value 
-                  ? moment(employeeForm.startDate.value).format('YYYY-MM-DD') 
-                  : moment(Date.now()).format('YYYY-MM-DD')} // Fallback to current date if value is not present
-              onFocus={() => handleInputFocus('startDate')}
+              value={employeeForm.startDate?.value }
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => 
                   onInputHandleChange('startDate', event.target.value)}
               error={!!employeeForm.startDate.error}

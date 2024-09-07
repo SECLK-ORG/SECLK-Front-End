@@ -17,6 +17,7 @@ import { validateFormData } from '../../utilities/helpers';
 import { PositionService } from '../../services/position.service';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import moment from 'moment';
 
 const Employees: React.FC = () => {
 
@@ -26,7 +27,7 @@ const Employees: React.FC = () => {
     email: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "", },
     position: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     name: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
-    startDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    startDate: { value: moment(new Date()).format('YYYY-MM-DD'), isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     status: { value: "Active", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     role: { value: "User", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     workLocation: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },

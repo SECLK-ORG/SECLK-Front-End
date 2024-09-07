@@ -10,7 +10,7 @@ import { Grid, Typography } from '@mui/material';
 import { PROJECT_STATUS, SCREEN_MODES } from '../../utilities/constants/app.constants';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../assets/theme/theme';
-import { createProjectDto, FilterMap,Project, ProjectFormDto, ProjectStatusDto } from '../../utilities/models';
+import { createProjectDto, FilterMap,Project, ProjectFormDto, ProjectStatus, ProjectStatusDto } from '../../utilities/models';
 import { ProjectService } from '../../services/project.service';
 import { CategoryService } from '../../services/category.service';
 import DeleteConfirmationModal from '../../components/shared/DeleteConfirmationModal/DeleteConfirmationModal';
@@ -18,17 +18,18 @@ import { showErrorToast, showSuccessToast } from '../../utilities/helpers/alert'
 import { validateFormData } from '../../utilities/helpers';
 import { RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const Projects: React.FC = () => {
 
   const INITIAL_PROJECT_FORM_DATA: ProjectFormDto= {
-    clientContactNumber:{ value: 0, isRequired: true, disable: false, readonly: false, validator: "mobile", error: "" },
+    clientContactNumber:{ value: 0, isRequired: false, disable: false, readonly: false, validator: "mobile", error: "" },
     _id: { value: "", isRequired: false, disable: false, readonly: false, validator: "text", error: "", },
-    clientEmail: { value: "", isRequired: true, disable: false, readonly: false, validator: "email", error: "", },
+    clientEmail: { value: "", isRequired: false, disable: false, readonly: false, validator: "email", error: "", },
     projectName: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
-    startDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
-    endDate: { value: "", isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
-    status: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
+    startDate: { value:moment(new Date()).format('YYYY-MM-DD'), isRequired: true, disable: false, readonly: false, validator: "date", error: "", },
+    endDate: { value: "", isRequired: false, disable: false, readonly: false, validator: "date", error: "", },
+    status: { value: ProjectStatus.IN_PROGRESS, isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     createdBy: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
     category: { value: "", isRequired: true, disable: false, readonly: false, validator: "text", error: "", },
   }

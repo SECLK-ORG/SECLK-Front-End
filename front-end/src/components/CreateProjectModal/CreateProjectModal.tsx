@@ -85,6 +85,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 label="Start Date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
+                
                 value={mode === SCREEN_MODES.EDIT ? moment(projectForm.startDate.value).format('YYYY-MM-DD') : projectForm.startDate.value}
                 error={!!projectForm.startDate.error}
                 disabled={projectForm.startDate.disable}
@@ -116,6 +117,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                   label="Status"
                   value={projectForm.status.value}
                   onChange={(event) => onInputHandleChange('status', event.target.value)}
+                  defaultValue={ProjectStatus.IN_PROGRESS}
                 >
                   <MenuItem value={ProjectStatus.IN_PROGRESS}>{ProjectStatus.IN_PROGRESS}</MenuItem>
                   <MenuItem value={ProjectStatus.ON_HOLD}>{ProjectStatus.ON_HOLD}</MenuItem>
