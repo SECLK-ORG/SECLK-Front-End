@@ -7,7 +7,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { CustomButton, StyledTextField } from '../../assets/theme/theme';
 import { createEmployeeFormDto, Positions } from '../../utilities/models';
 import { SCREEN_MODES } from '../../utilities/constants/app.constants';
-
 interface CreateEmployeeModalProps {
   open: boolean;
   onClose: () => void;
