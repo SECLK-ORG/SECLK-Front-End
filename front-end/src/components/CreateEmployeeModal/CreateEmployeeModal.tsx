@@ -20,7 +20,6 @@ interface CreateEmployeeModalProps {
   positions: Positions[]; // Update to array of Positions
   isLoading?: boolean;
 }
-
 const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
   isLoading,
   mode,
